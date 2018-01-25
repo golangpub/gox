@@ -1,0 +1,416 @@
+package types
+
+import (
+	"encoding/json"
+	"reflect"
+	"strings"
+	"time"
+)
+
+// M is a special map which provides convenient methods
+type M map[string]interface{}
+
+func (m M) Values(key string) []interface{} {
+	value, _ := m[key]
+	if value == nil {
+		return []interface{}{}
+	}
+
+	v := reflect.ValueOf(value)
+	switch v.Kind() {
+	case reflect.Slice, reflect.Array:
+		var values = []interface{}{}
+		length := v.Len()
+		for i := 0; i < length; i++ {
+			values = append(values, v.Index(i).Interface())
+		}
+		return values
+	default:
+		return []interface{}{value}
+	}
+}
+
+func (m M) Value(key string) interface{} {
+	value, _ := m[key]
+	if value == nil {
+		return nil
+	}
+
+	v := reflect.ValueOf(value)
+	switch v.Kind() {
+	case reflect.Slice, reflect.Array:
+		if v.Len() > 0 {
+			return v.Index(0).Interface()
+		}
+		return nil
+	default:
+		return value
+	}
+}
+
+func (m M) Contains(key string) bool {
+	return m.Value(key) != nil
+}
+
+func (m M) ContainsString(key string) bool {
+	switch m.Value(key).(type) {
+	case string:
+		return true
+	default:
+		return false
+	}
+}
+
+func (m M) String(key string) string {
+	switch v := m.Value(key).(type) {
+	case string:
+		return v
+	default:
+		return ""
+	}
+}
+
+func (m M) DefaultString(key string, defaultValue string) string {
+	switch v := m.Value(key).(type) {
+	case string:
+		return v
+	default:
+		return defaultValue
+	}
+}
+
+func (m M) MustString(key string) string {
+	switch v := m.Value(key).(type) {
+	case string:
+		return v
+	default:
+		panic("No string value for key:" + key)
+	}
+}
+
+func (m M) Strings(key string) []string {
+	_, found := m[key]
+	if !found {
+		return nil
+	}
+
+	values := m.Values(key)
+	result := []string{}
+	for _, v := range values {
+		if str, ok := v.(string); ok {
+			result = append(result, str)
+		}
+	}
+
+	return result
+}
+
+func (m M) ContainsBool(key string) bool {
+	_, e := ParseBool(m.Value(key))
+	return e == nil
+}
+
+func (m M) Bool(key string) bool {
+	v, _ := ParseBool(m.Value(key))
+	return v
+}
+
+func (m M) DefaultBool(key string, defaultValue bool) bool {
+	if v, err := ParseBool(m.Value(key)); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func (m M) MustBool(key string) bool {
+	if v, err := ParseBool(m.Value(key)); err == nil {
+		return v
+	}
+	panic("No bool value for key:" + key)
+}
+
+func (m M) Int(key string) int {
+	v, _ := ParseInt(m.Value(key))
+	return int(v)
+}
+
+func (m M) DefaultInt(key string, defaultVal int) int {
+	if v, err := ParseInt(m.Value(key)); err == nil {
+		return int(v)
+	}
+	return defaultVal
+}
+
+func (m M) MustInt(key string) int {
+	if v, err := ParseInt(m.Value(key)); err == nil {
+		return int(v)
+	}
+	panic("No int value for key:" + key)
+}
+
+func (m M) Ints(key string) []int {
+	values := m.Values(key)
+	result := make([]int, 0, len(values))
+	for _, v := range values {
+		i, e := ParseInt(v)
+		if e == nil {
+			result = append(result, int(i))
+		}
+	}
+
+	return result
+}
+
+func (m M) ContainsInt64(key string) bool {
+	_, err := ParseInt(m.Value(key))
+	return err == nil
+}
+
+func (m M) Int64(key string) int64 {
+	v, _ := ParseInt(m.Value(key))
+	return v
+}
+
+func (m M) DefaultInt64(key string, defaultVal int64) int64 {
+	if v, err := ParseInt(m.Value(key)); err == nil {
+		return v
+	}
+	return defaultVal
+}
+
+func (m M) MustInt64(key string) int64 {
+	if v, err := ParseInt(m.Value(key)); err == nil {
+		return v
+	}
+	panic("No int64 value for key:" + key)
+}
+
+func (m M) Int64s(key string) []int64 {
+	values := m.Values(key)
+	result := []int64{}
+	for _, v := range values {
+		i, e := ParseInt(v)
+		if e == nil {
+			result = append(result, i)
+		}
+	}
+
+	return result
+}
+
+func (m M) ContainsFloat64(key string) bool {
+	_, err := ParseFloat(m.Value(key))
+	return err == nil
+}
+
+func (m M) Float64(key string) float64 {
+	v, _ := ParseFloat(m.Value(key))
+	return v
+}
+
+func (m M) DefaultFloat64(key string, defaultValue float64) float64 {
+	if v, err := ParseFloat(m.Value(key)); err == nil {
+		return v
+	}
+	return defaultValue
+}
+
+func (m M) MustFloat64(key string) float64 {
+	if v, err := ParseFloat(m.Value(key)); err == nil {
+		return v
+	}
+	panic("No float64 value for key:" + key)
+}
+
+func (m M) Float64s(key string) []float64 {
+	values := m.Values(key)
+	result := []float64{}
+	for _, val := range values {
+		i, e := ParseFloat(val)
+		if e == nil {
+			result = append(result, i)
+		}
+	}
+
+	return result
+}
+
+func (m M) Map(key string) M {
+	switch val := m.Value(key).(type) {
+	case M:
+		return val
+	case map[string]interface{}:
+		return M(val)
+	default:
+		return M{}
+	}
+}
+
+func (m M) ContainsID(key string) bool {
+	return m.ContainsInt64(key)
+}
+
+func (m M) ID(key string) ID {
+	return ID(m.Int64(key))
+}
+
+func (m M) DefaultID(key string, defaultValue ID) ID {
+	return ID(m.DefaultInt64(key, int64(defaultValue)))
+}
+
+func (m M) MustID(key string) ID {
+	return ID(m.MustInt64(key))
+}
+
+func (m M) IDs(key string) IDList {
+	vals := m.Int64s(key)
+	result := make([]ID, len(vals))
+	for i, v := range vals {
+		result[i] = ID(v)
+	}
+
+	return result
+}
+
+func (m M) Date(key string) (time.Time, bool) {
+	return m.DateInLocation(key, time.UTC)
+}
+
+func (m M) DateInLocation(key string, location *time.Location) (time.Time, bool) {
+	str := strings.TrimSpace(m.String(key))
+	if len(str) > 0 {
+		birthday, err := time.ParseInLocation("2006-01-02", str, location)
+		return birthday, err == nil
+	}
+
+	return time.Time{}, false
+}
+
+//
+//func (m M) GetCoordinate(key string) *Coordinate {
+//	s := m.GetStr(key)
+//	strs := strings.Split(s, ",")
+//	if len(strs) != 2 {
+//		return nil
+//	}
+//
+//	if lng, err := ParseFloat(strs[0]); err != nil {
+//		return nil
+//	} else if lat, err := ParseFloat(strs[1]); err != nil {
+//		return nil
+//	} else if lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180 {
+//		return &Coordinate{Lat: lat, Lng: lng}
+//	} else {
+//		return nil
+//	}
+//}
+
+func (m M) AddMap(val M) {
+	for k, v := range val {
+		m[k] = v
+	}
+}
+
+func (m M) AddMapObj(obj interface{}) {
+	v := reflect.ValueOf(obj)
+	if v.IsValid() == false {
+		return
+	}
+
+	for v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+
+	if v.Kind() != reflect.Map {
+		return
+	}
+
+	length := len(v.MapKeys())
+	if length == 0 {
+		return
+	}
+
+	if v.MapKeys()[0].Kind() != reflect.String {
+		panic("not map[string]interface{}")
+	}
+
+	for _, key := range v.MapKeys() {
+		val := v.MapIndex(key).Interface()
+		if val != nil {
+			m[key.String()] = val
+		}
+	}
+}
+
+func (m M) JSON() string {
+	data, err := json.Marshal(m)
+	if err != nil {
+		return ""
+	}
+	return string(data)
+}
+
+func (m M) RemoveEmptyValues() {
+	m.RemoveSomeEmptyValues(nil)
+}
+
+func (m M) RemoveSomeEmptyValues(keys []string) {
+	for k, v := range m {
+		if len(keys) > 0 && indexOfStr(keys, k) < 0 {
+			continue
+		}
+		val := reflect.ValueOf(v)
+		rm := false
+		switch val.Kind() {
+		case reflect.Invalid:
+			rm = true
+		case reflect.String:
+			rm = val.Len() == 0
+		case reflect.Ptr:
+			rm = val.IsNil()
+		case reflect.Slice, reflect.Array, reflect.Chan:
+			rm = val.IsNil() || val.Len() == 0
+		case reflect.Map:
+			if m1, ok1 := v.(map[string]interface{}); ok1 {
+				M(m1).RemoveSomeEmptyValues(keys)
+			} else if m2, ok2 := v.(M); ok2 {
+				m2.RemoveEmptyValues()
+			}
+
+			if val.IsNil() {
+				rm = true
+			} else if val.Len() == 0 {
+				rm = true
+			}
+		}
+
+		if rm {
+			delete(m, k)
+		}
+	}
+}
+
+func (m M) RemoveKeys(keys []string) {
+	for k, _ := range m {
+		if indexOfStr(keys, k) < 0 {
+			delete(m, k)
+		}
+	}
+}
+
+func (m M) RemoveAllExceptKeys(keys []string) {
+	for k, _ := range m {
+		if indexOfStr(keys, k) < 0 {
+			delete(m, k)
+		}
+	}
+}
+
+func indexOfStr(strs []string, s string) int {
+	for i, str := range strs {
+		if s == str {
+			return i
+		}
+	}
+	return -1
+}
