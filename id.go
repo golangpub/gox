@@ -15,30 +15,22 @@ type ID int64
 // id由time+shard+seq组成
 // 若业务多可扩充shard，并发高可扩充seq. 由于time在最高位,故扩展后的id集合与原id集合不会出现交集,可保持全局唯一
 
-const _ShardBitSize = 2 // 最多4个shard
+const ShardBitSize = 2 // 最多4个shard
 
-const _FastSeqBitSize = 4    //每个shard每ms不能超过16次调用
-const _DefaultSeqBitSize = 2 //每个shard每ms不能超过4次调用
-const _SlowSeqBitSize = 3    //每个shard每s不能超过8次调用
+const FastSeqBitSize = 4    //每个shard每ms不能超过16次调用
+const DefaultSeqBitSize = 2 //每个shard每ms不能超过4次调用
+const SlowSeqBitSize = 3    //每个shard每s不能超过8次调用
 
-var _epoch time.Time
+var epoch time.Time
 var MonoFastIDGenerator *IDGenerator
 var MonoDefaultIDGenerator *IDGenerator
 var MonoSlowIDGenerator *IDGenerator
 
-var DistributedFastIDGenerator *IDGenerator
-var DistributedDefaultIDGenerator *IDGenerator
-var DistributedSlowIDGenerator *IDGenerator
-
 func init() {
-	_epoch = time.Date(2017, time.January, 2, 15, 4, 5, 0, time.UTC)
-	MonoFastIDGenerator = NewIDGenerator(0, 0, _FastSeqBitSize, false)
-	MonoDefaultIDGenerator = NewIDGenerator(0, 0, _DefaultSeqBitSize, false)
-	MonoSlowIDGenerator = NewIDGenerator(0, 0, _SlowSeqBitSize, true)
-
-	DistributedFastIDGenerator = NewIDGenerator(0, _ShardBitSize, _FastSeqBitSize, false)
-	DistributedDefaultIDGenerator = NewIDGenerator(0, _ShardBitSize, _DefaultSeqBitSize, false)
-	DistributedSlowIDGenerator = NewIDGenerator(0, _ShardBitSize, _SlowSeqBitSize, true)
+	epoch = time.Date(2017, time.January, 2, 15, 4, 5, 0, time.UTC)
+	MonoFastIDGenerator = NewIDGenerator(0, 0, FastSeqBitSize, false)
+	MonoDefaultIDGenerator = NewIDGenerator(0, 0, DefaultSeqBitSize, false)
+	MonoSlowIDGenerator = NewIDGenerator(0, 0, SlowSeqBitSize, true)
 }
 
 // NewID returns new ID created by default id generator
@@ -52,18 +44,6 @@ func NewFastID() ID {
 
 func NewSlowID() ID {
 	return MonoSlowIDGenerator.NewID()
-}
-
-func NewDistributedID() ID {
-	return DistributedFastIDGenerator.NewID()
-}
-
-func NewDistributedFastID() ID {
-	return DistributedDefaultIDGenerator.NewID()
-}
-
-func NewDistributedSlowID() ID {
-	return DistributedSlowIDGenerator.NewID()
 }
 
 // ShortString returns a short representation of id
@@ -165,7 +145,7 @@ func (g *IDGenerator) NewID() ID {
 	id := seq % ID(1<<g.seqBitSize)
 	id |= g.shardID
 
-	d := time.Since(_epoch)
+	d := time.Since(epoch)
 	var timestamp int64
 	if g.useSecond {
 		timestamp = d.Nanoseconds() / 1e9 //seconds
