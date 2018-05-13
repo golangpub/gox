@@ -3,7 +3,6 @@ package types
 import (
 	"errors"
 	"fmt"
-	"github.com/gopub/log"
 	"sync/atomic"
 	"time"
 )
@@ -122,7 +121,7 @@ func NewIDGenerator(shardID, shardBitSize, seqBitSize uint, useSecond bool) *IDG
 			panic(fmt.Sprint("shardID must be [ 0,", (1<<shardBitSize)-1, "]"))
 		}
 	} else {
-		log.Info("shardBitSize is 0, skip shardID")
+		//		log.Info("shardBitSize is 0, skip shardID")
 	}
 
 	g := &IDGenerator{}
