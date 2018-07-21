@@ -6,10 +6,11 @@ import (
 )
 
 func TestID(t *testing.T) {
-
-	t.Log(NewFastID(), NewFastID().ShortString())
-	t.Log(NewID(), NewID().ShortString())
-	t.Log(NewSlowID(), NewSlowID().ShortString())
+	for i := 0; i < 256; i++ {
+		id := NextID()
+		t.Logf("%d %0X %s", id, id, id.ShortString())
+		//time.Sleep(time.Millisecond * 1)
+	}
 
 	var id ID = 123
 	if id.ShortString() != "1z" {

@@ -2,8 +2,8 @@ package types
 
 import (
 	"errors"
-	"fmt"
-	"sync/atomic"
+	"log"
+	"net"
 	"time"
 )
 
@@ -14,35 +14,20 @@ type ID int64
 // id由time+shard+seq组成
 // 若业务多可扩充shard，并发高可扩充seq. 由于time在最高位,故扩展后的id集合与原id集合不会出现交集,可保持全局唯一
 
-const ShardBitSize = 2 // 最多4个shard
-
-const FastSeqBitSize = 4    //每个shard每ms不能超过16次调用
-const DefaultSeqBitSize = 2 //每个shard每ms不能超过4次调用
-const SlowSeqBitSize = 3    //每个shard每s不能超过8次调用
+const DefaultShardBitSize = 8 // 最多128个shard
+const DefaultSeqBitSize = 8   // 每个shard每ms不能超过128次调用
 
 var epoch time.Time
-var MonoFastIDGenerator *IDGenerator
-var MonoDefaultIDGenerator *IDGenerator
-var MonoSlowIDGenerator *IDGenerator
+var DefaultSnakeIDGenerator IDGenerator
 
 func init() {
-	epoch = time.Date(2017, time.January, 2, 15, 4, 5, 0, time.UTC)
-	MonoFastIDGenerator = NewIDGenerator(0, 0, FastSeqBitSize, false)
-	MonoDefaultIDGenerator = NewIDGenerator(0, 0, DefaultSeqBitSize, false)
-	MonoSlowIDGenerator = NewIDGenerator(0, 0, SlowSeqBitSize, true)
+	epoch = time.Date(2018, time.January, 2, 15, 4, 5, 0, time.UTC)
+	DefaultSnakeIDGenerator = NewSnakeIDGenerator(DefaultShardBitSize, DefaultSeqBitSize, NextMilliseconds, GetShardIDByIP, DefaultCounter)
 }
 
 // NewID returns new ID created by default id generator
-func NewID() ID {
-	return MonoDefaultIDGenerator.NewID()
-}
-
-func NewFastID() ID {
-	return MonoFastIDGenerator.NewID()
-}
-
-func NewSlowID() ID {
-	return MonoSlowIDGenerator.NewID()
+func NextID() ID {
+	return DefaultSnakeIDGenerator.NextID()
 }
 
 // ShortString returns a short representation of id
@@ -95,15 +80,16 @@ func ParseShortID(s string) (ID, error) {
 	return ID(k), nil
 }
 
-type IDGenerator struct {
-	seq          ID
-	shardID      ID
+type SnakeIDGenerator struct {
 	seqBitSize   uint
 	shardBitSize uint
-	useSecond    bool
+
+	timestampGetter NumberGetter
+	shardIDGetter   NumberGetter
+	seqNumGetter    NumberGetter
 }
 
-func NewIDGenerator(shardID, shardBitSize, seqBitSize uint, useSecond bool) *IDGenerator {
+func NewSnakeIDGenerator(shardBitSize, seqBitSize uint, timestampGetter, shardIDGetter, seqNumGetter NumberGetter) *SnakeIDGenerator {
 	if seqBitSize < 1 || seqBitSize > 16 {
 		panic("seqBitSize should be [1,16]")
 	}
@@ -116,41 +102,71 @@ func NewIDGenerator(shardID, shardBitSize, seqBitSize uint, useSecond bool) *IDG
 		panic("shardBitSize + seqBitSize should be less than 20")
 	}
 
-	if shardBitSize > 0 {
-		if shardID < 0 || shardID > (1<<shardBitSize)-1 {
-			panic(fmt.Sprint("shardID must be [ 0,", (1<<shardBitSize)-1, "]"))
-		}
-	} else {
-		//		log.Info("shardBitSize is 0, skip shardID")
+	return &SnakeIDGenerator{
+		seqBitSize,
+		shardBitSize,
+		timestampGetter,
+		shardIDGetter,
+		seqNumGetter,
 	}
-
-	g := &IDGenerator{}
-	g.seq = 1
-	if g.shardBitSize > 0 {
-		g.shardID = ID(shardID << seqBitSize)
-	}
-	g.seqBitSize = seqBitSize
-	g.shardBitSize = shardBitSize
-	g.useSecond = useSecond
-	return g
 }
 
-func (g *IDGenerator) Clone() *IDGenerator {
+func (g *SnakeIDGenerator) Clone() *SnakeIDGenerator {
 	return &*g
 }
 
-func (g *IDGenerator) NewID() ID {
-	seq := ID(atomic.AddInt64((*int64)(&g.seq), 1))
-	id := seq % ID(1<<g.seqBitSize)
-	id |= g.shardID
-
-	d := time.Since(epoch)
-	var timestamp int64
-	if g.useSecond {
-		timestamp = d.Nanoseconds() / 1e9 //seconds
-	} else {
-		timestamp = d.Nanoseconds() / 1e6 //milliseconds
-	}
-	id |= ID(timestamp << (g.seqBitSize + g.shardBitSize))
+func (g *SnakeIDGenerator) NextID() ID {
+	id := ID(g.seqNumGetter.GetNumber() % (1 << g.seqBitSize))
+	id |= ID(KeepLeftValue(g.shardIDGetter.GetNumber(), g.shardBitSize) << g.seqBitSize)
+	id |= ID(g.timestampGetter.GetNumber() << (g.seqBitSize + g.shardBitSize))
 	return ID(id)
+}
+
+type IDGenerator interface {
+	NextID() ID
+}
+
+type NumberGetter interface {
+	GetNumber() int64
+}
+
+type NumberGetterFunc func() int64
+
+func (f NumberGetterFunc) GetNumber() int64 {
+	return f()
+}
+
+var NextSecond NumberGetterFunc = func() int64 {
+	return time.Since(epoch).Nanoseconds() / 1e9
+}
+
+var NextMilliseconds NumberGetterFunc = func() int64 {
+	return time.Since(epoch).Nanoseconds() / 1e6
+}
+
+var GetShardIDByIP NumberGetterFunc = func() int64 {
+	ipBytes := []byte(getOutboundIP())
+	var num int64 = 0
+	for i := 0; i < 8 && i < len(ipBytes); i++ {
+		num <<= 8
+		num |= int64(ipBytes[i])
+	}
+	return num
+}
+
+func KeepLeftValue(i int64, bitSize uint) int64 {
+	return ((i >> bitSize) << bitSize) ^ i
+}
+
+// Get preferred outbound ip of this machine
+func getOutboundIP() net.IP {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	return localAddr.IP
 }
