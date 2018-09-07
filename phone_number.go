@@ -8,5 +8,5 @@ type PhoneNumber struct {
 }
 
 func (n *PhoneNumber) String() string {
-	return fmt.Sprintf("+%s %s", n.CountryCode, n.Number)
+	return fmt.Sprintf("+%s%s", n.CountryCode, n.Number)
 }
