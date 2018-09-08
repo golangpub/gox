@@ -42,7 +42,7 @@ func (e *errorInfo) Error() string {
 }
 
 func NewError(code int, msg string) Error {
-	if code <= 0 || code >= InternalErrorCode {
+	if code <= 0 || code > InternalErrorCode {
 		panic(fmt.Sprintf("code value should be (0, %d]", code))
 	}
 	return &errorInfo{code: code, message: msg}
