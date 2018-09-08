@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+const InternalErrorCode = 99999
+
 type Error interface {
 	error
 	Code() int
@@ -40,5 +42,12 @@ func (e *errorInfo) Error() string {
 }
 
 func NewError(code int, msg string) Error {
+	if code <= 0 || code >= InternalErrorCode {
+		panic(fmt.Sprintf("code value should be (0, %d]", code))
+	}
 	return &errorInfo{code: code, message: msg}
+}
+
+func InternalError(message string) Error {
+	return NewError(InternalErrorCode, message)
 }
