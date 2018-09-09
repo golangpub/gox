@@ -3,6 +3,7 @@ package errors
 import (
 	"github.com/gopub/types/errors/internal"
 	"net/http"
+	"strings"
 )
 
 type Error interface {
@@ -33,7 +34,7 @@ func BadRequest(message string) Error {
 }
 
 func BadRequestField(field string) Error {
-	return NewFieldError(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), field)
+	return NewFieldError(http.StatusBadRequest, strings.ToLower(http.StatusText(http.StatusBadRequest)), field)
 }
 
 func Unauthorized(message string) Error {
@@ -41,7 +42,7 @@ func Unauthorized(message string) Error {
 }
 
 func UnauthorizedField(field string) Error {
-	return NewFieldError(http.StatusUnauthorized, http.StatusText(http.StatusUnauthorized), field)
+	return NewFieldError(http.StatusUnauthorized, strings.ToLower(http.StatusText(http.StatusUnauthorized)), field)
 }
 
 func Forbidden(message string) Error {
@@ -49,7 +50,7 @@ func Forbidden(message string) Error {
 }
 
 func ForbiddenField(field string) Error {
-	return NewFieldError(http.StatusForbidden, http.StatusText(http.StatusForbidden), field)
+	return NewFieldError(http.StatusForbidden, strings.ToLower(http.StatusText(http.StatusForbidden)), field)
 }
 
 func NotFound(message string) Error {
@@ -57,7 +58,7 @@ func NotFound(message string) Error {
 }
 
 func NotFoundField(field string) Error {
-	return NewFieldError(http.StatusNotFound, http.StatusText(http.StatusNotFound), field)
+	return NewFieldError(http.StatusNotFound, strings.ToLower(http.StatusText(http.StatusNotFound)), field)
 }
 
 func Conflict(message string) Error {
@@ -65,5 +66,5 @@ func Conflict(message string) Error {
 }
 
 func ConflictField(field string) Error {
-	return NewFieldError(http.StatusConflict, http.StatusText(http.StatusConflict), field)
+	return NewFieldError(http.StatusConflict, strings.ToLower(http.StatusText(http.StatusConflict)), field)
 }

@@ -32,5 +32,5 @@ func (e *Error) Error() string {
 	if e == nil {
 		return ""
 	}
-	return fmt.Sprintf("code:%d message:%s", e.code, e.message)
+	return fmt.Sprintf("%d:%s", e.code, e.message)
 }
