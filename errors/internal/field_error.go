@@ -41,5 +41,5 @@ func (e *FieldError) Error() string {
 	if e == nil {
 		return ""
 	}
-	return fmt.Sprintf("code:%d message:%s field:%s", e.code, e.message, e.field)
+	return fmt.Sprintf("%d:%s:%s", e.code, e.field, e.message)
 }
