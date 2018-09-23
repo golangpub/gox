@@ -12,6 +12,9 @@ var mu sync.RWMutex
 var contentTypeToPrototype = make(map[string]reflect.Type)
 var prototypeToContentType = make(map[reflect.Type]string)
 
+// Register bind contentType with prototype
+// E.g.
+//		contents.Register("image", &contents.Image{})
 func Register(contentType string, prototype interface{}) error {
 	contentType = strings.TrimSpace(contentType)
 	if len(contentType) == 0 {
