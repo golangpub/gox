@@ -70,7 +70,25 @@ func getProtoType(contentType string) (reflect.Type, error) {
 }
 
 type Any struct {
-	Value interface{}
+	value interface{}
+}
+
+func NewAny(v interface{}) *Any {
+	a := &Any{}
+	a.SetValue(v)
+	return a
+}
+
+func (a *Any) Value() interface{} {
+	return a.value
+}
+
+func (a *Any) SetValue(v interface{}) {
+	_, err := getContentType(v)
+	if err != nil {
+		panic(err)
+	}
+	a.value = v
 }
 
 func (a *Any) UnmarshalJSON(b []byte) error {
@@ -90,17 +108,17 @@ func (a *Any) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	a.Value = val
+	a.SetValue(val)
 	return nil
 }
 
 func (a *Any) MarshalJSON() ([]byte, error) {
-	contentType, err := getContentType(a.Value)
+	contentType, err := getContentType(a.value)
 	if err != nil {
 		return nil, errors.BadRequestField("value")
 	}
 
-	b, err := json.Marshal(a.Value)
+	b, err := json.Marshal(a.value)
 	if err != nil {
 		return nil, err
 	}
