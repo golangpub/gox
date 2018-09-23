@@ -1,4 +1,4 @@
-package types
+package mobile
 
 import "encoding/json"
 

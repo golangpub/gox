@@ -1,4 +1,4 @@
-package types
+package geo
 
 import "math"
 
