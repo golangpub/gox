@@ -19,10 +19,10 @@ func (m M) Values(key string) []interface{} {
 	v := reflect.ValueOf(value)
 	switch v.Kind() {
 	case reflect.Slice, reflect.Array:
-		var values = []interface{}{}
 		length := v.Len()
+		var values = make([]interface{}, length)
 		for i := 0; i < length; i++ {
-			values = append(values, v.Index(i).Interface())
+			values[i] = v.Index(i).Interface()
 		}
 		return values
 	default:

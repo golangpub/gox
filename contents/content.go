@@ -16,7 +16,7 @@ type Video struct {
 	Format   string `json:"format"`
 	Duration int    `json:"duration"`
 	Size     int    `json:"size"`
-	Image    *Image `json:"image,omitempty"`
+	Image    *Image `json:"image"`
 }
 
 type Audio struct {
@@ -36,6 +36,6 @@ type File struct {
 type WebPage struct {
 	Title   string `json:"title"`
 	Summary string `json:"summary"`
-	Image   *Image `json:"image,omitempty"`
+	Image   *Image `json:"image"`
 	URL     string `json:"url"`
 }

@@ -10,10 +10,10 @@ const (
 )
 
 type Money struct {
-	Cents    int      `json:"cents"`
+	Amount   int      `json:"amount"`
 	Currency Currency `json:"currency"`
 }
 
 func (m *Money) String() string {
-	return fmt.Sprintf("%s %d", m.Currency, m.Cents)
+	return fmt.Sprintf("%s %d", m.Currency, m.Amount)
 }
