@@ -3,7 +3,6 @@ package types
 import (
 	"errors"
 	"log"
-	"net"
 	"time"
 )
 
@@ -145,7 +144,12 @@ var NextMilliseconds NumberGetterFunc = func() int64 {
 }
 
 var GetShardIDByIP NumberGetterFunc = func() int64 {
-	ipBytes := []byte(getOutboundIP())
+	ip, err := GetOutboundIP()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ipBytes := []byte(ip)
 	var num int64 = 0
 	for i := 0; i < 8 && i < len(ipBytes); i++ {
 		num <<= 8
@@ -156,17 +160,4 @@ var GetShardIDByIP NumberGetterFunc = func() int64 {
 
 func KeepLeftValue(i int64, bitSize uint) int64 {
 	return ((i >> bitSize) << bitSize) ^ i
-}
-
-// Get preferred outbound ip of this machine
-func getOutboundIP() net.IP {
-	conn, err := net.Dial("udp", "8.8.8.8:80")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
-
-	localAddr := conn.LocalAddr().(*net.UDPAddr)
-
-	return localAddr.IP
 }
