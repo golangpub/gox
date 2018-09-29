@@ -30,3 +30,29 @@ func TestID(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestID_PrettyString(t *testing.T) {
+	for i := 0; i < 256; i++ {
+		id := NextID()
+		t.Logf("%d %0X %s", id, id, id.PrettyString())
+		//time.Sleep(time.Millisecond * 1)
+	}
+
+	var id ID = 123
+	if id.PrettyString() != "4M" {
+		t.Log(id.PrettyString())
+		t.FailNow()
+	}
+
+	id = 34
+	if id.PrettyString() != "21" {
+		t.Log(id.PrettyString())
+		t.FailNow()
+	}
+
+	id = math.MaxInt64
+	if i, _ := ParsePrettyID(id.PrettyString()); i != id {
+		t.Log(id.PrettyString(), i)
+		t.FailNow()
+	}
+}

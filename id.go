@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -79,6 +80,71 @@ func ParseShortID(s string) (ID, error) {
 	return ID(k), nil
 }
 
+const prettyTableSize = 34
+
+var prettyTable = [prettyTableSize]byte{
+	'1', '2', '3', '4', '5', '6', '7', '8', '9',
+	'A', 'B', 'C', 'D', 'E', 'F', 'G',
+	'H', 'I', 'J', 'K', 'L', 'M', 'N',
+	'P', 'Q',
+	'R', 'S', 'T',
+	'U', 'V', 'W',
+	'X', 'Y', 'Z'}
+
+// PrettyString returns a incasesensitive pretty representation of id
+func (i ID) PrettyString() string {
+	if i < 0 {
+		panic("invalid id")
+	}
+	var bytes [16]byte
+	k := int64(i)
+	n := 15
+
+	for {
+		bytes[n] = prettyTable[k%prettyTableSize]
+		k /= prettyTableSize
+		if k == 0 {
+			return string(bytes[n:])
+		}
+		n--
+	}
+}
+
+func ParsePrettyID(s string) (ID, error) {
+	if len(s) == 0 {
+		return 0, errors.New("parse error")
+	}
+
+	s = strings.ToUpper(s)
+	var bytes = []byte(s)
+	var k int64
+	for _, b := range bytes {
+		i := searchPrettyTable(b)
+		if i <= 0 {
+			return 0, errors.New("parse error")
+		}
+		k = k*prettyTableSize + int64(i)
+	}
+	return ID(k), nil
+}
+
+func searchPrettyTable(v byte) int {
+	left := 0
+	right := prettyTableSize - 1
+	for right >= left {
+		mid := (left + right) / 2
+		if prettyTable[mid] == v {
+			return mid
+		} else if prettyTable[mid] > v {
+			right = mid - 1
+		} else {
+			left = mid + 1
+		}
+	}
+
+	return -1
+}
+
 type SnakeIDGenerator struct {
 	seqBitSize   uint
 	shardBitSize uint
@@ -116,7 +182,7 @@ func (g *SnakeIDGenerator) Clone() *SnakeIDGenerator {
 
 func (g *SnakeIDGenerator) NextID() ID {
 	id := ID(g.seqNumGetter.GetNumber() % (1 << g.seqBitSize))
-	id |= ID(KeepLeftValue(g.shardIDGetter.GetNumber(), g.shardBitSize) << g.seqBitSize)
+	id |= ID(KeepLeftBits(g.shardIDGetter.GetNumber(), g.shardBitSize) << g.seqBitSize)
 	id |= ID(g.timestampGetter.GetNumber() << (g.seqBitSize + g.shardBitSize))
 	return ID(id)
 }
@@ -158,6 +224,6 @@ var GetShardIDByIP NumberGetterFunc = func() int64 {
 	return num
 }
 
-func KeepLeftValue(i int64, bitSize uint) int64 {
+func KeepLeftBits(i int64, bitSize uint) int64 {
 	return ((i >> bitSize) << bitSize) ^ i
 }
