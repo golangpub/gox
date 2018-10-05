@@ -44,3 +44,29 @@ func (a IDList) IndexOf(i ID) int {
 	}
 	return -1
 }
+
+func Int64sToIDs(a []int64) []ID {
+	if a == nil {
+		return nil
+	}
+
+	ids := make([]ID, len(a))
+	for i, v := range a {
+		ids[i] = ID(v)
+	}
+
+	return ids
+}
+
+func IDsToInt64s(ids []ID) []int64 {
+	if ids == nil {
+		return nil
+	}
+
+	a := make([]int64, len(ids))
+	for i, v := range ids {
+		a[i] = int64(v)
+	}
+
+	return a
+}
