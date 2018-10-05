@@ -56,3 +56,11 @@ func TestID_PrettyString(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestNumberGetterFunc_GetNumber(t *testing.T) {
+	ip := GetShardIDByIP()
+	t.Logf("%0X", ip)
+	i1 := KeepLeftBits(ip, 8)
+	t.Logf("%0X %d", i1, i1)
+
+}

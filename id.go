@@ -182,7 +182,7 @@ func (g *SnakeIDGenerator) Clone() *SnakeIDGenerator {
 
 func (g *SnakeIDGenerator) NextID() ID {
 	id := ID(g.seqNumGetter.GetNumber() % (1 << g.seqBitSize))
-	id |= ID(KeepLeftBits(g.shardIDGetter.GetNumber(), g.shardBitSize) << g.seqBitSize)
+	id |= ID(KeepRightBits(g.shardIDGetter.GetNumber(), g.shardBitSize) << g.seqBitSize)
 	id |= ID(g.timestampGetter.GetNumber() << (g.seqBitSize + g.shardBitSize))
 	return ID(id)
 }
@@ -224,6 +224,6 @@ var GetShardIDByIP NumberGetterFunc = func() int64 {
 	return num
 }
 
-func KeepLeftBits(i int64, bitSize uint) int64 {
+func KeepRightBits(i int64, bitSize uint) int64 {
 	return ((i >> bitSize) << bitSize) ^ i
 }
