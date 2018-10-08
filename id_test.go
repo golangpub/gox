@@ -60,7 +60,7 @@ func TestID_PrettyString(t *testing.T) {
 func TestNumberGetterFunc_GetNumber(t *testing.T) {
 	ip := GetShardIDByIP()
 	t.Logf("%0X", ip)
-	i1 := KeepLeftBits(ip, 8)
+	i1 := KeepRightBits(ip, 8)
 	t.Logf("%0X %d", i1, i1)
 
 }

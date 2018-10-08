@@ -1,8 +1,4 @@
-package contents
-
-type Text struct {
-	Text string `json:"text"`
-}
+package types
 
 type Image struct {
 	URL    string `json:"url"`
