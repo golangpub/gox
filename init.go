@@ -6,4 +6,5 @@ func init() {
 	RegisterAny(&Video{})
 	RegisterAny(&File{})
 	RegisterAny(&WebPage{})
+	RegisterAny(&RichText{})
 }

@@ -35,3 +35,7 @@ type WebPage struct {
 	Image   *Image `json:"image"`
 	URL     string `json:"url"`
 }
+
+type RichText struct {
+	Items []*Any `json:"items"`
+}
