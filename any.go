@@ -18,7 +18,7 @@ type AnyType interface {
 // E.g.
 //		contents.Register("image", &contents.Image{})
 func RegisterAny(prototype interface{}) error {
-	name := getTypeName(prototype)
+	name := GetAnyTypeName(prototype)
 	mu.Lock()
 	defer mu.Unlock()
 	if _, ok := nameToPrototype[name]; ok {
@@ -50,7 +50,7 @@ func camelToSnake(s string) string {
 	return string(snake)
 }
 
-func getTypeName(prototype interface{}) string {
+func GetAnyTypeName(prototype interface{}) string {
 	if a, ok := prototype.(AnyType); ok {
 		return a.AnyType()
 	}
@@ -121,7 +121,7 @@ func (a *Any) UnmarshalJSON(b []byte) error {
 }
 
 func (a *Any) MarshalJSON() ([]byte, error) {
-	name := getTypeName(a.value)
+	name := GetAnyTypeName(a.value)
 
 	var m = make(map[string]interface{})
 
