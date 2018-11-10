@@ -8,6 +8,13 @@ import (
 	"time"
 )
 
+var _ = types.RegisterAny(&types.Image{})
+var _ = types.RegisterAny(&types.Video{})
+var _ = types.RegisterAny(&types.Audio{})
+var _ = types.RegisterAny(&types.WebPage{})
+var _ = types.RegisterAny(&types.File{})
+var _ = types.RegisterAny(&types.RichText{})
+
 func nextImage() *types.Image {
 	return &types.Image{
 		URL:    "https://www.image.com/" + fmt.Sprint(time.Now().Unix()),
@@ -137,6 +144,7 @@ func TestVideo(t *testing.T) {
 }
 
 func TestArray(t *testing.T) {
+
 	var items []*types.Any
 	items = append(items, types.NewAny("hello"))
 	items = append(items, types.NewAny(nextImage()))

@@ -97,12 +97,16 @@ func (a *Any) UnmarshalJSON(b []byte) error {
 	}
 
 	typ, _ := m["@type"].(string)
-	pt, foundType := getProtoType(typ)
-	if v, ok := m["@value"]; ok {
-		if !foundType {
-			a.value = v
-			return nil
+	pt, found := getProtoType(typ)
+	if !found {
+		a.value, _ = m["@value"]
+		if a.value == nil {
+			return errors.New("value is empty")
 		}
+		return nil
+	}
+
+	if v, ok := m["@value"]; ok {
 		b, _ = json.Marshal(v)
 	}
 
