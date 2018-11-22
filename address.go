@@ -8,4 +8,5 @@ type Address struct {
 	Street   string `json:"street"`
 	Building string `json:"building"`
 	Room     string `json:"room"`
+	PostCode string `json:"post_code"`
 }
