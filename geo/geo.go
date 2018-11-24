@@ -21,6 +21,18 @@ type Area struct {
 	MaxLng float64
 }
 
+func (a *Area) ContainsCoordinate(c *Coordinate) bool {
+	if c.Latitude < a.MinLat || c.Latitude > a.MaxLat {
+		return false
+	}
+
+	if a.MinLng > a.MaxLng {
+		return c.Longitude >= a.MinLng || c.Longitude <= a.MaxLng
+	}
+
+	return c.Longitude >= a.MinLng && c.Longitude <= a.MaxLng
+}
+
 // @param radius is in km
 func (c *Coordinate) GetArea(radius float64) Area {
 	if radius > Earth_Circle {
