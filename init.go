@@ -6,5 +6,4 @@ func init() {
 	RegisterAny(&Audio{})
 	RegisterAny(&WebPage{})
 	RegisterAny(&File{})
-	RegisterAny(&RichText{})
 }
