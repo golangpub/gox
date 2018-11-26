@@ -20,21 +20,21 @@ func NewError(code int, msg string) *Error {
 	return &Error{code: code, message: msg}
 }
 
-func (a *Error) UnmarshalJSON(b []byte) error {
+func (e *Error) UnmarshalJSON(b []byte) error {
 	var obj *errorJSONObject
 	if err := json.Unmarshal(b, &obj); err != nil {
 		return err
 	}
 
-	a.code = obj.Code
-	a.message = obj.Message
+	e.code = obj.Code
+	e.message = obj.Message
 	return nil
 }
 
-func (a Error) MarshalJSON() ([]byte, error) {
+func (e *Error) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&errorJSONObject{
-		Code:    a.code,
-		Message: a.message,
+		Code:    e.code,
+		Message: e.message,
 	})
 }
 
