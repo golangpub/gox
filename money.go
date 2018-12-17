@@ -10,7 +10,7 @@ const (
 )
 
 type Money struct {
-	Amount   int      `json:"amount"`
+	Amount   int64    `json:"amount"`
 	Currency Currency `json:"currency"`
 }
 
