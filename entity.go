@@ -14,9 +14,9 @@ type BaseEntity struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type BigInt big.Int
+type SQLBigInt big.Int
 
-func (i *BigInt) Scan(src interface{}) error {
+func (i *SQLBigInt) Scan(src interface{}) error {
 	if src == nil {
 		return nil
 	}
@@ -42,7 +42,7 @@ func (i *BigInt) Scan(src interface{}) error {
 	return nil
 }
 
-func (i *BigInt) Value() (driver.Value, error) {
+func (i *SQLBigInt) Value() (driver.Value, error) {
 	if i == nil {
 		return nil, nil
 	}
