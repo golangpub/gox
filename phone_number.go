@@ -1,6 +1,12 @@
 package types
 
-import "fmt"
+import (
+	"database/sql/driver"
+	"fmt"
+	"strings"
+)
+
+var _ driver.Valuer = (*PhoneNumber)(nil)
 
 type PhoneNumber struct {
 	CountryCode    int    `json:"country_code"`
@@ -14,4 +20,13 @@ func (n *PhoneNumber) String() string {
 	}
 
 	return fmt.Sprintf("+%d-%d-%s", n.CountryCode, n.NationalNumber, n.Extension)
+}
+
+func (n *PhoneNumber) Value() (driver.Value, error) {
+	if n == nil {
+		return nil, nil
+	}
+	ext := strings.Replace(n.Extension, ",", "\\,", -1)
+	s := fmt.Sprintf("(%d,%d,%s)", n.CountryCode, n.NationalNumber, ext)
+	return s, nil
 }
