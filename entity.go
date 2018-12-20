@@ -25,7 +25,8 @@ func (i *SQLBigInt) Scan(src interface{}) error {
 	var ok bool
 	s, ok = src.(string)
 	if !ok {
-		b, ok := src.([]byte)
+		var b []byte
+		b, ok = src.([]byte)
 		if ok {
 			s = string(b)
 		}
