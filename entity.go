@@ -8,11 +8,15 @@ import (
 	"time"
 )
 
-type BaseEntity struct {
-	ID        ID        `json:"id"`
+type EntityTime struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	Deleted   bool      `json:"-"`
+}
+
+type BaseEntity struct {
+	EntityTime
+	ID      ID   `json:"id"`
+	Deleted bool `json:"-"`
 }
 
 type SQLBigInt big.Int
