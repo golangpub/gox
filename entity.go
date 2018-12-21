@@ -12,6 +12,7 @@ type BaseEntity struct {
 	ID        ID        `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	Deleted   bool      `json:"-"`
 }
 
 type SQLBigInt big.Int
