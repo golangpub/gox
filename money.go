@@ -1,6 +1,9 @@
 package types
 
-import "fmt"
+import (
+	"database/sql/driver"
+	"fmt"
+)
 
 type Currency string
 
@@ -9,6 +12,8 @@ const (
 	USD Currency = "USD"
 )
 
+var _ driver.Valuer = (*Money)(nil)
+
 type Money struct {
 	Amount   int64    `json:"amount"`
 	Currency Currency `json:"currency"`
@@ -16,4 +21,8 @@ type Money struct {
 
 func (m *Money) String() string {
 	return fmt.Sprintf("%s %d", m.Currency, m.Amount)
+}
+
+func (m *Money) Value() (driver.Value, error) {
+	return fmt.Sprintf("(%d,%s)", m.Amount, m.Currency), nil
 }
