@@ -1,8 +1,10 @@
 package types
 
 import (
+	"database/sql/driver"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"reflect"
 	"sync"
 )
@@ -73,21 +75,21 @@ func getProtoType(typ string) (reflect.Type, bool) {
 }
 
 type Any struct {
-	value interface{}
+	val interface{}
 }
 
 func NewAny(v interface{}) *Any {
 	a := &Any{}
-	a.SetValue(v)
+	a.SetVal(v)
 	return a
 }
 
-func (a *Any) Value() interface{} {
-	return a.value
+func (a *Any) Val() interface{} {
+	return a.val
 }
 
-func (a *Any) SetValue(v interface{}) {
-	a.value = v
+func (a *Any) SetVal(v interface{}) {
+	a.val = v
 }
 
 func (a *Any) UnmarshalJSON(b []byte) error {
@@ -99,8 +101,8 @@ func (a *Any) UnmarshalJSON(b []byte) error {
 	typ, _ := m["@type"].(string)
 	pt, found := getProtoType(typ)
 	if !found {
-		a.value, _ = m["@value"]
-		if a.value == nil {
+		a.val, _ = m["@value"]
+		if a.val == nil {
 			return errors.New("value is empty")
 		}
 		return nil
@@ -120,23 +122,23 @@ func (a *Any) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	a.SetValue(ptrVal.Elem().Interface())
+	a.SetVal(ptrVal.Elem().Interface())
 	return nil
 }
 
 func (a *Any) MarshalJSON() ([]byte, error) {
-	name := GetAnyTypeName(a.value)
+	name := GetAnyTypeName(a.val)
 
 	var m = make(map[string]interface{})
 
-	t := reflect.TypeOf(a.value)
+	t := reflect.TypeOf(a.val)
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()
 	}
 
 	if t.Kind() == reflect.Struct || t.Kind() == reflect.Map {
 
-		b, err := json.Marshal(a.value)
+		b, err := json.Marshal(a.val)
 		if err != nil {
 			return nil, err
 		}
@@ -146,9 +148,49 @@ func (a *Any) MarshalJSON() ([]byte, error) {
 			return nil, err
 		}
 	} else {
-		m["@value"] = a.value
+		m["@value"] = a.val
 	}
 
 	m["@type"] = name
 	return json.Marshal(m)
+}
+
+func (a *Any) Scan(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+
+	if b, ok := src.([]byte); ok {
+		return json.Unmarshal(b, a)
+	} else {
+		return errors.New(fmt.Sprintf("failed to parse %v to types.Any", src))
+	}
+}
+
+func (a *Any) Value() (driver.Value, error) {
+	if a == nil {
+		return nil, nil
+	}
+	return json.Marshal(a)
+}
+
+type AnyList []*Any
+
+func (a *AnyList) Scan(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+
+	if b, ok := src.([]byte); ok {
+		return json.Unmarshal(b, a)
+	} else {
+		return errors.New(fmt.Sprintf("failed to parse %v to types.AnyList", src))
+	}
+}
+
+func (a *AnyList) Value() (driver.Value, error) {
+	if a == nil {
+		return nil, nil
+	}
+	return json.Marshal(a)
 }
