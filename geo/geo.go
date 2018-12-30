@@ -1,6 +1,13 @@
 package geo
 
-import "math"
+import (
+	"database/sql/driver"
+	"errors"
+	"fmt"
+	"math"
+	"strconv"
+	"strings"
+)
 
 const (
 	PI           = 3.14159265
@@ -12,6 +19,53 @@ const (
 type Coordinate struct {
 	Latitude  float64 `json:"lat"`
 	Longitude float64 `json:"lng"`
+}
+
+func (c *Coordinate) Scan(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+
+	var s string
+	var ok bool
+	s, ok = src.(string)
+	if !ok {
+		var b []byte
+		b, ok = src.([]byte)
+		if ok {
+			s = string(b)
+		}
+	}
+
+	if !ok {
+		return errors.New(fmt.Sprintf("failed to parse %v into Coordinate", src))
+	}
+
+	s = strings.Replace(s, "POINT(", "", -1)
+	s = strings.Replace(s, ")", "", -1)
+	numStrs := strings.Split(s, " ")
+	if len(numStrs) != 2 {
+		return errors.New(fmt.Sprintf("failed to parse %v into Coordinate", src))
+	}
+
+	var err error
+	c.Latitude, err = strconv.ParseFloat(numStrs[0], 10)
+	if err == nil {
+		c.Longitude, err = strconv.ParseFloat(numStrs[1], 10)
+	}
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Coordinate) Value() (driver.Value, error) {
+	if c == nil {
+		return nil, nil
+	}
+	return fmt.Sprintf("POINT(%f %f)", c.Latitude, c.Longitude), nil
 }
 
 type Area struct {
