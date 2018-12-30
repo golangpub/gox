@@ -46,7 +46,7 @@ func TestID(t *testing.T) {
 		t.FailNow()
 	}
 
-	if v2, ok := a2.Value().(types.ID); !ok {
+	if v2, ok := a2.Val().(types.ID); !ok {
 		t.Error("expected types.ID")
 		t.FailNow()
 	} else if v != v2 {
@@ -73,7 +73,7 @@ func TestText(t *testing.T) {
 		t.FailNow()
 	}
 
-	if v2, ok := a2.Value().(string); !ok {
+	if v2, ok := a2.Val().(string); !ok {
 		t.Error("expected Text")
 		t.FailNow()
 	} else if v != v2 {
@@ -100,7 +100,7 @@ func TestImage(t *testing.T) {
 		t.FailNow()
 	}
 
-	if v2, ok := a2.Value().(*types.Image); !ok {
+	if v2, ok := a2.Val().(*types.Image); !ok {
 		t.Error("expected Image")
 		t.FailNow()
 	} else if *v != *v2 {
@@ -127,7 +127,7 @@ func TestVideo(t *testing.T) {
 		t.FailNow()
 	}
 
-	if v2, ok := a2.Value().(*types.Video); !ok {
+	if v2, ok := a2.Val().(*types.Video); !ok {
 		t.Error("expected Video")
 		t.FailNow()
 	} else if *v.Image != *v2.Image || v.URL != v2.URL || v.Size != v2.Size || v.Format != v2.Format || v.Duration != v2.Duration {
@@ -156,17 +156,17 @@ func TestArray(t *testing.T) {
 		t.FailNow()
 	}
 
-	if items[0].Value().(string) != items2[0].Value().(string) {
+	if items[0].Val().(string) != items2[0].Val().(string) {
 		t.FailNow()
 	}
 
-	if *items[1].Value().(*types.Image) != *items2[1].Value().(*types.Image) {
+	if *items[1].Val().(*types.Image) != *items2[1].Val().(*types.Image) {
 		t.FailNow()
 	}
 
 	{
-		v := items[2].Value().(*types.Video)
-		v2 := items2[2].Value().(*types.Video)
+		v := items[2].Val().(*types.Video)
+		v2 := items2[2].Val().(*types.Video)
 		if *v.Image != *v2.Image || v.URL != v2.URL || v.Size != v2.Size || v.Format != v2.Format || v.Duration != v2.Duration {
 			t.Error("expected equal video value")
 			t.FailNow()
