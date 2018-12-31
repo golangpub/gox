@@ -5,8 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"math"
-	"strconv"
-	"strings"
 )
 
 const (
@@ -26,39 +24,13 @@ func (c *Coordinate) Scan(src interface{}) error {
 		return nil
 	}
 
-	var s string
-	var ok bool
-	s, ok = src.(string)
+	b, ok := src.([]byte)
 	if !ok {
-		var b []byte
-		b, ok = src.([]byte)
-		if ok {
-			s = string(b)
-		}
+		return errors.New(fmt.Sprintf("failed to parse %v into geo.Coordinate", src))
 	}
 
-	if !ok {
-		return errors.New(fmt.Sprintf("failed to parse %v into Coordinate", src))
-	}
-
-	s = strings.Replace(s, "POINT(", "", -1)
-	s = strings.Replace(s, ")", "", -1)
-	numStrs := strings.Split(s, " ")
-	if len(numStrs) != 2 {
-		return errors.New(fmt.Sprintf("failed to parse %v into Coordinate", src))
-	}
-
-	var err error
-	c.Latitude, err = strconv.ParseFloat(numStrs[0], 10)
-	if err == nil {
-		c.Longitude, err = strconv.ParseFloat(numStrs[1], 10)
-	}
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := fmt.Sscanf(string(b), "POINT(%d %d)", &c.Latitude, &c.Longitude)
+	return err
 }
 
 func (c *Coordinate) Value() (driver.Value, error) {

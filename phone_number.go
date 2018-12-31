@@ -2,6 +2,7 @@ package types
 
 import (
 	"database/sql/driver"
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -20,6 +21,20 @@ func (n *PhoneNumber) String() string {
 	}
 
 	return fmt.Sprintf("+%d-%d-%s", n.CountryCode, n.NationalNumber, n.Extension)
+}
+
+func (n *PhoneNumber) Scan(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+
+	b, ok := src.([]byte)
+	if !ok {
+		return errors.New(fmt.Sprintf("failed to parse %v into types.PhoneNumber", src))
+	}
+
+	_, err := fmt.Sscanf(string(b), "(%d,%d,%s)", &n.CountryCode, &n.NationalNumber, &n.Extension)
+	return err
 }
 
 func (n *PhoneNumber) Value() (driver.Value, error) {

@@ -2,6 +2,7 @@ package types
 
 import (
 	"database/sql/driver"
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -17,6 +18,21 @@ type Address struct {
 	Building string `json:"building"`
 	Room     string `json:"room"`
 	PostCode string `json:"post_code"`
+}
+
+func (a *Address) Scan(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+
+	b, ok := src.([]byte)
+	if !ok {
+		return errors.New(fmt.Sprintf("failed to parse %v into types.Address", src))
+	}
+
+	_, err := fmt.Sscanf(string(b), "(%s,%s,%s,%s,%s,%s,%s,%s)", &a.Country, &a.Province, &a.City, &a.District,
+		&a.Street, &a.Building, &a.Room, &a.PostCode)
+	return err
 }
 
 func (a *Address) Value() (driver.Value, error) {
