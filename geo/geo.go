@@ -1,6 +1,7 @@
 package geo
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"errors"
 	"fmt"
@@ -18,6 +19,9 @@ type Coordinate struct {
 	Latitude  float64 `json:"lat"`
 	Longitude float64 `json:"lng"`
 }
+
+var _ driver.Valuer = (*Coordinate)(nil)
+var _ sql.Scanner = (*Coordinate)(nil)
 
 func (c *Coordinate) Scan(src interface{}) error {
 	if src == nil {

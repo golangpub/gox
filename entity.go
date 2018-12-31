@@ -1,6 +1,7 @@
 package types
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"errors"
 	"fmt"
@@ -20,6 +21,9 @@ type BaseEntity struct {
 }
 
 type SQLBigInt big.Int
+
+var _ driver.Valuer = (*SQLBigInt)(nil)
+var _ sql.Scanner = (*SQLBigInt)(nil)
 
 func (i *SQLBigInt) Scan(src interface{}) error {
 	if src == nil {

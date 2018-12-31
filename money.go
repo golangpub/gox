@@ -1,6 +1,7 @@
 package types
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"errors"
 	"fmt"
@@ -14,6 +15,7 @@ const (
 )
 
 var _ driver.Valuer = (*Money)(nil)
+var _ sql.Scanner = (*Money)(nil)
 
 type Money struct {
 	Currency Currency `json:"currency"`

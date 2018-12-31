@@ -1,6 +1,7 @@
 package types
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"errors"
 	"fmt"
@@ -8,6 +9,7 @@ import (
 )
 
 var _ driver.Valuer = (*PhoneNumber)(nil)
+var _ sql.Scanner = (*PhoneNumber)(nil)
 
 type Address struct {
 	Country  string `json:"country"`
