@@ -45,6 +45,10 @@ func (i *SQLBigInt) Scan(src interface{}) error {
 		return errors.New(fmt.Sprintf("failed to parse %v into big.Int", src))
 	}
 
+	if s == "null" {
+		return nil
+	}
+
 	_, ok = (*big.Int)(i).SetString(s, 10)
 	if !ok {
 		return errors.New(fmt.Sprintf("failed to parse %v into big.Int", src))

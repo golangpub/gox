@@ -41,7 +41,11 @@ func (c *Coordinate) Scan(src interface{}) error {
 		return errors.New(fmt.Sprintf("failed to parse %v into geo.Coordinate", src))
 	}
 
-	_, err := fmt.Sscanf(s, "POINT(%f %f)", &c.Latitude, &c.Longitude)
+	if s == "null" {
+		return nil
+	}
+
+	_, err := fmt.Sscanf(s, "POINT(%f %f)", &c.Longitude, &c.Latitude)
 	if err != nil {
 		return errors.New(fmt.Sprintf("failed to parse %v into geo.Coordinate: %v", s, err))
 	}
@@ -52,7 +56,7 @@ func (c *Coordinate) Value() (driver.Value, error) {
 	if c == nil {
 		return nil, nil
 	}
-	return fmt.Sprintf("POINT(%f %f)", c.Latitude, c.Longitude), nil
+	return fmt.Sprintf("POINT(%f %f)", c.Longitude, c.Latitude), nil
 }
 
 type Area struct {

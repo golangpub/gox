@@ -41,6 +41,10 @@ func (n *PhoneNumber) Scan(src interface{}) error {
 		return errors.New(fmt.Sprintf("failed to parse %v into types.PhoneNumber", src))
 	}
 
+	if s == "null" {
+		return nil
+	}
+
 	_, err := fmt.Sscanf(s, "(%d,%d,%s)", &n.CountryCode, &n.NationalNumber, &n.Extension)
 	return err
 }
