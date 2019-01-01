@@ -202,7 +202,7 @@ func (a *AnyList) Scan(src interface{}) error {
 	}
 
 	if b, ok := src.([]byte); ok {
-		return json.Unmarshal(b, a.list)
+		return json.Unmarshal(b, &a.list)
 	} else {
 		return errors.New(fmt.Sprintf("failed to parse %v to types.AnyList", src))
 	}
