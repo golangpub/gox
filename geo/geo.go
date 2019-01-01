@@ -41,10 +41,6 @@ func (c *Coordinate) Scan(src interface{}) error {
 		return errors.New(fmt.Sprintf("failed to parse %v into geo.Coordinate", src))
 	}
 
-	if s == "null" {
-		return nil
-	}
-
 	_, err := fmt.Sscanf(s, "POINT(%f %f)", &c.Longitude, &c.Latitude)
 	if err != nil {
 		return errors.New(fmt.Sprintf("failed to parse %v into geo.Coordinate: %v", s, err))

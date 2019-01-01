@@ -161,9 +161,6 @@ func (a *Any) Scan(src interface{}) error {
 	}
 
 	if b, ok := src.([]byte); ok {
-		if string(b) == "null" {
-			return nil
-		}
 		return json.Unmarshal(b, a)
 	} else {
 		return errors.New(fmt.Sprintf("failed to parse %v to types.Any", src))
@@ -205,9 +202,6 @@ func (a *AnyList) Scan(src interface{}) error {
 	}
 
 	if b, ok := src.([]byte); ok {
-		if string(b) == "null" {
-			return nil
-		}
 		return json.Unmarshal(b, &a.list)
 	} else {
 		return errors.New(fmt.Sprintf("failed to parse %v to types.AnyList", src))
