@@ -214,3 +214,11 @@ func (a *AnyList) Value() (driver.Value, error) {
 	}
 	return json.Marshal(a.list)
 }
+
+func (a *AnyList) UnmarshalJSON(b []byte) error {
+	return json.Unmarshal(b, &a.list)
+}
+
+func (a *AnyList) MarshalJSON() ([]byte, error) {
+	return json.Marshal(a.list)
+}

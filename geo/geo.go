@@ -28,13 +28,24 @@ func (c *Coordinate) Scan(src interface{}) error {
 		return nil
 	}
 
-	b, ok := src.([]byte)
+	s, ok := src.(string)
+	if !ok {
+		var b []byte
+		b, ok = src.([]byte)
+		if ok {
+			s = string(b)
+		}
+	}
+
 	if !ok {
 		return errors.New(fmt.Sprintf("failed to parse %v into geo.Coordinate", src))
 	}
 
-	_, err := fmt.Sscanf(string(b), "POINT(%d %d)", &c.Latitude, &c.Longitude)
-	return err
+	_, err := fmt.Sscanf(s, "POINT(%f %f)", &c.Latitude, &c.Longitude)
+	if err != nil {
+		return errors.New(fmt.Sprintf("failed to parse %v into geo.Coordinate: %v", s, err))
+	}
+	return nil
 }
 
 func (c *Coordinate) Value() (driver.Value, error) {

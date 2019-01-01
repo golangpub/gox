@@ -28,12 +28,20 @@ func (n *PhoneNumber) Scan(src interface{}) error {
 		return nil
 	}
 
-	b, ok := src.([]byte)
+	s, ok := src.(string)
+	if !ok {
+		var b []byte
+		b, ok = src.([]byte)
+		if ok {
+			s = string(b)
+		}
+	}
+
 	if !ok {
 		return errors.New(fmt.Sprintf("failed to parse %v into types.PhoneNumber", src))
 	}
 
-	_, err := fmt.Sscanf(string(b), "(%d,%d,%s)", &n.CountryCode, &n.NationalNumber, &n.Extension)
+	_, err := fmt.Sscanf(s, "(%d,%d,%s)", &n.CountryCode, &n.NationalNumber, &n.Extension)
 	return err
 }
 
