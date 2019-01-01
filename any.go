@@ -174,7 +174,27 @@ func (a *Any) Value() (driver.Value, error) {
 	return json.Marshal(a)
 }
 
-type AnyList []*Any
+type AnyList struct {
+	list []*Any
+}
+
+func NewAnyList(items ...*Any) *AnyList {
+	return &AnyList{
+		list: items,
+	}
+}
+
+func (a *AnyList) Size() int {
+	return len(a.list)
+}
+
+func (a *AnyList) Get(index int) *Any {
+	return a.list[index]
+}
+
+func (a *AnyList) Remove(index int) {
+	a.list = append(a.list[0:index], a.list[index+1:]...)
+}
 
 func (a *AnyList) Scan(src interface{}) error {
 	if src == nil {
@@ -182,7 +202,7 @@ func (a *AnyList) Scan(src interface{}) error {
 	}
 
 	if b, ok := src.([]byte); ok {
-		return json.Unmarshal(b, a)
+		return json.Unmarshal(b, a.list)
 	} else {
 		return errors.New(fmt.Sprintf("failed to parse %v to types.AnyList", src))
 	}
@@ -192,5 +212,5 @@ func (a *AnyList) Value() (driver.Value, error) {
 	if a == nil {
 		return nil, nil
 	}
-	return json.Marshal(a)
+	return json.Marshal(a.list)
 }
