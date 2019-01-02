@@ -12,6 +12,9 @@ type Error interface {
 }
 
 func NewError(code int, msg string) Error {
+	if len(msg) == 0 {
+		msg = http.StatusText(code)
+	}
 	return internal.NewError(code, msg)
 }
 
