@@ -17,10 +17,10 @@ type PhoneNumber struct {
 
 func (n *PhoneNumber) String() string {
 	if len(n.Extension) == 0 {
-		return fmt.Sprintf("+%d-%d", n.CountryCode, n.NationalNumber)
+		return fmt.Sprintf("+%d%d", n.CountryCode, n.NationalNumber)
 	}
 
-	return fmt.Sprintf("+%d-%d-%s", n.CountryCode, n.NationalNumber, n.Extension)
+	return fmt.Sprintf("+%d%d-%s", n.CountryCode, n.NationalNumber, n.Extension)
 }
 
 func (n *PhoneNumber) Scan(src interface{}) error {
