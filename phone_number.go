@@ -41,8 +41,11 @@ func (n *PhoneNumber) Scan(src interface{}) error {
 		return errors.New(fmt.Sprintf("failed to parse %v into types.PhoneNumber", src))
 	}
 
-	_, err := fmt.Sscanf(s, "(%d,%d,%s)", &n.CountryCode, &n.NationalNumber, &n.Extension)
-	return err
+	k, err := fmt.Sscanf(s, "(%d,%d,%s)", &n.CountryCode, &n.NationalNumber, &n.Extension)
+	if k == 3 {
+		return nil
+	}
+	return errors.New(fmt.Sprintf("failed to parse %s into types.PhoneNumber: %v", s, err))
 }
 
 func (n *PhoneNumber) Value() (driver.Value, error) {

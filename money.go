@@ -36,8 +36,11 @@ func (m *Money) Scan(src interface{}) error {
 		return errors.New(fmt.Sprintf("failed to parse %v into types.Money", src))
 	}
 
-	_, err := fmt.Sscanf(string(b), "(%s,%d)", &m.Currency, &m.Amount)
-	return err
+	k, err := fmt.Sscanf(string(b), "(%s,%d)", &m.Currency, &m.Amount)
+	if k == 2 {
+		return nil
+	}
+	return errors.New(fmt.Sprintf("failed to parse %v into types.Money: %v", string(b), err))
 }
 
 func (m *Money) Value() (driver.Value, error) {

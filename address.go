@@ -32,9 +32,12 @@ func (a *Address) Scan(src interface{}) error {
 		return errors.New(fmt.Sprintf("failed to parse %v into types.Address", src))
 	}
 
-	_, err := fmt.Sscanf(string(b), "(%s,%s,%s,%s,%s,%s,%s,%s)", &a.Country, &a.Province, &a.City, &a.District,
+	k, err := fmt.Sscanf(string(b), "(%s,%s,%s,%s,%s,%s,%s,%s)", &a.Country, &a.Province, &a.City, &a.District,
 		&a.Street, &a.Building, &a.Room, &a.PostCode)
-	return err
+	if k == 8 {
+		return nil
+	}
+	return errors.New(fmt.Sprintf("failed to parse %v into types.Address: %v", string(b), err))
 }
 
 func (a *Address) Value() (driver.Value, error) {
