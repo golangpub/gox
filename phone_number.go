@@ -37,15 +37,23 @@ func (n *PhoneNumber) Scan(src interface{}) error {
 		}
 	}
 
-	if !ok {
+	if !ok || len(s) < 10 {
 		return errors.New(fmt.Sprintf("failed to parse %v into types.PhoneNumber", src))
 	}
 
-	k, err := fmt.Sscanf(s, "(%d,%d,%s)", &n.CountryCode, &n.NationalNumber, &n.Extension)
-	if k == 3 {
-		return nil
+	s = s[1 : len(s)-1]
+	if s[len(s)-1] == ',' {
+		k, _ := fmt.Sscanf(s, "%d,%d", &n.CountryCode, &n.NationalNumber)
+		if k == 2 {
+			return nil
+		}
+	} else {
+		k, _ := fmt.Sscanf(s, "%d,%d,%s", &n.CountryCode, &n.NationalNumber, &n.Extension)
+		if k == 3 {
+			return nil
+		}
 	}
-	return errors.New(fmt.Sprintf("failed to parse %s into types.PhoneNumber: %v", s, err))
+	return errors.New(fmt.Sprintf("failed to parse %s into types.PhoneNumber", s))
 }
 
 func (n *PhoneNumber) Value() (driver.Value, error) {
