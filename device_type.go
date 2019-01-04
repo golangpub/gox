@@ -1,6 +1,6 @@
 package types
 
-type DeviceType string
+type DeviceType = string
 
 const (
 	IOS     = "ios"
