@@ -185,10 +185,16 @@ func NewAnyList(items ...*Any) *AnyList {
 }
 
 func (a *AnyList) Size() int {
+	if a == nil {
+		return 0
+	}
 	return len(a.list)
 }
 
 func (a *AnyList) Get(index int) *Any {
+	if a == nil {
+		return nil
+	}
 	return a.list[index]
 }
 
