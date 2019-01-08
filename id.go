@@ -159,8 +159,20 @@ func NewSnakeIDGenerator(shardBitSize, seqBitSize uint, timestampGetter, shardID
 		panic("seqBitSize should be [1,16]")
 	}
 
+	if seqNumGetter == nil {
+		panic("seqNumGetter is nil")
+	}
+
+	if timestampGetter == nil {
+		panic("timestampGetter is nil")
+	}
+
 	if shardBitSize < 0 || shardBitSize > 8 {
 		panic("shardBitSize should be [0,8]")
+	}
+
+	if shardBitSize > 0 && shardIDGetter == nil {
+		panic("shardIDGetter is nil")
 	}
 
 	if shardBitSize+seqBitSize >= 20 {
@@ -182,7 +194,9 @@ func (g *SnakeIDGenerator) Clone() *SnakeIDGenerator {
 
 func (g *SnakeIDGenerator) NextID() ID {
 	id := ID(g.seqNumGetter.GetNumber() % (1 << g.seqBitSize))
-	id |= ID(KeepRightBits(g.shardIDGetter.GetNumber(), g.shardBitSize) << g.seqBitSize)
+	if g.shardBitSize > 0 {
+		id |= ID(KeepRightBits(g.shardIDGetter.GetNumber(), g.shardBitSize) << g.seqBitSize)
+	}
 	id |= ID(g.timestampGetter.GetNumber() << (g.seqBitSize + g.shardBitSize))
 	return ID(id)
 }
