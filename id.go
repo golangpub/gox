@@ -145,6 +145,17 @@ func (i ID) PrettyString() string {
 	}
 }
 
+const minorSeqSize = 4
+const minorMajorSize = 16
+
+func (i ID) NextMinorID() ID {
+	minorID := NextSecond() << (minorMajorSize + minorSeqSize)
+	k := LeftMultiRight(int64(i))
+	minorID |= KeepRightBits(k, minorMajorSize) << minorSeqSize
+	minorID |= NextSequence() % (1 << minorSeqSize)
+	return ID(minorID)
+}
+
 // ------------------------------
 // IDGenerator
 
@@ -240,5 +251,3 @@ var GetShardIDByIP NumberGetterFunc = func() int64 {
 	}
 	return num
 }
-
-
