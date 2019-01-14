@@ -15,4 +15,8 @@ func (c *Counter) GetNumber() int64 {
 	return c.Next()
 }
 
-var DefaultCounter = &Counter{}
+var defaultCounter = &Counter{}
+
+func NextSequence() int64 {
+	return defaultCounter.Next()
+}

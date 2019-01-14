@@ -7,10 +7,21 @@ import (
 	"time"
 )
 
+const prettyTableSize = 34
+
+var prettyTable = [prettyTableSize]byte{
+	'1', '2', '3', '4', '5', '6', '7', '8', '9',
+	'A', 'B', 'C', 'D', 'E', 'F', 'G',
+	'H', 'I', 'J', 'K', 'L', 'M', 'N',
+	'P', 'Q',
+	'R', 'S', 'T',
+	'U', 'V', 'W',
+	'X', 'Y', 'Z'}
+
 // Change to int64, as https://github.com/golang/go/issues/12401 is fixed in golang v1.6
 type ID int64
 
-// JSON中数字表示为double，double整数部分最大值为2^53，由于部分JSON库默认不支持int64，因此控制在53bit内比较好
+// JSON中若没有指定类型，number默认解析成double，double整数部分最大值为2^53，因此控制在53bit内比较好
 // id由time+shard+seq组成
 // 若业务多可扩充shard，并发高可扩充seq. 由于time在最高位,故扩展后的id集合与原id集合不会出现交集,可保持全局唯一
 
@@ -18,42 +29,11 @@ const DefaultShardBitSize = 8 // 最多128个shard
 const DefaultSeqBitSize = 8   // 每个shard每ms不能超过128次调用
 
 var epoch time.Time
-var DefaultSnakeIDGenerator IDGenerator
+var defaultIDGenerator IDGenerator
 
 func init() {
-	epoch = time.Date(2018, time.January, 2, 15, 4, 5, 0, time.UTC)
-	DefaultSnakeIDGenerator = NewSnakeIDGenerator(DefaultShardBitSize, DefaultSeqBitSize, NextMilliseconds, GetShardIDByIP, DefaultCounter)
-}
-
-// NewID returns new ID created by default id generator
-func NextID() ID {
-	return DefaultSnakeIDGenerator.NextID()
-}
-
-// ShortString returns a short representation of id
-func (i ID) ShortString() string {
-	if i < 0 {
-		panic("invalid id")
-	}
-	var bytes [16]byte
-	k := int64(i)
-	n := 15
-	for {
-		j := k % 62
-		switch {
-		case j <= 9:
-			bytes[n] = byte('0' + j)
-		case j <= 35:
-			bytes[n] = byte('A' + j - 10)
-		default:
-			bytes[n] = byte('a' + j - 36)
-		}
-		k /= 62
-		if k == 0 {
-			return string(bytes[n:])
-		}
-		n--
-	}
+	epoch = time.Date(2019, time.January, 2, 15, 4, 5, 0, time.UTC)
+	defaultIDGenerator = NewSnakeIDGenerator(DefaultShardBitSize, DefaultSeqBitSize, NextMilliseconds, GetShardIDByIP, defaultCounter)
 }
 
 func ParseShortID(s string) (ID, error) {
@@ -78,36 +58,6 @@ func ParseShortID(s string) (ID, error) {
 		k = k*62 + v
 	}
 	return ID(k), nil
-}
-
-const prettyTableSize = 34
-
-var prettyTable = [prettyTableSize]byte{
-	'1', '2', '3', '4', '5', '6', '7', '8', '9',
-	'A', 'B', 'C', 'D', 'E', 'F', 'G',
-	'H', 'I', 'J', 'K', 'L', 'M', 'N',
-	'P', 'Q',
-	'R', 'S', 'T',
-	'U', 'V', 'W',
-	'X', 'Y', 'Z'}
-
-// PrettyString returns a incasesensitive pretty representation of id
-func (i ID) PrettyString() string {
-	if i < 0 {
-		panic("invalid id")
-	}
-	var bytes [16]byte
-	k := int64(i)
-	n := 15
-
-	for {
-		bytes[n] = prettyTable[k%prettyTableSize]
-		k /= prettyTableSize
-		if k == 0 {
-			return string(bytes[n:])
-		}
-		n--
-	}
 }
 
 func ParsePrettyID(s string) (ID, error) {
@@ -143,6 +93,67 @@ func searchPrettyTable(v byte) int {
 	}
 
 	return -1
+}
+
+// NewID returns new ID created by default id generator
+func NextID() ID {
+	return defaultIDGenerator.NextID()
+}
+
+// ShortString returns a short representation of id
+func (i ID) ShortString() string {
+	if i < 0 {
+		panic("invalid id")
+	}
+	var bytes [16]byte
+	k := int64(i)
+	n := 15
+	for {
+		j := k % 62
+		switch {
+		case j <= 9:
+			bytes[n] = byte('0' + j)
+		case j <= 35:
+			bytes[n] = byte('A' + j - 10)
+		default:
+			bytes[n] = byte('a' + j - 36)
+		}
+		k /= 62
+		if k == 0 {
+			return string(bytes[n:])
+		}
+		n--
+	}
+}
+
+// PrettyString returns a incasesensitive pretty representation of id
+func (i ID) PrettyString() string {
+	if i < 0 {
+		panic("invalid id")
+	}
+	var bytes [16]byte
+	k := int64(i)
+	n := 15
+
+	for {
+		bytes[n] = prettyTable[k%prettyTableSize]
+		k /= prettyTableSize
+		if k == 0 {
+			return string(bytes[n:])
+		}
+		n--
+	}
+}
+
+// ------------------------------
+// IDGenerator
+
+type IDGenerator interface {
+	NextID() ID
+}
+
+type NumberGetter interface {
+	GetNumber() int64
 }
 
 type SnakeIDGenerator struct {
@@ -193,20 +204,12 @@ func (g *SnakeIDGenerator) Clone() *SnakeIDGenerator {
 }
 
 func (g *SnakeIDGenerator) NextID() ID {
-	id := ID(g.seqNumGetter.GetNumber() % (1 << g.seqBitSize))
+	id := g.timestampGetter.GetNumber() << (g.seqBitSize + g.shardBitSize)
 	if g.shardBitSize > 0 {
-		id |= ID(KeepRightBits(g.shardIDGetter.GetNumber(), g.shardBitSize) << g.seqBitSize)
+		id |= g.shardIDGetter.GetNumber() << g.seqBitSize
 	}
-	id |= ID(g.timestampGetter.GetNumber() << (g.seqBitSize + g.shardBitSize))
+	id |= g.seqNumGetter.GetNumber() % (1 << g.seqBitSize)
 	return ID(id)
-}
-
-type IDGenerator interface {
-	NextID() ID
-}
-
-type NumberGetter interface {
-	GetNumber() int64
 }
 
 type NumberGetterFunc func() int64
@@ -238,6 +241,4 @@ var GetShardIDByIP NumberGetterFunc = func() int64 {
 	return num
 }
 
-func KeepRightBits(i int64, bitSize uint) int64 {
-	return ((i >> bitSize) << bitSize) ^ i
-}
+

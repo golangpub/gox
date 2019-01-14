@@ -1,5 +1,13 @@
 package types
 
+func init() {
+	RegisterAny(&Image{})
+	RegisterAny(&Video{})
+	RegisterAny(&Audio{})
+	RegisterAny(&WebPage{})
+	RegisterAny(&File{})
+}
+
 type Image struct {
 	URL    string `json:"url"`
 	Width  int    `json:"width"`
