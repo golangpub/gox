@@ -14,8 +14,34 @@ type EntityTime struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+func (e *EntityTime) Timestamp() *EntityTimestamp {
+	return &EntityTimestamp{
+		CreatedAt: e.CreatedAt.Unix(),
+		UpdatedAt: e.UpdatedAt.Unix(),
+	}
+}
+
+type EntityTimestamp struct {
+	CreatedAt int64 `json:"created_at"`
+	UpdatedAt int64 `json:"updated_at"`
+}
+
 type BaseEntity struct {
 	EntityTime
+	ID      ID   `json:"id"`
+	Deleted bool `json:"-"`
+}
+
+func (e *BaseEntity) Value() *BaseEntityValue {
+	return &BaseEntityValue{
+		EntityTimestamp: *e.EntityTime.Timestamp(),
+		ID:              e.ID,
+		Deleted:         e.Deleted,
+	}
+}
+
+type BaseEntityValue struct {
+	EntityTimestamp
 	ID      ID   `json:"id"`
 	Deleted bool `json:"-"`
 }
@@ -57,4 +83,8 @@ func (i *SQLBigInt) Value() (driver.Value, error) {
 		return nil, nil
 	}
 	return (*big.Int)(i).String(), nil
+}
+
+func (i *SQLBigInt) Int() *big.Int {
+	return (*big.Int)(i)
 }
