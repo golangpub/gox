@@ -1,7 +1,10 @@
 package types
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
+	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -154,6 +157,11 @@ func (i ID) NextMinorID() ID {
 	minorID |= KeepRightBits(k, minorMajorSize) << minorSeqSize
 	minorID |= NextSequence() % (1 << minorSeqSize)
 	return ID(minorID)
+}
+
+func (i ID) Salt(v string) string {
+	sum := md5.Sum([]byte(fmt.Sprintf("%s%d", v, i)))
+	return hex.EncodeToString(sum[:])
 }
 
 // ------------------------------
