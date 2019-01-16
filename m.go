@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/json"
+	"math/big"
 	"reflect"
 	"strings"
 	"time"
@@ -234,6 +235,60 @@ func (m M) Float64s(key string) []float64 {
 
 	return result
 }
+
+func (m M) BigInt(key string) *big.Int {
+	s := m.String(key)
+	n := big.NewInt(0)
+	_, ok := n.SetString(s, 10)
+	if !ok {
+		_, ok = n.SetString(s, 16)
+	}
+
+	if ok {
+		return n
+	}
+	return nil
+}
+
+func (m M) DefaultBigInt(key string, defaultVal *big.Int) *big.Int {
+	if n := m.BigInt(key); n != nil {
+		return n
+	}
+	return defaultVal
+}
+
+func (m M) MustBigInt(key string) *big.Int {
+	if n := m.BigInt(key); n != nil {
+		return n
+	}
+	panic("No big.Int value for key:" + key)
+}
+
+
+func (m M) BigFloat(key string) *big.Float {
+	s := m.String(key)
+	n := big.NewFloat(0)
+	_, ok := n.SetString(s)
+	if ok {
+		return n
+	}
+	return nil
+}
+
+func (m M) DefaultBigFloat(key string, defaultVal *big.Float) *big.Float {
+	if n := m.BigFloat(key); n != nil {
+		return n
+	}
+	return defaultVal
+}
+
+func (m M) MustBigFloat(key string) *big.Float {
+	if n := m.BigFloat(key); n != nil {
+		return n
+	}
+	panic("No big.Float value for key:" + key)
+}
+
 
 func (m M) Map(key string) M {
 	switch val := m.Value(key).(type) {
