@@ -12,6 +12,9 @@ type Currency string
 const (
 	CNY Currency = "CNY"
 	USD Currency = "USD"
+
+	ETH Currency = "ETH"
+	BTC Currency = "BTC"
 )
 
 var _ driver.Valuer = (*Money)(nil)
