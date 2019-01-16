@@ -2,8 +2,10 @@ package types
 
 import (
 	"encoding/json"
+	"github.com/nyaruka/phonenumbers"
 	"math/big"
 	"reflect"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -355,6 +357,29 @@ func (m M) MustCurrency(key string) Currency {
 		return Currency(strings.ToUpper(s))
 	}
 	panic("No currency for key: " + key)
+}
+
+func (m M) PhoneNumber(key string) *PhoneNumber {
+	parsedNumber, err := phonenumbers.Parse(m.String(key), "")
+	if err != nil || !phonenumbers.IsValidNumber(parsedNumber) {
+		return nil
+	}
+
+	return &PhoneNumber{
+		CountryCode:    int(parsedNumber.GetCountryCode()),
+		NationalNumber: int64(parsedNumber.GetNationalNumber()),
+		Extension:      parsedNumber.GetExtension(),
+	}
+}
+
+var emailRegexp = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+
+func (m M) Email(key string) string {
+	s := m.String(key)
+	if emailRegexp.MatchString(s) {
+		return s
+	}
+	return ""
 }
 
 //
