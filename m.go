@@ -264,7 +264,6 @@ func (m M) MustBigInt(key string) *big.Int {
 	panic("No big.Int value for key:" + key)
 }
 
-
 func (m M) BigFloat(key string) *big.Float {
 	s := m.String(key)
 	n := big.NewFloat(0)
@@ -288,7 +287,6 @@ func (m M) MustBigFloat(key string) *big.Float {
 	}
 	panic("No big.Float value for key:" + key)
 }
-
 
 func (m M) Map(key string) M {
 	switch val := m.Value(key).(type) {
@@ -339,6 +337,24 @@ func (m M) DateInLocation(key string, location *time.Location) (time.Time, bool)
 	}
 
 	return time.Time{}, false
+}
+
+func (m M) Currency(key string) Currency {
+	return Currency(strings.ToUpper(m.String(key)))
+}
+
+func (m M) DefaultCurrency(key string, defaultValue Currency) Currency {
+	if s := m.String(key); len(s) > 0 {
+		return Currency(strings.ToUpper(s))
+	}
+	return defaultValue
+}
+
+func (m M) MustCurrency(key string) Currency {
+	if s := m.String(key); len(s) > 0 {
+		return Currency(strings.ToUpper(s))
+	}
+	panic("No currency for key: " + key)
 }
 
 //
