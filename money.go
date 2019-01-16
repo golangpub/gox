@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 	"errors"
 	"fmt"
+	"strings"
 )
 
 type Currency string
@@ -16,6 +17,10 @@ const (
 	ETH Currency = "ETH"
 	BTC Currency = "BTC"
 )
+
+func (c Currency) Upper() Currency {
+	return Currency(strings.ToUpper(string(c)))
+}
 
 var _ driver.Valuer = (*Money)(nil)
 var _ sql.Scanner = (*Money)(nil)
