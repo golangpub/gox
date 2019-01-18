@@ -6,7 +6,6 @@ type EntityTime struct {
 }
 
 type BaseEntity struct {
-	ID        ID    `json:"id"`
-	CreatedAt int64 `json:"created_at"`
-	UpdatedAt int64 `json:"-"`
+	ID ID `json:"id"`
+	EntityTime
 }

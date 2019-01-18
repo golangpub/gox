@@ -14,7 +14,7 @@ type SQLRowTime struct {
 	UpdatedAt time.Time `json:"-"`
 }
 
-func (e *SQLRowTime) Timestamp() *EntityTime {
+func (e *SQLRowTime) EntityTime() *EntityTime {
 	return &EntityTime{
 		CreatedAt: e.CreatedAt.Unix(),
 		UpdatedAt: e.UpdatedAt.Unix(),
@@ -22,17 +22,15 @@ func (e *SQLRowTime) Timestamp() *EntityTime {
 }
 
 type SQLBaseRow struct {
-	ID        ID        `json:"-"`
-	CreatedAt time.Time `json:"-"`
-	UpdatedAt time.Time `json:"-"`
-	Deleted   bool      `json:"-"`
+	ID      ID   `json:"-"`
+	Deleted bool `json:"-"`
+	SQLRowTime
 }
 
 func (e *SQLBaseRow) Entity() *BaseEntity {
 	return &BaseEntity{
-		ID:        e.ID,
-		CreatedAt: e.CreatedAt.Unix(),
-		UpdatedAt: e.UpdatedAt.Unix(),
+		ID:         e.ID,
+		EntityTime: *e.SQLRowTime.EntityTime(),
 	}
 }
 
