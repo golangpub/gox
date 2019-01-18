@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/nyaruka/phonenumbers"
 	"math/big"
+	"net/url"
 	"reflect"
 	"regexp"
 	"strings"
@@ -342,25 +343,33 @@ func (m M) DateInLocation(key string, location *time.Location) (time.Time, bool)
 }
 
 func (m M) Currency(key string) Currency {
-	return Currency(strings.ToUpper(m.String(key)))
+	s := m.String(key)
+	s = strings.TrimSpace(s)
+	return Currency(strings.ToUpper(s))
 }
 
 func (m M) DefaultCurrency(key string, defaultValue Currency) Currency {
-	if s := m.String(key); len(s) > 0 {
+	s := m.String(key)
+	s = strings.TrimSpace(s)
+	if len(s) > 0 {
 		return Currency(strings.ToUpper(s))
 	}
 	return defaultValue
 }
 
 func (m M) MustCurrency(key string) Currency {
-	if s := m.String(key); len(s) > 0 {
+	s := m.String(key)
+	s = strings.TrimSpace(s)
+	if len(s) > 0 {
 		return Currency(strings.ToUpper(s))
 	}
 	panic("No currency for key: " + key)
 }
 
 func (m M) PhoneNumber(key string) *PhoneNumber {
-	parsedNumber, err := phonenumbers.Parse(m.String(key), "")
+	s := m.String(key)
+	s = strings.TrimSpace(s)
+	parsedNumber, err := phonenumbers.Parse(s, "")
 	if err != nil || !phonenumbers.IsValidNumber(parsedNumber) {
 		return nil
 	}
@@ -376,10 +385,21 @@ var emailRegexp = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0
 
 func (m M) Email(key string) string {
 	s := m.String(key)
+	s = strings.TrimSpace(s)
 	if emailRegexp.MatchString(s) {
 		return s
 	}
 	return ""
+}
+
+func (m M) URL(key string) string {
+	s := m.String(key)
+	s = strings.TrimSpace(s)
+	_, err := url.Parse(s)
+	if err != nil {
+		return ""
+	}
+	return s
 }
 
 //
