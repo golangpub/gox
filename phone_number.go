@@ -23,6 +23,23 @@ func (n *PhoneNumber) String() string {
 	return fmt.Sprintf("+%d%d-%s", n.CountryCode, n.NationalNumber, n.Extension)
 }
 
+func (n *PhoneNumber) MaskString() string {
+	nnBytes := []byte(fmt.Sprint(n.NationalNumber))
+	maskLen := (len(nnBytes) + 2) / 3
+	start := len(nnBytes) - 2*maskLen
+	for i := 0; i < maskLen; i++ {
+		nnBytes[start+i] = '*'
+	}
+
+	nn := string(nnBytes)
+
+	if len(n.Extension) == 0 {
+		return fmt.Sprintf("+%d%s", n.CountryCode, nn)
+	}
+
+	return fmt.Sprintf("+%d%s-%s", n.CountryCode, nn, n.Extension)
+}
+
 func (n *PhoneNumber) Scan(src interface{}) error {
 	if src == nil {
 		return nil
