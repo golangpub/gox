@@ -70,3 +70,20 @@ func IDsToInt64s(ids []ID) []int64 {
 
 	return a
 }
+
+func IDSliceToSet(ids []ID) map[ID]bool {
+	m := make(map[ID]bool, len(ids))
+	for _, v := range ids {
+		m[v] = true
+	}
+
+	return m
+}
+
+func IDSetToSlice(ids map[ID]bool) []ID {
+	a := make([]ID, 0, len(ids))
+	for id, _ := range ids {
+		a = append(a, id)
+	}
+	return a
+}
