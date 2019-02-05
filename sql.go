@@ -80,3 +80,7 @@ func (i *SQLBigInt) Int() *big.Int {
 type SQLRowScanner interface {
 	Scan(dest ...interface{}) error
 }
+
+type SQLExecutor interface {
+	Exec(query string, args ...interface{}) (sql.Result, error)
+}
