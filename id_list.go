@@ -1,4 +1,4 @@
-package types
+package gox
 
 type IDList []ID
 

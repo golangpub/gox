@@ -1,4 +1,4 @@
-package types
+package gox
 
 func CountBitsSize(i int64) uint {
 	var bitsSize uint = 0

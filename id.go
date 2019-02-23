@@ -1,4 +1,4 @@
-package types
+package gox
 
 import (
 	"crypto/md5"

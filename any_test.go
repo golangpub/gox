@@ -1,15 +1,15 @@
-package types_test
+package gox_test
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gopub/types"
+	"github.com/gopub/gox"
 	"testing"
 	"time"
 )
 
-func nextImage() *types.Image {
-	return &types.Image{
+func nextImage() *gox.Image {
+	return &gox.Image{
 		URL:    "https://www.image.com/" + fmt.Sprint(time.Now().Unix()),
 		Width:  200,
 		Height: 800,
@@ -17,8 +17,8 @@ func nextImage() *types.Image {
 	}
 }
 
-func nextVideo() *types.Video {
-	return &types.Video{
+func nextVideo() *gox.Video {
+	return &gox.Video{
 		URL:      "http://www.video.com/" + fmt.Sprint(time.Now().Unix()),
 		Format:   "rmvb",
 		Duration: 1230,
@@ -28,9 +28,9 @@ func nextVideo() *types.Video {
 }
 
 func TestID(t *testing.T) {
-	var v types.ID = 10
-	types.RegisterAny(types.ID(0))
-	a := types.NewAny(v)
+	var v gox.ID = 10
+	gox.RegisterAny(gox.ID(0))
+	a := gox.NewAny(v)
 	b, err := json.Marshal(a)
 	if err != nil {
 		t.Error(err)
@@ -39,25 +39,25 @@ func TestID(t *testing.T) {
 
 	t.Log(string(b))
 
-	var a2 *types.Any
+	var a2 *gox.Any
 	err = json.Unmarshal(b, &a2)
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
 	}
 
-	if v2, ok := a2.Val().(types.ID); !ok {
-		t.Error("expected types.ID")
+	if v2, ok := a2.Val().(gox.ID); !ok {
+		t.Error("expected gox.ID")
 		t.FailNow()
 	} else if v != v2 {
-		t.Error("expected equal types.ID")
+		t.Error("expected equal gox.ID")
 		t.FailNow()
 	}
 }
 
 func TestText(t *testing.T) {
 	v := "hello"
-	a := types.NewAny(v)
+	a := gox.NewAny(v)
 	b, err := json.Marshal(a)
 	if err != nil {
 		t.Error(err)
@@ -66,7 +66,7 @@ func TestText(t *testing.T) {
 
 	t.Log(string(b))
 
-	var a2 *types.Any
+	var a2 *gox.Any
 	err = json.Unmarshal(b, &a2)
 	if err != nil {
 		t.Error(err)
@@ -84,7 +84,7 @@ func TestText(t *testing.T) {
 
 func TestImage(t *testing.T) {
 	v := nextImage()
-	a := types.NewAny(v)
+	a := gox.NewAny(v)
 	b, err := json.Marshal(a)
 	if err != nil {
 		t.Error(err)
@@ -93,14 +93,14 @@ func TestImage(t *testing.T) {
 
 	t.Log(string(b))
 
-	var a2 *types.Any
+	var a2 *gox.Any
 	err = json.Unmarshal(b, &a2)
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
 	}
 
-	if v2, ok := a2.Val().(*types.Image); !ok {
+	if v2, ok := a2.Val().(*gox.Image); !ok {
 		t.Error("expected Image")
 		t.FailNow()
 	} else if *v != *v2 {
@@ -111,7 +111,7 @@ func TestImage(t *testing.T) {
 
 func TestVideo(t *testing.T) {
 	v := nextVideo()
-	a := types.NewAny(v)
+	a := gox.NewAny(v)
 	b, err := json.Marshal(a)
 	if err != nil {
 		t.Error(err)
@@ -120,14 +120,14 @@ func TestVideo(t *testing.T) {
 
 	t.Log(string(b))
 
-	var a2 *types.Any
+	var a2 *gox.Any
 	err = json.Unmarshal(b, &a2)
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
 	}
 
-	if v2, ok := a2.Val().(*types.Video); !ok {
+	if v2, ok := a2.Val().(*gox.Video); !ok {
 		t.Error("expected Video")
 		t.FailNow()
 	} else if *v.Image != *v2.Image || v.URL != v2.URL || v.Size != v2.Size || v.Format != v2.Format || v.Duration != v2.Duration {
@@ -138,10 +138,10 @@ func TestVideo(t *testing.T) {
 
 func TestArray(t *testing.T) {
 
-	var items []*types.Any
-	items = append(items, types.NewAny("hello"))
-	items = append(items, types.NewAny(nextImage()))
-	items = append(items, types.NewAny(nextVideo()))
+	var items []*gox.Any
+	items = append(items, gox.NewAny("hello"))
+	items = append(items, gox.NewAny(nextImage()))
+	items = append(items, gox.NewAny(nextVideo()))
 	b, err := json.Marshal(items)
 	if err != nil {
 		t.Error(err)
@@ -149,7 +149,7 @@ func TestArray(t *testing.T) {
 	}
 	t.Log(string(b))
 
-	var items2 []*types.Any
+	var items2 []*gox.Any
 	err = json.Unmarshal(b, &items2)
 	if err != nil {
 		t.Error(err)
@@ -160,13 +160,13 @@ func TestArray(t *testing.T) {
 		t.FailNow()
 	}
 
-	if *items[1].Val().(*types.Image) != *items2[1].Val().(*types.Image) {
+	if *items[1].Val().(*gox.Image) != *items2[1].Val().(*gox.Image) {
 		t.FailNow()
 	}
 
 	{
-		v := items[2].Val().(*types.Video)
-		v2 := items2[2].Val().(*types.Video)
+		v := items[2].Val().(*gox.Video)
+		v2 := items2[2].Val().(*gox.Video)
 		if *v.Image != *v2.Image || v.URL != v2.URL || v.Size != v2.Size || v.Format != v2.Format || v.Duration != v2.Duration {
 			t.Error("expected equal video value")
 			t.FailNow()

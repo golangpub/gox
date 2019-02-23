@@ -1,4 +1,4 @@
-package types
+package gox
 
 import (
 	"encoding/json"
@@ -6,7 +6,6 @@ import (
 	"math/big"
 	"net/url"
 	"reflect"
-	"regexp"
 	"strings"
 	"time"
 )
@@ -380,8 +379,6 @@ func (m M) PhoneNumber(key string) *PhoneNumber {
 		Extension:      parsedNumber.GetExtension(),
 	}
 }
-
-var emailRegexp = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
 func (m M) Email(key string) string {
 	s := m.String(key)

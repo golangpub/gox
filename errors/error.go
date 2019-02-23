@@ -1,7 +1,7 @@
 package errors
 
 import (
-	"github.com/gopub/types/errors/internal"
+	"github.com/gopub/gox/errors/internal"
 	"net/http"
 )
 
