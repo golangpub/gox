@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package gopub.protobuf;
+
+option go_package = "github.com/gopub/gox/protobuf/base";
+
+message VoidValue {
+
+}
+
+message BoolValue {
+    bool value = 1;
+}
+
+message Int64Value {
+    int64 value = 1;
+}
+
+message Float64Value {
+    int64 value = 1;
+}
+
+message Int64List {
+    repeated int64 value = 1;
+}
+
+message Float64List {
+    repeated int64 value = 1;
+}
+
+message StringValue {
+    string value = 1;
+}
+
+message StringList {
+    repeated string value = 1;
+}
+
+message ListQuery {
+    int64 since_id = 1;
+    int32 count = 2;
+}
+
+message Area {
+    double min_lat = 1;
+    double max_lat = 2;
+    double min_lng = 3;
+    double max_lng = 4;
+}
+
+message Coordinate {
+    double longitude = 1;
+    double latitude = 2;
+}
+
+message PhoneNumber {
+    int32 country_code = 1;
+    int64 national_number = 2;
+    string extension = 3;
+}
