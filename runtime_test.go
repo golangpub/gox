@@ -53,13 +53,13 @@ func TestRenew(t *testing.T) {
 	}
 }
 
-type Address struct {
+type AddressInfo struct {
 	City string
 }
 
 type User struct {
 	Name string
-	*Address
+	*AddressInfo
 }
 
 type Topic struct {
