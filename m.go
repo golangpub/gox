@@ -68,6 +68,8 @@ func (m M) String(key string) string {
 	switch v := m.Value(key).(type) {
 	case string:
 		return v
+	case json.Number:
+		return string(v)
 	default:
 		return ""
 	}
@@ -249,6 +251,11 @@ func (m M) BigInt(key string) *big.Int {
 	if ok {
 		return n
 	}
+
+	if k, err := ParseInt(m[key]); err == nil {
+		return big.NewInt(k)
+	}
+
 	return nil
 }
 
@@ -273,6 +280,11 @@ func (m M) BigFloat(key string) *big.Float {
 	if ok {
 		return n
 	}
+
+	if k, err := ParseFloat(m[key]); err == nil {
+		return big.NewFloat(k)
+	}
+
 	return nil
 }
 
