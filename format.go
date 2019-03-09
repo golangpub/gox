@@ -2,6 +2,7 @@ package gox
 
 import (
 	"errors"
+	"github.com/gopub/gox/protobuf/base"
 	"github.com/nyaruka/phonenumbers"
 	"regexp"
 )
@@ -36,4 +37,20 @@ func ParsePhoneNumber(s string) (*PhoneNumber, error) {
 	}
 
 	return nil, errors.New("invalid phone number")
+}
+
+func FromPBPhoneNumber(pn *base.PhoneNumber) *PhoneNumber {
+	return &PhoneNumber{
+		CountryCode:    int(pn.CountryCode),
+		NationalNumber: pn.NationalNumber,
+		Extension:      pn.Extension,
+	}
+}
+
+func FromPBPhoneNumbers(pns []*base.PhoneNumber) []*PhoneNumber {
+	l := make([]*PhoneNumber, len(pns))
+	for i, pn := range pns {
+		l[i] = FromPBPhoneNumber(pn)
+	}
+	return l
 }
