@@ -3,7 +3,6 @@ package geo
 import (
 	"database/sql"
 	"database/sql/driver"
-	"errors"
 	"fmt"
 	"math"
 )
@@ -38,7 +37,7 @@ func (c *Coordinate) Scan(src interface{}) error {
 	}
 
 	if !ok {
-		return errors.New(fmt.Sprintf("failed to parse %v into geo.Coordinate", src))
+		return fmt.Errorf("failed to parse %v into geo.Coordinate", src)
 	}
 
 	k, err := fmt.Sscanf(s, "POINT(%f %f)", &c.Longitude, &c.Latitude)
@@ -46,7 +45,7 @@ func (c *Coordinate) Scan(src interface{}) error {
 		return nil
 	}
 
-	return errors.New(fmt.Sprintf("failed to parse %v into geo.Coordinate: %v", s, err))
+	return fmt.Errorf("failed to parse %v into geo.Coordinate: %v", s, err)
 }
 
 func (c *Coordinate) Value() (driver.Value, error) {

@@ -3,7 +3,6 @@ package gox
 import (
 	"database/sql"
 	"database/sql/driver"
-	"errors"
 	"fmt"
 	"math/big"
 	"time"
@@ -56,12 +55,12 @@ func (i *SQLBigInt) Scan(src interface{}) error {
 	}
 
 	if !ok {
-		return errors.New(fmt.Sprintf("failed to parse %v into big.Int", src))
+		return fmt.Errorf("failed to parse %v into big.Int", src)
 	}
 
 	_, ok = (*big.Int)(i).SetString(s, 10)
 	if !ok {
-		return errors.New(fmt.Sprintf("failed to parse %v into big.Int", src))
+		return fmt.Errorf("failed to parse %v into big.Int", src)
 	}
 	return nil
 }

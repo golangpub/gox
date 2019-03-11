@@ -163,7 +163,7 @@ func (a *Any) Scan(src interface{}) error {
 	if b, ok := src.([]byte); ok {
 		return json.Unmarshal(b, a)
 	} else {
-		return errors.New(fmt.Sprintf("failed to parse %v to gox.Any", src))
+		return fmt.Errorf("failed to parse %v to gox.Any", src)
 	}
 }
 
@@ -210,7 +210,7 @@ func (a *AnyList) Scan(src interface{}) error {
 	if b, ok := src.([]byte); ok {
 		return json.Unmarshal(b, &a.list)
 	} else {
-		return errors.New(fmt.Sprintf("failed to parse %v to gox.AnyList", src))
+		return fmt.Errorf("failed to parse %v to gox.AnyList", src)
 	}
 }
 

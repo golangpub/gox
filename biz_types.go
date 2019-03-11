@@ -3,7 +3,6 @@ package gox
 import (
 	"database/sql"
 	"database/sql/driver"
-	"errors"
 	"fmt"
 	"strings"
 )
@@ -77,7 +76,7 @@ func (n *PhoneNumber) Scan(src interface{}) error {
 	}
 
 	if !ok || len(s) < 10 {
-		return errors.New(fmt.Sprintf("failed to parse %v into gox.PhoneNumber", src))
+		return fmt.Errorf("failed to parse %v into gox.PhoneNumber", src)
 	}
 
 	s = s[1 : len(s)-1]
@@ -92,7 +91,7 @@ func (n *PhoneNumber) Scan(src interface{}) error {
 			return nil
 		}
 	}
-	return errors.New(fmt.Sprintf("failed to parse %s into gox.PhoneNumber", s))
+	return fmt.Errorf("failed to parse %s into gox.PhoneNumber", s)
 }
 
 func (n *PhoneNumber) Value() (driver.Value, error) {
@@ -126,7 +125,7 @@ func (a *Address) Scan(src interface{}) error {
 
 	b, ok := src.([]byte)
 	if !ok {
-		return errors.New(fmt.Sprintf("failed to parse %v into gox.Address", src))
+		return fmt.Errorf("failed to parse %v into gox.Address", src)
 	}
 
 	k, err := fmt.Sscanf(string(b), "(%s,%s,%s,%s,%s,%s,%s,%s)", &a.Country, &a.Province, &a.City, &a.District,
@@ -134,7 +133,7 @@ func (a *Address) Scan(src interface{}) error {
 	if k == 8 {
 		return nil
 	}
-	return errors.New(fmt.Sprintf("failed to parse %v into gox.Address: %v", string(b), err))
+	return fmt.Errorf("failed to parse %v into gox.Address: %v", string(b), err)
 }
 
 func (a *Address) Value() (driver.Value, error) {
@@ -218,14 +217,14 @@ func (m *Money) Scan(src interface{}) error {
 
 	b, ok := src.([]byte)
 	if !ok {
-		return errors.New(fmt.Sprintf("failed to parse %v into gox.Money", src))
+		return fmt.Errorf("failed to parse %v into gox.Money", src)
 	}
 
 	k, err := fmt.Sscanf(string(b), "(%s,%d)", &m.Currency, &m.Amount)
 	if k == 2 {
 		return nil
 	}
-	return errors.New(fmt.Sprintf("failed to parse %v into gox.Money: %v", string(b), err))
+	return fmt.Errorf("failed to parse %v into gox.Money: %v", string(b), err)
 }
 
 func (m *Money) Value() (driver.Value, error) {
