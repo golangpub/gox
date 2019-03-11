@@ -54,3 +54,19 @@ func FromPBPhoneNumbers(pns []*base.PhoneNumber) []*PhoneNumber {
 	}
 	return l
 }
+
+func ToPBPhoneNumber(pn *PhoneNumber) *base.PhoneNumber {
+	return &base.PhoneNumber{
+		CountryCode:    int32(pn.CountryCode),
+		NationalNumber: pn.NationalNumber,
+		Extension:      pn.Extension,
+	}
+}
+
+func ToPBPhoneNumbers(pns []*PhoneNumber) []*base.PhoneNumber {
+	l := make([]*base.PhoneNumber, len(pns))
+	for i, pn := range pns {
+		l[i] = ToPBPhoneNumber(pn)
+	}
+	return l
+}
