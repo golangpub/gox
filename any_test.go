@@ -19,11 +19,11 @@ func nextImage() *gox.Image {
 
 func nextVideo() *gox.Video {
 	return &gox.Video{
-		URL:      "http://www.video.com/" + fmt.Sprint(time.Now().Unix()),
-		Format:   "rmvb",
-		Duration: 1230,
-		Size:     90,
-		Image:    nextImage(),
+		URL:    "http://www.video.com/" + fmt.Sprint(time.Now().Unix()),
+		Format: "rmvb",
+		Length: 1230,
+		Size:   90,
+		Image:  nextImage(),
 	}
 }
 
@@ -130,7 +130,7 @@ func TestVideo(t *testing.T) {
 	if v2, ok := a2.Val().(*gox.Video); !ok {
 		t.Error("expected Video")
 		t.FailNow()
-	} else if *v.Image != *v2.Image || v.URL != v2.URL || v.Size != v2.Size || v.Format != v2.Format || v.Duration != v2.Duration {
+	} else if *v.Image != *v2.Image || v.URL != v2.URL || v.Size != v2.Size || v.Format != v2.Format || v.Length != v2.Length {
 		t.Error("expected equal video value")
 		t.FailNow()
 	}
@@ -167,7 +167,7 @@ func TestArray(t *testing.T) {
 	{
 		v := items[2].Val().(*gox.Video)
 		v2 := items2[2].Val().(*gox.Video)
-		if *v.Image != *v2.Image || v.URL != v2.URL || v.Size != v2.Size || v.Format != v2.Format || v.Duration != v2.Duration {
+		if *v.Image != *v2.Image || v.URL != v2.URL || v.Size != v2.Size || v.Format != v2.Format || v.Length != v2.Length {
 			t.Error("expected equal video value")
 			t.FailNow()
 		}

@@ -96,23 +96,28 @@ func (a *Any) SetVal(v interface{}) {
 	a.val = v
 }
 
+const (
+	keyAnyType = "@t"
+	keyAnyVal  = "@v"
+)
+
 func (a *Any) UnmarshalJSON(b []byte) error {
 	var m map[string]interface{}
 	if err := json.Unmarshal(b, &m); err != nil {
 		return err
 	}
 
-	typ, _ := m["@type"].(string)
+	typ, _ := m[keyAnyType].(string)
 	pt, found := getProtoType(typ)
 	if !found {
-		a.val, _ = m["@value"]
+		a.val, _ = m[keyAnyVal]
 		if a.val == nil {
 			return errors.New("value is empty")
 		}
 		return nil
 	}
 
-	if v, ok := m["@value"]; ok {
+	if v, ok := m[keyAnyVal]; ok {
 		b, _ = json.Marshal(v)
 	}
 
@@ -152,10 +157,10 @@ func (a *Any) MarshalJSON() ([]byte, error) {
 			return nil, err
 		}
 	} else {
-		m["@value"] = a.val
+		m[keyAnyVal] = a.val
 	}
 
-	m["@type"] = name
+	m[keyAnyType] = name
 	return json.Marshal(m)
 }
 
@@ -246,6 +251,7 @@ type Image struct {
 	Width  int    `json:"w,omitempty"`
 	Height int    `json:"h,omitempty"`
 	Format string `json:"fmt,omitempty"`
+	Size   int    `json:"size,omitempty"`
 }
 
 type Video struct {
