@@ -1,6 +1,7 @@
 package gox
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
@@ -73,6 +74,9 @@ func getProtoType(typ string) (reflect.Type, bool) {
 		return nil, false
 	}
 }
+
+var _ sql.Scanner = (*Any)(nil)
+var _ driver.Valuer = (*Any)(nil)
 
 type Any struct {
 	val interface{}
