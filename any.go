@@ -243,36 +243,36 @@ func init() {
 
 type Image struct {
 	URL    string `json:"url"`
-	Width  int    `json:"width"`
-	Height int    `json:"height"`
-	Format string `json:"format"`
+	Width  int    `json:"w,omitempty"`
+	Height int    `json:"h,omitempty"`
+	Format string `json:"fmt,omitempty"`
 }
 
 type Video struct {
-	URL      string `json:"url"`
-	Format   string `json:"format"`
-	Duration int    `json:"duration"`
-	Size     int    `json:"size"`
-	Image    *Image `json:"image"`
+	URL    string `json:"url"`
+	Format string `json:"fmt,omitempty"`
+	Length int    `json:"len,omitempty"`
+	Size   int    `json:"size,omitempty"`
+	Image  *Image `json:"img,omitempty"`
 }
 
 type Audio struct {
-	URL      string `json:"url"`
-	Format   string `json:"format"`
-	Duration int    `json:"duration"`
-	Size     int    `json:"size"`
+	URL    string `json:"url"`
+	Format string `json:"fmt,omitempty"`
+	Length int    `json:"len,omitempty"`
+	Size   int    `json:"size,omitempty"`
 }
 
 type File struct {
 	URL    string `json:"url"`
 	Name   string `json:"name"`
-	Size   int    `json:"size"`
-	Format string `json:"format"`
+	Size   int    `json:"size,omitempty"`
+	Format string `json:"fmt,omitempty"`
 }
 
 type WebPage struct {
-	Title   string `json:"title"`
-	Summary string `json:"summary"`
-	Image   *Image `json:"image"`
+	Title   string `json:"title,omitempty"`
+	Summary string `json:"summary,omitempty"`
+	Image   *Image `json:"image,omitempty"`
 	URL     string `json:"url"`
 }
