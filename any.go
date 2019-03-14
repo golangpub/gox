@@ -136,8 +136,6 @@ func (a *Any) UnmarshalJSON(b []byte) error {
 }
 
 func (a *Any) MarshalJSON() ([]byte, error) {
-	name := GetAnyTypeName(a.val)
-
 	var m = make(map[string]interface{})
 
 	t := reflect.TypeOf(a.val)
@@ -160,8 +158,12 @@ func (a *Any) MarshalJSON() ([]byte, error) {
 		m[keyAnyVal] = a.val
 	}
 
-	m[keyAnyType] = name
+	m[keyAnyType] = a.TypeName()
 	return json.Marshal(m)
+}
+
+func (a *Any) TypeName() string {
+	return GetAnyTypeName(a.val)
 }
 
 func (a *Any) Scan(src interface{}) error {
