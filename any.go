@@ -169,10 +169,12 @@ func (a *Any) Scan(src interface{}) error {
 		return nil
 	}
 
-	if b, ok := src.([]byte); ok {
+	if s, ok := src.(string); ok {
+		return json.Unmarshal([]byte(s), a)
+	} else if b, ok := src.([]byte); ok {
 		return json.Unmarshal(b, a)
 	} else {
-		return fmt.Errorf("failed to parse %v to gox.Any", src)
+		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
 	}
 }
 
@@ -212,14 +214,12 @@ func (a *AnyList) Remove(index int) {
 }
 
 func (a *AnyList) Scan(src interface{}) error {
-	if src == nil {
-		return nil
-	}
-
-	if b, ok := src.([]byte); ok {
-		return json.Unmarshal(b, &a.list)
+	if s, ok := src.(string); ok {
+		return json.Unmarshal([]byte(s), a)
+	} else if b, ok := src.([]byte); ok {
+		return json.Unmarshal(b, a)
 	} else {
-		return fmt.Errorf("failed to parse %v to gox.AnyList", src)
+		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
 	}
 }
 
