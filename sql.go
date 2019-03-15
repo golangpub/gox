@@ -3,6 +3,7 @@ package gox
 import (
 	"database/sql"
 	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"math/big"
 	"time"
@@ -84,4 +85,36 @@ type SQLExecutor interface {
 	Exec(query string, args ...interface{}) (sql.Result, error)
 	Query(query string, args ...interface{}) (*sql.Rows, error)
 	QueryRow(query string, args ...interface{}) *sql.Row
+}
+
+type SQLMap map[string]interface{}
+
+var _ sql.Scanner = (*SQLMap)(nil)
+var _ driver.Valuer = SQLMap(nil)
+
+func (m *SQLMap) Scan(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+
+	b, ok := src.([]byte)
+	if !ok {
+		s, ok := src.(string)
+		if ok {
+			b = []byte(s)
+		}
+	}
+
+	if !ok {
+		return fmt.Errorf("failed to parse %v into gox.SQLMap", src)
+	}
+
+	return JSONUnmarshal(b, m)
+}
+
+func (m SQLMap) Value() (driver.Value, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return json.Marshal(m)
 }
