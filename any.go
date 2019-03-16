@@ -11,7 +11,22 @@ import (
 )
 
 var mu sync.RWMutex
-var nameToPrototype = make(map[string]reflect.Type)
+var nameToPrototype = map[string]reflect.Type{
+	"int":     reflect.TypeOf(int(1)),
+	"int8":    reflect.TypeOf(int8(1)),
+	"int16":   reflect.TypeOf(int16(1)),
+	"int32":   reflect.TypeOf(int32(1)),
+	"int64":   reflect.TypeOf(int64(1)),
+	"uint":    reflect.TypeOf(int(1)),
+	"uint8":   reflect.TypeOf(uint8(1)),
+	"uint16":  reflect.TypeOf(uint16(1)),
+	"uint32":  reflect.TypeOf(uint32(1)),
+	"uint64":  reflect.TypeOf(uint64(1)),
+	"float32": reflect.TypeOf(float32(1)),
+	"float64": reflect.TypeOf(float64(1)),
+	"bool":    reflect.TypeOf(true),
+	"string":  reflect.TypeOf(""),
+}
 
 type AnyType interface {
 	AnyType() string
@@ -114,7 +129,11 @@ func (a *Any) UnmarshalJSON(b []byte) error {
 		if a.val == nil {
 			return errors.New("value is empty")
 		}
-		return nil
+
+		if GetAnyTypeName(a.val) == typ {
+			return nil
+		}
+		return fmt.Errorf("type doesn't match: %s and %s", typ, GetAnyTypeName(a.val))
 	}
 
 	if v, ok := m[keyAnyVal]; ok {
