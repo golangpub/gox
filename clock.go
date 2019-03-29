@@ -13,10 +13,32 @@ func (c *localClock) Now() time.Time {
 	return time.Now()
 }
 
+var lc *localClock = new(localClock)
+
 func LocalClock() Clock {
-	return new(localClock)
+	return lc
 }
 
 type Uptimer interface {
-	Uptime() int64
+	Uptime() float64
+}
+
+type mockUptimer struct {
+	startAt time.Time
+}
+
+func newMockUptimer() *mockUptimer {
+	t := &mockUptimer{}
+	t.startAt = time.Now()
+	return t
+}
+
+func (t *mockUptimer) Uptime() float64 {
+	return time.Since(t.startAt).Seconds()
+}
+
+var mt = newMockUptimer()
+
+func MockUptimer() Uptimer {
+	return mt
 }
