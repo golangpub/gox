@@ -1,4 +1,4 @@
-package geo
+package gox
 
 import (
 	"database/sql"

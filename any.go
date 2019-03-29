@@ -375,12 +375,20 @@ type Image struct {
 	Size   int    `json:"size,omitempty"`
 }
 
+func NewImage() *Image {
+	return new(Image)
+}
+
 type Video struct {
 	URL    string `json:"url"`
 	Format string `json:"fmt,omitempty"`
 	Length int    `json:"len,omitempty"`
 	Size   int    `json:"size,omitempty"`
 	Image  *Image `json:"img,omitempty"`
+}
+
+func NewVideo() *Video {
+	return new(Video)
 }
 
 type Audio struct {
@@ -390,6 +398,10 @@ type Audio struct {
 	Size   int    `json:"size,omitempty"`
 }
 
+func NewAudio() *Audio {
+	return new(Audio)
+}
+
 type File struct {
 	URL    string `json:"url"`
 	Name   string `json:"name"`
@@ -397,9 +409,17 @@ type File struct {
 	Format string `json:"fmt,omitempty"`
 }
 
+func NewFile() *File {
+	return new(File)
+}
+
 type WebPage struct {
 	Title   string `json:"title,omitempty"`
 	Summary string `json:"summary,omitempty"`
 	Image   *Image `json:"image,omitempty"`
 	URL     string `json:"url"`
+}
+
+func NewWebPage() *WebPage {
+	return new(WebPage)
 }
