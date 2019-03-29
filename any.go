@@ -97,6 +97,11 @@ type Any struct {
 	val interface{}
 }
 
+// NewAnyObj is for gomobile
+func NewAnyObj() *Any {
+	return new(Any)
+}
+
 func NewAny(v interface{}) *Any {
 	a := &Any{}
 	a.SetVal(v)
@@ -109,6 +114,78 @@ func (a *Any) Val() interface{} {
 
 func (a *Any) SetVal(v interface{}) {
 	a.val = v
+}
+
+func (a *Any) SetImage(i *Image) {
+	a.SetVal(i)
+}
+
+func (a *Any) SetAudio(au *Audio) {
+	a.SetVal(au)
+}
+
+func (a *Any) SetVideo(v *Video) {
+	a.SetVal(v)
+}
+
+func (a *Any) SetString(s string) {
+	a.SetVal(s)
+}
+
+func (a *Any) SetInt(i int64) {
+	a.SetVal(i)
+}
+
+func (a *Any) SetFloat(i float64) {
+	a.SetVal(i)
+}
+
+func (a *Any) SetFile(f *File) {
+	a.SetVal(f)
+}
+
+func (a *Any) SetWebPage(wp *WebPage) {
+	a.SetVal(wp)
+}
+
+func (a *Any) Int() int64 {
+	v, _ := a.val.(int64)
+	return v
+}
+
+func (a *Any) Float() float64 {
+	i, _ := a.val.(float64)
+	return i
+}
+
+func (a *Any) Text() string {
+	s, _ := a.val.(string)
+	return s
+}
+
+func (a *Any) Image() *Image {
+	img, _ := a.val.(*Image)
+	return img
+}
+
+func (a *Any) Video() *Video {
+	v, _ := a.val.(*Video)
+	return v
+}
+
+func (a *Any) Audio() *Audio {
+	v, _ := a.val.(*Audio)
+	return v
+}
+
+func (a *Any) File() *File {
+	v, _ := a.val.(*File)
+	return v
+}
+
+func (a *Any) WebPage() *WebPage {
+	v, _ := a.val.(*WebPage)
+	return v
 }
 
 const (
@@ -210,6 +287,11 @@ type AnyList struct {
 	list []*Any
 }
 
+// NewAnyListObj is for gomobile
+func NewAnyListObj() *AnyList {
+	return new(AnyList)
+}
+
 func NewAnyList(items ...*Any) *AnyList {
 	return &AnyList{
 		list: items,
@@ -228,6 +310,24 @@ func (a *AnyList) Get(index int) *Any {
 		return nil
 	}
 	return a.list[index]
+}
+
+func (a *AnyList) Append(v *Any) {
+	a.list = append(a.list, v)
+}
+
+func (a *AnyList) Prepend(v *Any) {
+	a.list = append([]*Any{v}, a.list...)
+}
+
+func (a *AnyList) Insert(i int, v *Any) {
+	if len(a.list) <= i {
+		a.list = append(a.list, v)
+	} else {
+		l := a.list[i:]
+		l = append([]*Any{v}, l...)
+		a.list = append(a.list[0:i], l...)
+	}
 }
 
 func (a *AnyList) Remove(index int) {
