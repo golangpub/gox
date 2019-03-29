@@ -16,3 +16,7 @@ func (c *localClock) Now() time.Time {
 func LocalClock() Clock {
 	return new(localClock)
 }
+
+type Uptimer interface {
+	Uptime() int64
+}
