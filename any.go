@@ -94,7 +94,8 @@ var _ sql.Scanner = (*Any)(nil)
 var _ driver.Valuer = (*Any)(nil)
 
 type Any struct {
-	val interface{}
+	val     interface{}
+	jsonStr string
 }
 
 // NewAnyObj is for gomobile
@@ -114,10 +115,14 @@ func (a *Any) Val() interface{} {
 
 func (a *Any) SetVal(v interface{}) {
 	a.val = v
+	a.jsonStr = ""
 }
 
 func (a *Any) JSONString() string {
-	return JSONMarshalStr(a)
+	if len(a.jsonStr) == 0 {
+		a.jsonStr = JSONMarshalStr(a)
+	}
+	return a.jsonStr
 }
 
 func (a *Any) SetImage(i *Image) {
