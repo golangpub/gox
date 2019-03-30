@@ -232,6 +232,10 @@ func (a *Any) UnmarshalJSON(b []byte) error {
 }
 
 func (a *Any) MarshalJSON() ([]byte, error) {
+	if a == nil {
+		return json.Marshal(nil)
+	}
+
 	var m = make(map[string]interface{})
 
 	t := reflect.TypeOf(a.val)
