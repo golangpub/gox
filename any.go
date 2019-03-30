@@ -243,7 +243,6 @@ func (a *Any) MarshalJSON() ([]byte, error) {
 		t = t.Elem()
 	}
 
-	fmt.Println(2)
 	if t.Kind() == reflect.Struct || t.Kind() == reflect.Map {
 		b, err := json.Marshal(a.val)
 		if err != nil {
@@ -258,7 +257,6 @@ func (a *Any) MarshalJSON() ([]byte, error) {
 		m[keyAnyVal] = a.val
 	}
 
-	fmt.Println(3)
 	m[keyAnyType] = a.TypeName()
 	return json.Marshal(m)
 }
