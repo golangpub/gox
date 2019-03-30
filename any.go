@@ -116,6 +116,10 @@ func (a *Any) SetVal(v interface{}) {
 	a.val = v
 }
 
+func (a *Any) JSONString() string {
+	return JSONMarshalStr(a)
+}
+
 func (a *Any) SetImage(i *Image) {
 	a.SetVal(i)
 }
