@@ -10,11 +10,21 @@ func GetCountries() []*Country {
 	return countries
 }
 
+func GetCountryByCallingCode(code int) *Country {
+	return codeToCountry[code]
+}
+
 var countries []*Country
+var codeToCountry map[int]*Country
 
 func init() {
 	if err := JSONUnmarshal([]byte(countriesJSONString), &countries); err != nil {
 		panic(err)
+	}
+
+	codeToCountry = make(map[int]*Country, len(countries))
+	for _, c := range countries {
+		codeToCountry[c.CallingCode] = c
 	}
 }
 
