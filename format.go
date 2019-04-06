@@ -27,6 +27,13 @@ func IsPhoneNumber(phoneNumber string) bool {
 	return phonenumbers.IsValidNumber(parsedNumber)
 }
 
+func NewPhoneNumber(callingCode int, number int64) *PhoneNumber {
+	pn := new(PhoneNumber)
+	pn.CountryCode = callingCode
+	pn.NationalNumber = number
+	return pn
+}
+
 func ParsePhoneNumber(s string) (*PhoneNumber, error) {
 	parsedNumber, err := phonenumbers.Parse(s, "")
 	if err != nil {
