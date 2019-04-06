@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
+	"github.com/nyaruka/phonenumbers"
 	"strings"
 )
 
@@ -42,6 +43,14 @@ func (n *PhoneNumber) String() string {
 	}
 
 	return fmt.Sprintf("+%d%d-%s", n.CountryCode, n.NationalNumber, n.Extension)
+}
+
+func (n *PhoneNumber) InternationalFormat() string {
+	pn, err := phonenumbers.Parse(n.String(), "")
+	if err != nil {
+		return ""
+	}
+	return phonenumbers.Format(pn, phonenumbers.INTERNATIONAL)
 }
 
 func (n *PhoneNumber) MaskString() string {
