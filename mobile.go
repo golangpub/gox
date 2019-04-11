@@ -42,7 +42,7 @@ func (l *Int64List) MarshalJSON() ([]byte, error) {
 }
 
 type Float64List struct {
-	elements []float64
+	List []float64
 }
 
 func NewFloatList() *Float64List {
@@ -54,23 +54,23 @@ func (l *Float64List) Len() int {
 	if l == nil {
 		return 0
 	}
-	return len(l.elements)
+	return len(l.List)
 }
 
 func (l *Float64List) Get(index int) float64 {
-	return l.elements[index]
+	return l.List[index]
 }
 
 func (l *Float64List) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &l.elements)
+	return json.Unmarshal(data, &l.List)
 }
 
 func (l *Float64List) MarshalJSON() ([]byte, error) {
-	return json.Marshal(l.elements)
+	return json.Marshal(l.List)
 }
 
 type StringList struct {
-	elements []string
+	List []string
 }
 
 func NewStringList() *StringList {
@@ -82,32 +82,32 @@ func (l *StringList) Len() int {
 	if l == nil {
 		return 0
 	}
-	return len(l.elements)
+	return len(l.List)
 }
 
 func (l *StringList) Get(index int) string {
-	return l.elements[index]
+	return l.List[index]
 }
 
 func (l *StringList) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &l.elements)
+	return json.Unmarshal(data, &l.List)
 }
 
 func (l *StringList) MarshalJSON() ([]byte, error) {
-	return json.Marshal(l.elements)
+	return json.Marshal(l.List)
 }
 
 type ImageList struct {
-	elements []*Image
+	List []*Image
 }
 
 func (l *ImageList) Len() int {
 	if l == nil {
 		return 0
 	}
-	return len(l.elements)
+	return len(l.List)
 }
 
 func (l *ImageList) Get(index int) *Image {
-	return l.elements[index]
+	return l.List[index]
 }
