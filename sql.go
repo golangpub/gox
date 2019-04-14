@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/big"
 	"time"
 )
@@ -117,4 +118,12 @@ func (m SQLMap) Value() (driver.Value, error) {
 		return nil, nil
 	}
 	return json.Marshal(m)
+}
+
+func MustPrepareStmt(db *sql.DB, query string) *sql.Stmt {
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Panic(err)
+	}
+	return stmt
 }
