@@ -111,3 +111,18 @@ func (l *ImageList) Len() int {
 func (l *ImageList) Get(index int) *Image {
 	return l.List[index]
 }
+
+type PhoneNumberList struct {
+	List []*PhoneNumber
+}
+
+func (l *PhoneNumberList) Len() int {
+	if l == nil {
+		return 0
+	}
+	return len(l.List)
+}
+
+func (l *PhoneNumberList) Get(index int) *PhoneNumber {
+	return l.List[index]
+}
