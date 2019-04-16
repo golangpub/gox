@@ -129,6 +129,10 @@ func (i ID) ShortString() string {
 	}
 }
 
+func (i ID) Int() int64 {
+	return int64(i)
+}
+
 // PrettyString returns a incasesensitive pretty representation of id
 func (i ID) PrettyString() string {
 	if i < 0 {
