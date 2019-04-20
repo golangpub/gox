@@ -24,8 +24,46 @@ type FullName struct {
 	LastName   string `json:"last_name"`
 }
 
+var _ driver.Valuer = (*FullName)(nil)
+
 func (n *FullName) String() string {
 	return fmt.Sprintf("%s %s %s", n.FirstName, n.MiddleName, n.LastName)
+}
+
+func (n *FullName) Scan(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+
+	s, ok := src.(string)
+	if !ok {
+		var b []byte
+		b, ok = src.([]byte)
+		if ok {
+			s = string(b)
+		}
+	}
+
+	if !ok || len(s) < 4 {
+		return fmt.Errorf("failed to parse %v into gox.PhoneNumber", src)
+	}
+
+	s = s[1 : len(s)-1]
+	segments := strings.Split(s, ",")
+	if len(segments) != 3 {
+		return fmt.Errorf("failed to parse %v into gox.PhoneNumber", src)
+	}
+
+	n.FirstName, n.MiddleName, n.LastName = segments[0], segments[1], segments[2]
+	return nil
+}
+
+func (n *FullName) Value() (driver.Value, error) {
+	if n == nil {
+		return nil, nil
+	}
+	s := fmt.Sprintf("(%s,%s,%s)", n.FirstName, n.MiddleName, n.LastName)
+	return s, nil
 }
 
 // PhoneNumber
