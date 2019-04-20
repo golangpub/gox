@@ -58,3 +58,9 @@ message PhoneNumber {
     int64 national_number = 2;
     string extension = 3;
 }
+
+message FullName {
+    string first_name = 1;
+    string middle_name = 2;
+    string last_name = 3;
+}
