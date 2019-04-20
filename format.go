@@ -82,3 +82,19 @@ func ToPBPhoneNumbers(pns []*PhoneNumber) []*base.PhoneNumber {
 	}
 	return l
 }
+
+func FromPBFullName(n *base.FullName) *FullName {
+	return &FullName{
+		FirstName:  n.FirstName,
+		MiddleName: n.MiddleName,
+		LastName:   n.LastName,
+	}
+}
+
+func ToPBFullName(n *FullName) *base.FullName {
+	return &base.FullName{
+		FirstName:  n.FirstName,
+		MiddleName: n.MiddleName,
+		LastName:   n.LastName,
+	}
+}
