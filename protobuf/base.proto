@@ -36,11 +36,6 @@ message StringList {
     repeated string value = 1;
 }
 
-message ListQuery {
-    int64 since_id = 1;
-    int32 count = 2;
-}
-
 message Area {
     double min_lat = 1;
     double max_lat = 2;
@@ -63,4 +58,28 @@ message FullName {
     string first_name = 1;
     string middle_name = 2;
     string last_name = 3;
+}
+
+message ListQuery {
+    int64 user_id = 1;
+    int64 since = 2;
+    int32 count = 3;
+}
+
+message PageQuery {
+    int64 user_id = 1;
+    int32 page = 2;
+    int32 size = 3;
+}
+
+message SubListQuery {
+    int64 item_id = 1;
+    int64 since = 2;
+    int32 count = 3;
+}
+
+message SubPageQuery {
+    int64 item_id = 1;
+    int32 page = 2;
+    int32 size = 3;
 }
