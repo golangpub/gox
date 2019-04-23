@@ -123,3 +123,8 @@ func (c *Coordinate) DistanceTo(d Coordinate) float64 {
 	k := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
 	return k * Earth_Radius
 }
+
+type Location struct {
+	Address
+	Coordinate
+}

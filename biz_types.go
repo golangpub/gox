@@ -152,14 +152,17 @@ func (n *PhoneNumber) Value() (driver.Value, error) {
 
 // Address
 type Address struct {
-	Country  string `json:"country"`
-	Province string `json:"province"`
-	City     string `json:"city"`
-	District string `json:"district"`
-	Street   string `json:"street"`
-	Building string `json:"building"`
-	Room     string `json:"room"`
-	PostCode string `json:"post_code"`
+	Country  string `json:"country,omitempty"`
+	Province string `json:"province,omitempty"`
+	City     string `json:"city,omitempty"`
+	District string `json:"district,omitempty"`
+	Street   string `json:"street,omitempty"`
+	Building string `json:"building,omitempty"`
+	Room     string `json:"room,omitempty"`
+	PostCode string `json:"post_code,omitempty"`
+
+	Name     string `json:"name"`
+	FullName string `json:"full_name"`
 }
 
 var _ driver.Valuer = (*Address)(nil)
