@@ -74,12 +74,14 @@ message PageQuery {
 
 message SubListQuery {
     int64 item_id = 1;
-    int64 since = 2;
-    int32 count = 3;
+    int32 item_type = 2;
+    int64 since = 3;
+    int32 count = 4;
 }
 
 message SubPageQuery {
     int64 item_id = 1;
-    int32 page = 2;
-    int32 size = 3;
+    int32 item_type = 2;
+    int32 page = 3;
+    int32 size = 4;
 }
