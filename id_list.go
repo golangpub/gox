@@ -1,43 +1,48 @@
 package gox
 
+type KeyIDList map[ID][]ID
+
+func (kl KeyIDList) Append(key ID, val ID) {
+	l, ok := kl[key]
+	if !ok {
+		l = make([]ID, 0, 1)
+	}
+	kl[key] = append(l, val)
+}
+
 type IDList []ID
 
-func (ids IDList) Len() int {
-	return len(ids)
+func (l IDList) Len() int {
+	return len(l)
 }
 
-func (ids IDList) Less(i, j int) bool {
-	return ids[i] < ids[j]
+func (l IDList) Less(i, j int) bool {
+	return l[i] < l[j]
 }
 
-func (ids IDList) Swap(i, j int) {
-	tmp := ids[i]
-	ids[i] = ids[j]
-	ids[j] = tmp
+func (l IDList) Swap(i, j int) {
+	tmp := l[i]
+	l[i] = l[j]
+	l[j] = tmp
 }
 
-func (p *IDList) Append(i ID) {
-	*p = append(*p, i)
+func (l *IDList) Append(i ID) {
+	*l = append(*l, i)
 }
 
-func (p *IDList) Remove(i ID) bool {
-	a := *p
+func (l *IDList) Remove(i ID) bool {
+	a := *l
 	for idx, v := range a {
 		if v == i {
-			if idx < len(a)-1 {
-				*p = append(a[0:idx], a[idx+1:len(a)]...)
-			} else {
-				*p = a[0:idx]
-			}
+			*l = append(a[0:idx], a[idx+1:]...)
 			return true
 		}
 	}
-
 	return false
 }
 
-func (a IDList) IndexOf(i ID) int {
-	for idx, v := range a {
+func (l IDList) IndexOf(i ID) int {
+	for idx, v := range l {
 		if v == i {
 			return idx
 		}
@@ -82,7 +87,7 @@ func IDSliceToSet(ids []ID) map[ID]bool {
 
 func IDSetToSlice(ids map[ID]bool) []ID {
 	a := make([]ID, 0, len(ids))
-	for id, _ := range ids {
+	for id := range ids {
 		a = append(a, id)
 	}
 	return a

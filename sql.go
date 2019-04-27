@@ -120,8 +120,8 @@ func (m SQLMap) Value() (driver.Value, error) {
 	return json.Marshal(m)
 }
 
-func MustPrepareStmt(db *sql.DB, query string) *sql.Stmt {
-	stmt, err := db.Prepare(query)
+func MustPrepareStmt(db *sql.DB, format string, args ...interface{}) *sql.Stmt {
+	stmt, err := db.Prepare(fmt.Sprintf(format, args...))
 	if err != nil {
 		log.Panic(err)
 	}
