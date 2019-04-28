@@ -98,3 +98,21 @@ func ToPBFullName(n *FullName) *base.FullName {
 		LastName:   n.LastName,
 	}
 }
+
+func FromPBLocation(l *base.Location) *Location {
+	return &Location{
+		Name:      l.Name,
+		FullName:  l.FullName,
+		Latitude:  l.Latitude,
+		Longitude: l.Longitude,
+	}
+}
+
+func ToPBLocation(l *Location) *base.Location {
+	return &base.Location{
+		Name:      l.Name,
+		FullName:  l.FullName,
+		Latitude:  l.Latitude,
+		Longitude: l.Longitude,
+	}
+}

@@ -125,6 +125,8 @@ func (c *Coordinate) DistanceTo(d Coordinate) float64 {
 }
 
 type Location struct {
-	Address
-	Coordinate
+	Name      string  `json:"name,omitempty"`
+	FullName  string  `json:"full_name,omitempty"`
+	Latitude  float64 `json:"lat"`
+	Longitude float64 `json:"lng"`
 }

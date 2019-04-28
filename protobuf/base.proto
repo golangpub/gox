@@ -48,6 +48,13 @@ message Coordinate {
     double latitude = 2;
 }
 
+message Location {
+    double longitude = 1;
+    double latitude = 2;
+    string name = 3;
+    string full_name = 4;
+}
+
 message PhoneNumber {
     int32 country_code = 1;
     int64 national_number = 2;
