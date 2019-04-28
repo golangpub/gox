@@ -435,3 +435,14 @@ type WebPage struct {
 func NewWebPage() *WebPage {
 	return new(WebPage)
 }
+
+type Text string
+
+func (t *Text) MarshalJSON() ([]byte, error) {
+	return []byte(*t), nil
+}
+
+func (t *Text) Unmarshal(data []byte) error {
+	*t = Text(string(data))
+	return nil
+}
