@@ -116,3 +116,17 @@ func ToPBLocation(l *Location) *base.Location {
 		Longitude: l.Longitude,
 	}
 }
+
+func FromPBCoordinate(l *base.Coordinate) *Coordinate {
+	return &Coordinate{
+		Latitude:  l.Latitude,
+		Longitude: l.Longitude,
+	}
+}
+
+func ToPBCoordinate(l *Coordinate) *base.Coordinate {
+	return &base.Coordinate{
+		Latitude:  l.Latitude,
+		Longitude: l.Longitude,
+	}
+}
