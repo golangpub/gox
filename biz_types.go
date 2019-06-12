@@ -152,6 +152,11 @@ func (n *PhoneNumber) Value() (driver.Value, error) {
 }
 
 func (n *PhoneNumber) Assign(v interface{}) error {
+	if pn, ok := v.(*PhoneNumber); ok {
+		*n = *pn
+		return nil
+	}
+
 	var s string
 	if b, ok := v.([]byte); ok {
 		s = string(b)
