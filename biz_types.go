@@ -3,6 +3,7 @@ package gox
 import (
 	"database/sql"
 	"database/sql/driver"
+	"errors"
 	"fmt"
 	"github.com/nyaruka/phonenumbers"
 	"strings"
@@ -148,6 +149,22 @@ func (n *PhoneNumber) Value() (driver.Value, error) {
 	ext := strings.Replace(n.Extension, ",", "\\,", -1)
 	s := fmt.Sprintf("(%d,%d,%s)", n.CountryCode, n.NationalNumber, ext)
 	return s, nil
+}
+
+func (n *PhoneNumber) Assign(v interface{}) error {
+	var s string
+	if b, ok := v.([]byte); ok {
+		s = string(b)
+	} else if s, ok = v.(string); !ok {
+		return errors.New("v is not string or []byte")
+	}
+
+	res, err := ParsePhoneNumber(s)
+	if err != nil {
+		return err
+	}
+	*n = *res
+	return nil
 }
 
 // Address
