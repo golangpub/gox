@@ -5,6 +5,8 @@ import (
 	"compress/flate"
 	"compress/gzip"
 	"io/ioutil"
+
+	"github.com/pkg/errors"
 )
 
 type Compressor interface {
@@ -43,7 +45,7 @@ type flateCompression struct {
 }
 
 func (g *flateCompression) Compress(data []byte) ([]byte, error) {
-	if data == nil || len(data) == 0 {
+	if len(data) == 0 {
 		return nil, nil
 	}
 
@@ -63,7 +65,7 @@ func (g *flateCompression) Compress(data []byte) ([]byte, error) {
 }
 
 func (g *flateCompression) Decompress(data []byte) ([]byte, error) {
-	if data == nil || len(data) == 0 {
+	if len(data) == 0 {
 		return nil, nil
 	}
 
@@ -79,7 +81,7 @@ type gzipCompression struct {
 }
 
 func (g *gzipCompression) Compress(data []byte) ([]byte, error) {
-	if data == nil || len(data) == 0 {
+	if len(data) == 0 {
 		return nil, nil
 	}
 
@@ -88,15 +90,16 @@ func (g *gzipCompression) Compress(data []byte) ([]byte, error) {
 	//Make sure writer is closed before calling buffer.Bytes()!!!
 	err := WriteAll(writer, data)
 	if err != nil {
-		writer.Close()
-		return nil, err
+		return nil, errors.Wrap(err, "cannot write data")
 	}
-	writer.Close()
+	if err = writer.Close(); err != nil {
+		return nil, errors.Wrap(err, "cannot close writer")
+	}
 	return buffer.Bytes(), nil
 }
 
 func (g *gzipCompression) Decompress(data []byte) ([]byte, error) {
-	if data == nil || len(data) == 0 {
+	if len(data) == 0 {
 		return nil, nil
 	}
 

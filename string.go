@@ -18,7 +18,7 @@ func SmartLen(s string) int {
 	return n
 }
 
-var whitespaceRegexp = regexp.MustCompile("\\s")
+var whitespaceRegexp = regexp.MustCompile(`\\s`)
 
 func CombineSpaces(s string) string {
 	s = strings.TrimSpace(s)

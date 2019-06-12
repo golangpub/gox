@@ -29,7 +29,7 @@ func (s *Set) Remove(item interface{}) {
 
 func (s *Set) Slice() []interface{} {
 	sl := make([]interface{}, 0, len(s.items))
-	for k, _ := range s.items {
+	for k := range s.items {
 		sl = append(sl, k)
 	}
 
@@ -69,7 +69,7 @@ func (s *ConcurrentSet) Remove(item interface{}) {
 func (s *ConcurrentSet) Slice() []interface{} {
 	s.mu.RLock()
 	sl := make([]interface{}, 0, len(s.items))
-	for k, _ := range s.items {
+	for k := range s.items {
 		sl = append(sl, k)
 	}
 	s.mu.RUnlock()

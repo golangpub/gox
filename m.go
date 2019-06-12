@@ -2,19 +2,20 @@ package gox
 
 import (
 	"encoding/json"
-	"github.com/nyaruka/phonenumbers"
 	"math/big"
 	"net/url"
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/nyaruka/phonenumbers"
 )
 
 // M is a special map which provides convenient methods
 type M map[string]interface{}
 
 func (m M) Values(key string) []interface{} {
-	value, _ := m[key]
+	value := m[key]
 	if value == nil {
 		return []interface{}{}
 	}
@@ -34,7 +35,7 @@ func (m M) Values(key string) []interface{} {
 }
 
 func (m M) Value(key string) interface{} {
-	value, _ := m[key]
+	value := m[key]
 	if value == nil {
 		return nil
 	}
@@ -438,7 +439,7 @@ func (m M) AddMap(val M) {
 
 func (m M) AddMapObj(obj interface{}) {
 	v := reflect.ValueOf(obj)
-	if v.IsValid() == false {
+	if !v.IsValid() {
 		return
 	}
 
@@ -516,7 +517,7 @@ func (m M) RemoveSomeEmptyValues(keys []string) {
 }
 
 func (m M) RemoveKeys(keys []string) {
-	for k, _ := range m {
+	for k := range m {
 		if indexOfStr(keys, k) < 0 {
 			delete(m, k)
 		}
@@ -524,7 +525,7 @@ func (m M) RemoveKeys(keys []string) {
 }
 
 func (m M) RemoveAllExceptKeys(keys []string) {
-	for k, _ := range m {
+	for k := range m {
 		if indexOfStr(keys, k) < 0 {
 			delete(m, k)
 		}

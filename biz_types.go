@@ -5,8 +5,9 @@ import (
 	"database/sql/driver"
 	"errors"
 	"fmt"
-	"github.com/nyaruka/phonenumbers"
 	"strings"
+
+	"github.com/nyaruka/phonenumbers"
 )
 
 type EntityTime struct {

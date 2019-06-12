@@ -211,7 +211,7 @@ func (a *Any) UnmarshalJSON(b []byte) error {
 	typ, _ := m[keyAnyType].(string)
 	pt, found := getProtoType(typ)
 	if !found {
-		a.val, _ = m[keyAnyVal]
+		a.val = m[keyAnyVal]
 		if a.val == nil {
 			return errors.New("value is empty")
 		}

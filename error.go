@@ -1,9 +1,10 @@
 package gox
 
 import (
-	"github.com/gopub/gox/internal"
 	"net/http"
 	"strings"
+
+	"github.com/gopub/gox/internal"
 )
 
 type Error interface {

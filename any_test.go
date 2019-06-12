@@ -3,9 +3,10 @@ package gox_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gopub/gox"
 	"testing"
 	"time"
+
+	"github.com/gopub/gox"
 )
 
 func nextImage() *gox.Image {

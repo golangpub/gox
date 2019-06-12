@@ -2,12 +2,13 @@ package gox
 
 import (
 	"errors"
+	"regexp"
+
 	"github.com/gopub/gox/protobuf/base"
 	"github.com/nyaruka/phonenumbers"
-	"regexp"
 )
 
-var nameRegexp = regexp.MustCompile("^[a-zA-Z][a-zA-Z0-9\\-._]*$")
+var nameRegexp = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9\-._]*$`)
 var emailRegexp = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
 func IsEmail(email string) bool {

@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/gopub/log"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"reflect"
+
+	"github.com/gopub/log"
 )
 
 func JSONUnmarshal(data []byte, v interface{}) error {
