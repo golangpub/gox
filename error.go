@@ -105,3 +105,15 @@ func NotFoundFieldSub(subCode int, message string) Error {
 func ConflictSub(subCode int, message string) Error {
 	return NewSubError(http.StatusConflict, subCode, message)
 }
+
+func Unwrap(err error) Error {
+	if err == nil {
+		return nil
+	}
+
+	if e, ok := err.(Error); ok {
+		return e
+	}
+
+	return InternalError(err.Error())
+}
