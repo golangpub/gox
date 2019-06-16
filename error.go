@@ -106,7 +106,7 @@ func ConflictSub(subCode int, message string) Error {
 	return NewSubError(http.StatusConflict, subCode, message)
 }
 
-func Unwrap(err error) Error {
+func UnwrapError(err error) Error {
 	if err == nil {
 		return nil
 	}
