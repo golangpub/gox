@@ -3,8 +3,9 @@ package gox
 import (
 	"database/sql"
 	"database/sql/driver"
-	"errors"
 	"fmt"
+	"github.com/gopub/gox/protobuf/base"
+	"reflect"
 	"strings"
 
 	"github.com/nyaruka/phonenumbers"
@@ -158,11 +159,18 @@ func (n *PhoneNumber) Assign(v interface{}) error {
 		return nil
 	}
 
+	if pn, ok := v.(*base.PhoneNumber); ok {
+		n.CountryCode = int(pn.CountryCode)
+		n.NationalNumber = pn.NationalNumber
+		n.Extension = pn.Extension
+		return nil
+	}
+
 	var s string
 	if b, ok := v.([]byte); ok {
 		s = string(b)
 	} else if s, ok = v.(string); !ok {
-		return errors.New("v is not string or []byte")
+		return fmt.Errorf("v is %v instead of string or []byte", reflect.TypeOf(v))
 	}
 
 	res, err := ParsePhoneNumber(s)
