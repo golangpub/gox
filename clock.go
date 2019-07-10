@@ -13,7 +13,7 @@ func (c *localClock) Now() time.Time {
 	return time.Now()
 }
 
-var lc *localClock = new(localClock)
+var lc = new(localClock)
 
 func LocalClock() Clock {
 	return lc

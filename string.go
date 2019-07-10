@@ -20,6 +20,7 @@ func SmartLen(s string) int {
 
 var whitespaceRegexp = regexp.MustCompile(`\\s`)
 
+// CombineSpaces cobines multiple spaces to a single space
 func CombineSpaces(s string) string {
 	s = strings.TrimSpace(s)
 	s = whitespaceRegexp.ReplaceAllString(s, " ")

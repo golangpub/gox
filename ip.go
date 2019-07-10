@@ -1,6 +1,7 @@
 package gox
 
 import (
+	"github.com/gopub/log"
 	"net"
 )
 
@@ -10,9 +11,9 @@ func GetOutboundIP() (net.IP, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
-
 	localAddr := conn.LocalAddr().(*net.UDPAddr)
-
+	if err = conn.Close(); err != nil {
+		log.Error(err)
+	}
 	return localAddr.IP, nil
 }

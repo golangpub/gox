@@ -4,12 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"github.com/gopub/log"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"reflect"
-
-	"github.com/gopub/log"
 )
 
 func JSONUnmarshal(data []byte, v interface{}) error {
@@ -18,25 +17,15 @@ func JSONUnmarshal(data []byte, v interface{}) error {
 	}
 	decoder := json.NewDecoder(bytes.NewBuffer(data))
 	decoder.UseNumber()
-	err := decoder.Decode(v)
-	if err != nil {
-		log.Error(err)
-	}
-	return err
+	return decoder.Decode(v)
 }
 
 func JSONUnmarshalFile(filename string, v interface{}) error {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
-		log.Error(err, filename)
 		return err
 	}
-
-	err = JSONUnmarshal(data, v)
-	if err != nil {
-		log.Error(err, filename)
-	}
-	return err
+	return JSONUnmarshal(data, v)
 }
 
 func JSONMarshalStr(i interface{}) string {
@@ -54,6 +43,7 @@ func JSONMarshalStr(i interface{}) string {
 	d, err := json.Marshal(i)
 	if err != nil {
 		log.Error(err)
+		return ""
 	}
 
 	if len(d) == 0 {
@@ -77,6 +67,7 @@ func JSONMarshalStrIndent(i interface{}, indent string) string {
 	d, err := json.MarshalIndent(i, "", indent)
 	if err != nil {
 		log.Error(err)
+		return ""
 	}
 
 	if len(d) == 0 {
@@ -90,7 +81,6 @@ func ToMap(i interface{}) (m M, err error) {
 
 	data, err = json.Marshal(i)
 	if err != nil {
-		log.Error(err)
 		return
 	}
 

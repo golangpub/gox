@@ -4,22 +4,13 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
-	"github.com/gopub/gox/protobuf/base"
 	"reflect"
 	"strings"
 
+	"github.com/gopub/gox/protobuf/base"
+
 	"github.com/nyaruka/phonenumbers"
 )
-
-type EntityTime struct {
-	CreatedAt int64 `json:"created_at"`
-	UpdatedAt int64 `json:"-"`
-}
-
-type BaseEntity struct {
-	ID ID `json:"id"`
-	EntityTime
-}
 
 type FullName struct {
 	FirstName  string `json:"first_name"`
@@ -153,7 +144,7 @@ func (n *PhoneNumber) Value() (driver.Value, error) {
 	return s, nil
 }
 
-func (n *PhoneNumber) Assign(v interface{}) error {
+func (n *PhoneNumber) Copy(v interface{}) error {
 	if pn, ok := v.(*PhoneNumber); ok {
 		*n = *pn
 		return nil

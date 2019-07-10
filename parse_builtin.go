@@ -2,20 +2,14 @@ package gox
 
 import (
 	"encoding/json"
-	"errors"
 	"reflect"
 	"strconv"
 	"strings"
 )
 
-var (
-	//typeJSONNumber = reflect.TypeOf(json.Number(""))
-	errNoValue = errors.New("no value")
-)
-
 func ParseBool(i interface{}) (bool, error) {
 	if i == nil {
-		return false, errNoValue
+		return false, ErrNoValue
 	}
 
 	v := reflect.ValueOf(i)
@@ -30,7 +24,7 @@ func ParseBool(i interface{}) (bool, error) {
 		if str == "false" {
 			return false, nil
 		}
-		return false, errNoValue
+		return false, ErrNoValue
 	default:
 		b, err := ParseInt(i)
 		if err == nil {
@@ -55,7 +49,7 @@ func ParseBool(i interface{}) (bool, error) {
 
 func ParseInt(i interface{}) (int64, error) {
 	if i == nil {
-		return 0, errNoValue
+		return 0, ErrNoValue
 	}
 
 	v := reflect.ValueOf(i)
@@ -86,12 +80,12 @@ func ParseInt(i interface{}) (int64, error) {
 			return int64(n), nil
 		}
 	}
-	return 0, errNoValue
+	return 0, ErrNoValue
 }
 
 func ParseFloat(i interface{}) (float64, error) {
 	if i == nil {
-		return 0, errNoValue
+		return 0, ErrNoValue
 	}
 
 	v := reflect.ValueOf(i)
@@ -104,6 +98,6 @@ func ParseFloat(i interface{}) (float64, error) {
 		}
 		return strconv.ParseFloat(v.String(), 64)
 	default:
-		return 0, errNoValue
+		return 0, ErrNoValue
 	}
 }

@@ -1,5 +1,10 @@
 package gox
 
+import (
+	"github.com/gopub/log"
+	"sync"
+)
+
 type Country struct {
 	Name        string `json:"name"`
 	CallingCode int    `json:"calling_code"`
@@ -7,19 +12,35 @@ type Country struct {
 }
 
 func GetCountries() []*Country {
+	loadCountries()
 	return countries
 }
 
 func GetCountryByCallingCode(code int) *Country {
+	loadCountries()
 	return codeToCountry[code]
 }
 
 var countries []*Country
 var codeToCountry map[int]*Country
+var loadCountriesMutex sync.Mutex
 
-func init() {
+func loadCountries() {
+	if countries != nil {
+		return
+	}
+
+	loadCountriesMutex.Lock()
+	defer loadCountriesMutex.Unlock()
+
+	if countries != nil {
+		return
+	}
+
 	if err := JSONUnmarshal([]byte(countriesJSONString), &countries); err != nil {
-		panic(err)
+		log.Error(err)
+		countries = []*Country{}
+		return
 	}
 
 	codeToCountry = make(map[int]*Country, len(countries))

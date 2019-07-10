@@ -5,35 +5,9 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"log"
+	"github.com/gopub/log"
 	"math/big"
-	"time"
 )
-
-type SQLRowTime struct {
-	CreatedAt time.Time `json:"-"`
-	UpdatedAt time.Time `json:"-"`
-}
-
-func (e *SQLRowTime) EntityTime() *EntityTime {
-	return &EntityTime{
-		CreatedAt: e.CreatedAt.Unix(),
-		UpdatedAt: e.UpdatedAt.Unix(),
-	}
-}
-
-type SQLBaseRow struct {
-	ID      ID   `json:"-"`
-	Deleted bool `json:"-"`
-	SQLRowTime
-}
-
-func (e *SQLBaseRow) Entity() *BaseEntity {
-	return &BaseEntity{
-		ID:         e.ID,
-		EntityTime: *e.SQLRowTime.EntityTime(),
-	}
-}
 
 type SQLBigInt big.Int
 

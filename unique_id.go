@@ -33,18 +33,18 @@ func randomString() string {
 	return b.String()
 }
 
-func LongUniqueID() string {
-	return SHA256(randomString())
-}
-
 func UniqueID() string {
 	return SHA1(randomString())
 }
 
-func ShortUniqueID() string {
+func UniqueID32() string {
 	return MD5(randomString())
 }
 
-func GenerateUniqueID() string {
-	return UniqueID()
+func UniqueID40() string {
+	return SHA1(randomString())
+}
+
+func UniqueID64() string {
+	return SHA256(randomString())
 }

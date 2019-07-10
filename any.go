@@ -47,25 +47,10 @@ func RegisterAny(prototype interface{}) error {
 	return nil
 }
 
-func camelToSnake(s string) string {
-	snake := make([]rune, 0, len(s)+1)
-	flag := false
-	k := 'a' - 'A'
-	for i, c := range s {
-		if c >= 'A' && c <= 'Z' {
-			if !flag {
-				flag = true
-				if i > 0 {
-					snake = append(snake, '_')
-				}
-			}
-			snake = append(snake, c+k)
-		} else {
-			flag = false
-			snake = append(snake, c)
-		}
+func MustRegisterAny(prototype interface{}) {
+	if err := RegisterAny(prototype); err != nil {
+		panic(err)
 	}
-	return string(snake)
 }
 
 func GetAnyTypeName(prototype interface{}) string {
@@ -77,7 +62,7 @@ func GetAnyTypeName(prototype interface{}) string {
 	for p.Kind() == reflect.Ptr {
 		p = p.Elem()
 	}
-	return camelToSnake(p.Name())
+	return CamelToSnake(p.Name())
 }
 
 func getProtoType(typ string) (reflect.Type, bool) {
@@ -372,11 +357,11 @@ func (a *AnyList) MarshalJSON() ([]byte, error) {
 }
 
 func init() {
-	RegisterAny(&Image{})
-	RegisterAny(&Video{})
-	RegisterAny(&Audio{})
-	RegisterAny(&WebPage{})
-	RegisterAny(&File{})
+	MustRegisterAny(&Image{})
+	MustRegisterAny(&Video{})
+	MustRegisterAny(&Audio{})
+	MustRegisterAny(&WebPage{})
+	MustRegisterAny(&File{})
 }
 
 type Image struct {

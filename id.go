@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"log"
+	"github.com/gopub/log"
 	"strings"
 	"time"
 )
