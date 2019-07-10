@@ -6,10 +6,9 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"reflect"
-
-	"github.com/gopub/log"
 )
 
 func JSONUnmarshal(data []byte, v interface{}) error {
@@ -18,25 +17,15 @@ func JSONUnmarshal(data []byte, v interface{}) error {
 	}
 	decoder := json.NewDecoder(bytes.NewBuffer(data))
 	decoder.UseNumber()
-	err := decoder.Decode(v)
-	if err != nil {
-		log.Error(err)
-	}
-	return err
+	return decoder.Decode(v)
 }
 
 func JSONUnmarshalFile(filename string, v interface{}) error {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
-		log.Error(err, filename)
 		return err
 	}
-
-	err = JSONUnmarshal(data, v)
-	if err != nil {
-		log.Error(err, filename)
-	}
-	return err
+	return JSONUnmarshal(data, v)
 }
 
 func JSONMarshalStr(i interface{}) string {
@@ -53,7 +42,8 @@ func JSONMarshalStr(i interface{}) string {
 	}
 	d, err := json.Marshal(i)
 	if err != nil {
-		log.Error(err)
+		log.Println(err)
+		return ""
 	}
 
 	if len(d) == 0 {
@@ -76,7 +66,8 @@ func JSONMarshalStrIndent(i interface{}, indent string) string {
 	}
 	d, err := json.MarshalIndent(i, "", indent)
 	if err != nil {
-		log.Error(err)
+		log.Println(err)
+		return ""
 	}
 
 	if len(d) == 0 {
@@ -90,13 +81,12 @@ func ToMap(i interface{}) (m M, err error) {
 
 	data, err = json.Marshal(i)
 	if err != nil {
-		log.Error(err)
 		return
 	}
 
 	err = json.Unmarshal(data, &m)
 	if err != nil {
-		log.Error(err)
+		log.Println(err)
 	}
 
 	return
@@ -120,7 +110,7 @@ func FetchJSON(url string, httpMethod string, header http.Header, parameters M) 
 
 	body, err := json.Marshal(parameters)
 	if err != nil {
-		log.Error(url, err)
+		log.Println(url, err)
 		return nil
 	}
 
@@ -131,7 +121,7 @@ func FetchJSON(url string, httpMethod string, header http.Header, parameters M) 
 
 	req, err = http.NewRequest(httpMethod, url, reader)
 	if err != nil {
-		log.Error(url, err)
+		log.Println(url, err)
 		return nil
 	}
 
@@ -142,10 +132,10 @@ func FetchJSON(url string, httpMethod string, header http.Header, parameters M) 
 
 	resp, err = http.DefaultClient.Do(req)
 	if err != nil {
-		log.Error(url, err)
+		log.Println(url, err)
 		return nil
 	} else if resp != nil && resp.StatusCode != http.StatusOK {
-		log.Error(url, resp.StatusCode)
+		log.Println(url, resp.StatusCode)
 		return nil
 	}
 
@@ -154,7 +144,7 @@ func FetchJSON(url string, httpMethod string, header http.Header, parameters M) 
 
 	var result M
 	if err = JSONUnmarshal(data, &result); err != nil {
-		log.Error(url, err, string(data))
+		log.Println(url, err, string(data))
 		return nil
 	}
 
