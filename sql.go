@@ -5,7 +5,7 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"log"
+	"github.com/gopub/log"
 	"math/big"
 )
 

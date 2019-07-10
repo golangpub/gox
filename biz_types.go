@@ -144,7 +144,7 @@ func (n *PhoneNumber) Value() (driver.Value, error) {
 	return s, nil
 }
 
-func (n *PhoneNumber) Assign(v interface{}) error {
+func (n *PhoneNumber) Copy(v interface{}) error {
 	if pn, ok := v.(*PhoneNumber); ok {
 		*n = *pn
 		return nil

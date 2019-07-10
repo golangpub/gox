@@ -53,27 +53,6 @@ func MustRegisterAny(prototype interface{}) {
 	}
 }
 
-func camelToSnake(s string) string {
-	snake := make([]rune, 0, len(s)+1)
-	flag := false
-	k := 'a' - 'A'
-	for i, c := range s {
-		if c >= 'A' && c <= 'Z' {
-			if !flag {
-				flag = true
-				if i > 0 {
-					snake = append(snake, '_')
-				}
-			}
-			snake = append(snake, c+k)
-		} else {
-			flag = false
-			snake = append(snake, c)
-		}
-	}
-	return string(snake)
-}
-
 func GetAnyTypeName(prototype interface{}) string {
 	if a, ok := prototype.(AnyType); ok {
 		return a.AnyType()
@@ -83,7 +62,7 @@ func GetAnyTypeName(prototype interface{}) string {
 	for p.Kind() == reflect.Ptr {
 		p = p.Elem()
 	}
-	return camelToSnake(p.Name())
+	return CamelToSnake(p.Name())
 }
 
 func getProtoType(typ string) (reflect.Type, bool) {

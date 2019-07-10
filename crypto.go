@@ -8,7 +8,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
-	"log"
+	"github.com/gopub/log"
 )
 
 // AES crypt data with key, iv
@@ -38,7 +38,7 @@ func AES(data []byte, key []byte, iv []byte) error {
 func XOR(data []byte, key []byte) {
 	n := len(key)
 	if len(data) == 0 || n == 0 {
-		log.Println("SimpleXORCrypt invalid or and key")
+		log.Error("SimpleXORCrypt invalid or and key")
 		return
 	}
 
@@ -60,7 +60,7 @@ func SHA1(str string) string {
 	for len(b) > 0 {
 		n, err := sha1er.Write(b)
 		if err != nil {
-			log.Println(err)
+			log.Error(err)
 		}
 		b = b[n:]
 	}
@@ -74,7 +74,8 @@ func SHA256(str string) string {
 	for len(b) > 0 {
 		n, err := sha256er.Write(b)
 		if err != nil {
-			log.Println(err)
+			log.Error(err)
+			return ""
 		}
 		b = b[n:]
 	}

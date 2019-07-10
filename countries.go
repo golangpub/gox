@@ -1,7 +1,7 @@
 package gox
 
 import (
-	"log"
+	"github.com/gopub/log"
 	"sync"
 )
 
@@ -38,7 +38,7 @@ func loadCountries() {
 	}
 
 	if err := JSONUnmarshal([]byte(countriesJSONString), &countries); err != nil {
-		log.Println(err)
+		log.Error(err)
 		countries = []*Country{}
 		return
 	}

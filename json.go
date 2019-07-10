@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"github.com/gopub/log"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"reflect"
 )
@@ -42,7 +42,7 @@ func JSONMarshalStr(i interface{}) string {
 	}
 	d, err := json.Marshal(i)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		return ""
 	}
 
@@ -66,7 +66,7 @@ func JSONMarshalStrIndent(i interface{}, indent string) string {
 	}
 	d, err := json.MarshalIndent(i, "", indent)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		return ""
 	}
 
@@ -86,7 +86,7 @@ func ToMap(i interface{}) (m M, err error) {
 
 	err = json.Unmarshal(data, &m)
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 	}
 
 	return
@@ -110,7 +110,7 @@ func FetchJSON(url string, httpMethod string, header http.Header, parameters M) 
 
 	body, err := json.Marshal(parameters)
 	if err != nil {
-		log.Println(url, err)
+		log.Error(url, err)
 		return nil
 	}
 
@@ -121,7 +121,7 @@ func FetchJSON(url string, httpMethod string, header http.Header, parameters M) 
 
 	req, err = http.NewRequest(httpMethod, url, reader)
 	if err != nil {
-		log.Println(url, err)
+		log.Error(url, err)
 		return nil
 	}
 
@@ -132,10 +132,10 @@ func FetchJSON(url string, httpMethod string, header http.Header, parameters M) 
 
 	resp, err = http.DefaultClient.Do(req)
 	if err != nil {
-		log.Println(url, err)
+		log.Error(url, err)
 		return nil
 	} else if resp != nil && resp.StatusCode != http.StatusOK {
-		log.Println(url, resp.StatusCode)
+		log.Error(url, resp.StatusCode)
 		return nil
 	}
 
@@ -144,7 +144,7 @@ func FetchJSON(url string, httpMethod string, header http.Header, parameters M) 
 
 	var result M
 	if err = JSONUnmarshal(data, &result); err != nil {
-		log.Println(url, err, string(data))
+		log.Error(url, err, string(data))
 		return nil
 	}
 

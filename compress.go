@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
-	"errors"
 	"io/ioutil"
+
+	"github.com/pkg/errors"
 )
 
 type Compressor interface {
