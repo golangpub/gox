@@ -1,9 +1,10 @@
 package gox_test
 
 import (
+	"testing"
+
 	"github.com/gopub/gox"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestIsBirthDate(t *testing.T) {

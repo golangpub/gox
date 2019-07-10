@@ -1,8 +1,9 @@
 package gox
 
 import (
-	"github.com/gopub/log"
 	"sync"
+
+	"github.com/gopub/log"
 )
 
 type Country struct {

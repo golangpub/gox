@@ -1,8 +1,9 @@
 package gox
 
 import (
-	"github.com/gopub/log"
 	"net"
+
+	"github.com/gopub/log"
 )
 
 // Get preferred outbound ip of this machine

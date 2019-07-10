@@ -1,8 +1,9 @@
 package gox
 
 import (
-	"github.com/gopub/log"
 	"net"
+
+	"github.com/gopub/log"
 )
 
 // GetIP gets ip address such as "10.0.0.1"

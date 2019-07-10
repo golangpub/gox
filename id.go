@@ -5,9 +5,10 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/gopub/log"
 	"strings"
 	"time"
+
+	"github.com/gopub/log"
 )
 
 const prettyTableSize = 34

@@ -5,8 +5,9 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"github.com/gopub/log"
 	"math/big"
+
+	"github.com/gopub/log"
 )
 
 type SQLBigInt big.Int

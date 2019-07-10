@@ -1,10 +1,10 @@
 package gox
 
 import (
-	"github.com/gopub/log"
 	"regexp"
 	"time"
 
+	"github.com/gopub/log"
 	"github.com/nyaruka/phonenumbers"
 )
 
