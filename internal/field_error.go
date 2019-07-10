@@ -50,14 +50,6 @@ func (e *FieldError) Code() int {
 	return e.code
 }
 
-func (e *FieldError) Message() string {
-	if e == nil {
-		return ""
-	}
-
-	return e.message
-}
-
 func (e *FieldError) Field() string {
 	if e == nil {
 		return ""
@@ -70,5 +62,5 @@ func (e *FieldError) Error() string {
 	if e == nil {
 		return ""
 	}
-	return fmt.Sprintf("%d:%s {%s}", e.code, e.message, e.field)
+	return fmt.Sprintf("%s {%s}", e.message, e.field)
 }

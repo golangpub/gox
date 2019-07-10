@@ -2,7 +2,6 @@ package internal
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 type subErrorJSONObject struct {
@@ -58,17 +57,10 @@ func (e *SubError) SubCode() int {
 	return e.subCode
 }
 
-func (e *SubError) Message() string {
+func (e *SubError) Error() string {
 	if e == nil {
 		return ""
 	}
 
 	return e.message
-}
-
-func (e *SubError) Error() string {
-	if e == nil {
-		return ""
-	}
-	return fmt.Sprintf("%d:%d:%s", e.code, e.subCode, e.message)
 }

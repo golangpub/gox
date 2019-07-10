@@ -1,9 +1,8 @@
 package gox
 
 import (
+	"log"
 	"net"
-
-	"github.com/gopub/log"
 )
 
 // GetIP gets ip address such as "10.0.0.1"
@@ -52,12 +51,13 @@ import (
 func GetIP() net.IP {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return net.IPv6loopback
 	}
-	defer conn.Close()
-
 	localAddr := conn.LocalAddr().(*net.UDPAddr)
-
+	if err = conn.Close(); err != nil {
+		log.Println(err)
+	}
 	return localAddr.IP
 }
 

@@ -7,10 +7,19 @@ import (
 	"github.com/gopub/gox/internal"
 )
 
+type ErrorString string
+
+func (es ErrorString) Error() string {
+	return string(es)
+}
+
+const (
+	ErrNoValue ErrorString = "no value"
+)
+
 type Error interface {
 	error
 	Code() int
-	Message() string
 }
 
 func NewError(code int, msg string) Error {

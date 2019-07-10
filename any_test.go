@@ -30,7 +30,10 @@ func nextVideo() *gox.Video {
 
 func TestID(t *testing.T) {
 	var v gox.ID = 10
-	gox.RegisterAny(gox.ID(0))
+	if err := gox.RegisterAny(gox.ID(0)); err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
 	a := gox.NewAny(v)
 	b, err := json.Marshal(a)
 	if err != nil {

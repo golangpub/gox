@@ -8,8 +8,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
-
-	"github.com/gopub/log"
+	"log"
 )
 
 // AES crypt data with key, iv
@@ -39,7 +38,7 @@ func AES(data []byte, key []byte, iv []byte) error {
 func XOR(data []byte, key []byte) {
 	n := len(key)
 	if len(data) == 0 || n == 0 {
-		log.Error("SimpleXORCrypt invalid or and key")
+		log.Println("SimpleXORCrypt invalid or and key")
 		return
 	}
 
@@ -57,13 +56,27 @@ func MD5(str string) string {
 // SHA1 returns str's sha1 value which is 160 bits represented as 40 hex string
 func SHA1(str string) string {
 	sha1er := sha1.New()
-	sha1er.Write([]byte(str))
+	b := []byte(str)
+	for len(b) > 0 {
+		n, err := sha1er.Write(b)
+		if err != nil {
+			log.Println(err)
+		}
+		b = b[n:]
+	}
 	return hex.EncodeToString(sha1er.Sum(nil))
 }
 
 // SHA256 returns str's sha256 value which is 256 bits 64 hex string
 func SHA256(str string) string {
 	sha256er := sha256.New()
-	sha256er.Write([]byte(str))
+	b := []byte(str)
+	for len(b) > 0 {
+		n, err := sha256er.Write(b)
+		if err != nil {
+			log.Println(err)
+		}
+		b = b[n:]
+	}
 	return hex.EncodeToString(sha256er.Sum(nil))
 }
