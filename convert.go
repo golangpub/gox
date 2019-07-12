@@ -110,3 +110,25 @@ func ToPBCoordinate(l *Coordinate) *base.Coordinate {
 		Longitude: l.Longitude,
 	}
 }
+
+func FromPBGender(v base.Gender) Gender {
+	switch v {
+	case base.Gender_Male:
+		return Male
+	case base.Gender_Female:
+		return Female
+	default:
+		return 0
+	}
+}
+
+func ToPBGender(v Gender) base.Gender {
+	switch v {
+	case Male:
+		return base.Gender_Male
+	case Female:
+		return base.Gender_Female
+	default:
+		return base.Gender_Unknown
+	}
+}
