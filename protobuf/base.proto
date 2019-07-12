@@ -92,3 +92,9 @@ message SubPageQuery {
     int32 page = 3;
     int32 size = 4;
 }
+
+enum Gender {
+    Unknown = 0;
+    Male = 1;
+    Female = 2;
+}
