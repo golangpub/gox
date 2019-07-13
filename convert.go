@@ -132,3 +132,25 @@ func ToPBGender(v Gender) base.Gender {
 		return base.Gender_Unknown
 	}
 }
+
+func ToPBFormItem(v *FormItem) *base.FormItem {
+	return &base.FormItem{
+		Type:        v.Type,
+		Name:        v.Name,
+		Options:     v.Options,
+		Values:      v.Values,
+		Optional:    v.Optional,
+		Description: v.Description,
+	}
+}
+
+func FromPBFormItem(v *base.FormItem) *FormItem {
+	return &FormItem{
+		Type:        v.Type,
+		Name:        v.Name,
+		Options:     v.Options,
+		Values:      v.Values,
+		Optional:    v.Optional,
+		Description: v.Description,
+	}
+}

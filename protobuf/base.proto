@@ -98,3 +98,12 @@ enum Gender {
     Male = 1;
     Female = 2;
 }
+
+message FormItem {
+    string type = 1;
+    string name = 2;
+    repeated string options = 3;
+    repeated string values = 4;
+    bool optional = 5;
+    string description = 6;
+}
