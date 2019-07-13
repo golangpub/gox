@@ -154,3 +154,19 @@ func FromPBFormItem(v *base.FormItem) *FormItem {
 		Description: v.Description,
 	}
 }
+
+func ToPBFormItemList(items []*FormItem) []*base.FormItem {
+	l := make([]*base.FormItem, len(items))
+	for i, v := range items {
+		l[i] = ToPBFormItem(v)
+	}
+	return l
+}
+
+func FromPBFormItems(items []*base.FormItem) []*FormItem {
+	l := make([]*FormItem, len(items))
+	for i, v := range items {
+		l[i] = FromPBFormItem(v)
+	}
+	return l
+}
