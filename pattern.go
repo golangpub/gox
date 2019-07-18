@@ -1,6 +1,7 @@
 package gox
 
 import (
+	"net/url"
 	"regexp"
 	"time"
 
@@ -13,6 +14,11 @@ var emailRegexp = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0
 
 func IsEmail(email string) bool {
 	return emailRegexp.MatchString(email)
+}
+
+func IsURL(s string) bool {
+	_, err := url.Parse(s)
+	return err == nil
 }
 
 func IsName(name string) bool {
