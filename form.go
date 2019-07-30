@@ -18,10 +18,14 @@ func (f *Form) Add(i *FormItem) {
 	f.Items = append(f.Items, i)
 }
 
+func (f *Form) Remove(idx int) {
+	f.Items = append(f.Items[0:idx], f.Items[idx+1:]...)
+}
+
 func (f *Form) Size() int {
 	return len(f.Items)
 }
 
-func (f *Form) Remove(idx int) {
-	f.Items = append(f.Items[0:idx], f.Items[idx+1:]...)
+func (f *Form) Get(idx int) *FormItem {
+	return f.Items[idx]
 }
