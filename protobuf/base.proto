@@ -105,5 +105,10 @@ message FormItem {
     repeated string options = 3;
     repeated string values = 4;
     bool optional = 5;
-    string description = 6;
+    string display_name = 6;
+    string description = 7;
+}
+
+message Form {
+    repeated FormItem items = 1;
 }
