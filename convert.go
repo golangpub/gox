@@ -170,3 +170,15 @@ func FromPBFormItems(items []*base.FormItem) []*FormItem {
 	}
 	return l
 }
+
+func ToPBForm(f *Form) *base.Form {
+	return &base.Form{
+		Items: ToPBFormItemList(f.Items),
+	}
+}
+
+func FromPBForm(f *base.Form) *Form {
+	return &Form{
+		Items: FromPBFormItems(f.Items),
+	}
+}
