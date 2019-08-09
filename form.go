@@ -11,7 +11,7 @@ type FormItem struct {
 }
 
 type Form struct {
-	Items []*FormItem
+	Items []*FormItem `json:"items"`
 }
 
 func (f *Form) Add(i *FormItem) {
