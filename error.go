@@ -1,10 +1,10 @@
 package gox
 
 import (
+	"github.com/pkg/errors"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"net/http"
-	"strings"
-
-	"github.com/gopub/gox/internal"
 )
 
 type ErrorString string
@@ -17,112 +17,83 @@ const (
 	ErrNoValue ErrorString = "no value"
 )
 
-type Error interface {
-	error
-	Code() int
+type Error struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
-func NewError(code int, msg string) Error {
-	if len(msg) == 0 {
-		msg = http.StatusText(code)
+func (e *Error) Error() string {
+	return e.Message
+}
+
+func NewError(code int, message string) *Error {
+	if len(message) == 0 {
+		message = http.StatusText(code % 1000)
 	}
-	return internal.NewError(code, msg)
+	return &Error{
+		Code:    code,
+		Message: message,
+	}
 }
 
-func InternalError(message string) Error {
+func InternalError(message string) *Error {
 	return NewError(http.StatusInternalServerError, message)
 }
 
-func BadRequest(message string) Error {
+func BadRequest(message string) *Error {
 	return NewError(http.StatusBadRequest, message)
 }
 
-func Unauthorized(message string) Error {
+func Unauthorized(message string) *Error {
 	return NewError(http.StatusUnauthorized, message)
 }
 
-func Forbidden(message string) Error {
+func Forbidden(message string) *Error {
 	return NewError(http.StatusForbidden, message)
 }
 
-func NotFound(message string) Error {
+func NotFound(message string) *Error {
 	return NewError(http.StatusNotFound, message)
 }
 
-func Conflict(message string) Error {
+func Conflict(message string) *Error {
 	return NewError(http.StatusConflict, message)
 }
 
-type FieldError interface {
-	Error
-	Field() string
-}
-
-func NewFieldError(code int, msg, field string) Error {
-	return internal.NewFieldError(code, msg, field)
-}
-
-func BadRequestField(field string) Error {
-	return NewFieldError(http.StatusBadRequest, strings.ToLower(http.StatusText(http.StatusBadRequest)), field)
-}
-
-func UnauthorizedField(field string) Error {
-	return NewFieldError(http.StatusUnauthorized, strings.ToLower(http.StatusText(http.StatusUnauthorized)), field)
-}
-
-func ForbiddenField(field string) Error {
-	return NewFieldError(http.StatusForbidden, strings.ToLower(http.StatusText(http.StatusForbidden)), field)
-}
-
-func NotFoundField(field string) Error {
-	return NewFieldError(http.StatusNotFound, strings.ToLower(http.StatusText(http.StatusNotFound)), field)
-}
-
-func ConflictField(field string) Error {
-	return NewFieldError(http.StatusConflict, strings.ToLower(http.StatusText(http.StatusConflict)), field)
-}
-
-type SubError interface {
-	Error
-	SubCode() int
-}
-
-func NewSubError(code, subCode int, msg string) Error {
-	return internal.NewSubError(code, subCode, msg)
-}
-
-func InternalSubError(subCode int, message string) Error {
-	return NewSubError(http.StatusInternalServerError, subCode, message)
-}
-
-func BadRequestSub(subCode int, message string) Error {
-	return NewSubError(http.StatusBadRequest, subCode, message)
-}
-
-func UnauthorizedSub(subCode int, message string) Error {
-	return NewSubError(http.StatusUnauthorized, subCode, message)
-}
-
-func ForbiddenSub(subCode int, message string) Error {
-	return NewSubError(http.StatusForbidden, subCode, message)
-}
-
-func NotFoundFieldSub(subCode int, message string) Error {
-	return NewSubError(http.StatusNotFound, subCode, message)
-}
-
-func ConflictSub(subCode int, message string) Error {
-	return NewSubError(http.StatusConflict, subCode, message)
-}
-
-func UnwrapError(err error) Error {
+func ToStatusError(err error) error {
 	if err == nil {
 		return nil
 	}
 
-	if e, ok := err.(Error); ok {
-		return e
+	// if err is status error, return directly
+	_, ok := status.FromError(err)
+	if ok {
+		return err
 	}
 
-	return InternalError(err.Error())
+	err = errors.Cause(err)
+
+	if err == ErrNoValue {
+		return status.Error(codes.Code(http.StatusNotFound), err.Error())
+	}
+
+	switch v := err.(type) {
+	case *Error:
+		return status.Error(codes.Code(v.Code), v.Error())
+	default:
+		return status.Error(codes.Code(http.StatusInternalServerError), err.Error())
+	}
+}
+
+func FromStatusError(err error) *Error {
+	if err == nil {
+		return nil
+	}
+
+	s, ok := status.FromError(err)
+	if !ok {
+		return InternalError(err.Error())
+	}
+
+	return NewError(int(s.Code()), s.Message())
 }
