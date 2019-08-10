@@ -9,5 +9,7 @@ require (
 	github.com/nyaruka/phonenumbers v1.0.42
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.3.0
+	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80 // indirect
+	golang.org/x/text v0.3.2 // indirect
 	google.golang.org/grpc v1.22.1
 )

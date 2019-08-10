@@ -102,3 +102,16 @@ func MustPrepareStmt(db *sql.DB, format string, args ...interface{}) *sql.Stmt {
 	}
 	return stmt
 }
+
+func OpenPostgres(dbURL string) *sql.DB {
+	db, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		log.Fatal("Failed to open postgres", err)
+	}
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatalf("Failed to ping postgres: source=%s, err=%v", dbURL, err)
+	}
+	return db
+}

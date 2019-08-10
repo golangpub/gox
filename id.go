@@ -29,15 +29,19 @@ type ID int64
 // id由time+shard+seq组成
 // 若业务多可扩充shard，并发高可扩充seq. 由于time在最高位,故扩展后的id集合与原id集合不会出现交集,可保持全局唯一
 
-const DefaultShardBitSize = 8 // 最多128个shard
-const DefaultSeqBitSize = 8   // 每个shard每ms不能超过128次调用
+const DefaultShardBitSize = 3 // 最多8个shard
+const DefaultSeqBitSize = 6   // 每个shard每ms不能超过64次调用
 
 var epoch time.Time
 var defaultIDGenerator IDGenerator
+var slowIDGenerator IDGenerator
+var fastIDGenerator IDGenerator
 
 func init() {
 	epoch = time.Date(2019, time.January, 2, 15, 4, 5, 0, time.UTC)
+	slowIDGenerator = NewSnakeIDGenerator(DefaultShardBitSize, DefaultSeqBitSize, NextSecond, GetShardIDByIP, defaultCounter)
 	defaultIDGenerator = NewSnakeIDGenerator(DefaultShardBitSize, DefaultSeqBitSize, NextMilliseconds, GetShardIDByIP, defaultCounter)
+	fastIDGenerator = NewSnakeIDGenerator(DefaultShardBitSize, DefaultSeqBitSize>>1, NextMilliseconds, GetShardIDByIP, defaultCounter)
 }
 
 func ParseShortID(s string) (ID, error) {
@@ -102,6 +106,14 @@ func searchPrettyTable(v byte) int {
 // NewID returns new ID created by default id generator
 func NextID() ID {
 	return defaultIDGenerator.NextID()
+}
+
+func NextSlowID() ID {
+	return slowIDGenerator.NextID()
+}
+
+func NextFastID() ID {
+	return fastIDGenerator.NextID()
 }
 
 // ShortString returns a short representation of id

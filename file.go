@@ -2,9 +2,10 @@ package gox
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 func FetchFile(ctx context.Context, url string) ([]byte, error) {
