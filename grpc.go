@@ -109,14 +109,17 @@ func handleIncomingMetadata(ctx context.Context) context.Context {
 		}
 	}
 
-	deviceIDVal := md.Get(keyDeviceID)
-	if len(deviceIDVal) > 0 && len(deviceIDVal[0]) > 0 {
-		ctx = ContextWithDeviceID(ctx, deviceIDVal[0])
+	deviceID := md.Get(keyDeviceID)
+	if len(deviceID) > 0 && len(deviceID[0]) > 0 {
+		ctx = ContextWithDeviceID(ctx, deviceID[0])
 	}
 
-	authTokenVal := md.Get(keyAccessToken)
-	if len(authTokenVal) > 0 && len(authTokenVal[0]) > 0 && TokenAuthenticator != nil {
-		ctx = TokenAuthenticator(ctx, authTokenVal[0])
+	accessToken := md.Get(keyAccessToken)
+	if len(accessToken) > 0 && len(accessToken[0]) > 0 {
+		ctx = ContextWithAccessToken(ctx, accessToken[0])
+		if TokenAuthenticator != nil {
+			ctx = TokenAuthenticator(ctx, accessToken[0])
+		}
 	}
 
 	if ContextWithMetadata != nil {
