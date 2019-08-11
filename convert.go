@@ -32,6 +32,9 @@ func ParsePhoneNumber(s string) (*PhoneNumber, error) {
 }
 
 func FromPBPhoneNumber(pn *base.PhoneNumber) *PhoneNumber {
+	if pn == nil {
+		return nil
+	}
 	return &PhoneNumber{
 		CountryCode:    int(pn.CountryCode),
 		NationalNumber: pn.NationalNumber,
@@ -64,6 +67,9 @@ func ToPBPhoneNumbers(pns []*PhoneNumber) []*base.PhoneNumber {
 }
 
 func FromPBFullName(n *base.FullName) *FullName {
+	if n == nil {
+		return nil
+	}
 	return &FullName{
 		FirstName:  n.FirstName,
 		MiddleName: n.MiddleName,
@@ -72,6 +78,9 @@ func FromPBFullName(n *base.FullName) *FullName {
 }
 
 func ToPBFullName(n *FullName) *base.FullName {
+	if n == nil {
+		return nil
+	}
 	return &base.FullName{
 		FirstName:  n.FirstName,
 		MiddleName: n.MiddleName,
@@ -80,6 +89,9 @@ func ToPBFullName(n *FullName) *base.FullName {
 }
 
 func FromPBLocation(l *base.Location) *Location {
+	if l == nil {
+		return nil
+	}
 	return &Location{
 		Name:      l.Name,
 		FullName:  l.FullName,
@@ -89,6 +101,9 @@ func FromPBLocation(l *base.Location) *Location {
 }
 
 func ToPBLocation(l *Location) *base.Location {
+	if l == nil {
+		return nil
+	}
 	return &base.Location{
 		Name:      l.Name,
 		FullName:  l.FullName,
@@ -98,6 +113,9 @@ func ToPBLocation(l *Location) *base.Location {
 }
 
 func FromPBCoordinate(l *base.Coordinate) *Coordinate {
+	if l == nil {
+		return nil
+	}
 	return &Coordinate{
 		Latitude:  l.Latitude,
 		Longitude: l.Longitude,
@@ -105,6 +123,9 @@ func FromPBCoordinate(l *base.Coordinate) *Coordinate {
 }
 
 func ToPBCoordinate(l *Coordinate) *base.Coordinate {
+	if l == nil {
+		return nil
+	}
 	return &base.Coordinate{
 		Latitude:  l.Latitude,
 		Longitude: l.Longitude,
@@ -134,6 +155,9 @@ func ToPBGender(v Gender) base.Gender {
 }
 
 func ToPBFormItem(v *FormItem) *base.FormItem {
+	if v == nil {
+		return nil
+	}
 	return &base.FormItem{
 		Type:        v.Type,
 		Name:        v.Name,
@@ -145,6 +169,9 @@ func ToPBFormItem(v *FormItem) *base.FormItem {
 }
 
 func FromPBFormItem(v *base.FormItem) *FormItem {
+	if v == nil {
+		return nil
+	}
 	return &FormItem{
 		Type:        v.Type,
 		Name:        v.Name,
@@ -172,12 +199,18 @@ func FromPBFormItems(items []*base.FormItem) []*FormItem {
 }
 
 func ToPBForm(f *Form) *base.Form {
+	if f == nil {
+		return nil
+	}
 	return &base.Form{
 		Items: ToPBFormItemList(f.Items),
 	}
 }
 
 func FromPBForm(f *base.Form) *Form {
+	if f == nil {
+		return nil
+	}
 	return &Form{
 		Items: FromPBFormItems(f.Items),
 	}
