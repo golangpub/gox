@@ -46,3 +46,20 @@ func GetCoordinate(ctx context.Context) *Coordinate {
 func ContextWithCoordinate(ctx context.Context, location *Coordinate) context.Context {
 	return context.WithValue(ctx, keyCoordinate, location)
 }
+
+func DetachedContext(ctx context.Context) context.Context {
+	newCtx := context.Background()
+	if token := GetAccessToken(ctx); len(token) > 0 {
+		newCtx = ContextWithAccessToken(newCtx, token)
+	}
+	if deviceID := GetDeviceID(ctx); len(deviceID) > 0 {
+		newCtx = ContextWithDeviceID(newCtx, deviceID)
+	}
+	if c := GetCoordinate(ctx); c != nil {
+		newCtx = ContextWithCoordinate(newCtx, c)
+	}
+	if addr := GetRemoteAddr(ctx); len(addr) > 0 {
+		newCtx = ContextWithRemoteAddr(newCtx, addr)
+	}
+	return newCtx
+}
