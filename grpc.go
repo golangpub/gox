@@ -3,7 +3,7 @@ package gox
 import (
 	"context"
 	"fmt"
-	"log"
+	"github.com/gopub/log"
 	"time"
 
 	"google.golang.org/grpc"
@@ -124,6 +124,11 @@ func handleIncomingMetadata(ctx context.Context) context.Context {
 
 	if ContextWithMetadata != nil {
 		ctx = ContextWithMetadata(md)
+	}
+
+	if id := GetLoginID(ctx); id > 0 {
+		logger := log.With("login", id)
+		ctx = log.ContextWithLogger(ctx, logger)
 	}
 	return ctx
 }
