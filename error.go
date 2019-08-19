@@ -1,6 +1,7 @@
 package gox
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/pkg/errors"
@@ -74,7 +75,7 @@ func ToStatusError(err error) error {
 
 	err = errors.Cause(err)
 
-	if err == ErrNoValue {
+	if err == ErrNoValue || err == sql.ErrNoRows {
 		return status.Error(codes.Code(http.StatusNotFound), err.Error())
 	}
 
