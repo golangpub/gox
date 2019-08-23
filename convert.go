@@ -51,6 +51,9 @@ func FromPBPhoneNumbers(pns []*base.PhoneNumber) []*PhoneNumber {
 }
 
 func ToPBPhoneNumber(pn *PhoneNumber) *base.PhoneNumber {
+	if pn == nil {
+		return nil
+	}
 	return &base.PhoneNumber{
 		CountryCode:    int32(pn.CountryCode),
 		NationalNumber: pn.NationalNumber,
