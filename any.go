@@ -333,9 +333,9 @@ func (a *AnyList) Remove(index int) {
 
 func (a *AnyList) Scan(src interface{}) error {
 	if s, ok := src.(string); ok {
-		return json.Unmarshal([]byte(s), a)
+		return json.Unmarshal([]byte(s), &a.list)
 	} else if b, ok := src.([]byte); ok {
-		return json.Unmarshal(b, a)
+		return json.Unmarshal(b, &a.list)
 	} else {
 		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
 	}

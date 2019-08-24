@@ -1,5 +1,12 @@
 package gox
 
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
+	"reflect"
+)
+
 type FormItem struct {
 	Type        string   `json:"type"`
 	Name        string   `json:"name"`
@@ -28,4 +35,21 @@ func (f *Form) Size() int {
 
 func (f *Form) Get(idx int) *FormItem {
 	return f.Items[idx]
+}
+
+func (f *Form) Scan(src interface{}) error {
+	if s, ok := src.(string); ok {
+		return json.Unmarshal([]byte(s), &f.Items)
+	} else if b, ok := src.([]byte); ok {
+		return json.Unmarshal(b, &f.Items)
+	} else {
+		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
+	}
+}
+
+func (f *Form) Value() (driver.Value, error) {
+	if f == nil {
+		return nil, nil
+	}
+	return json.Marshal(f.Items)
 }
