@@ -370,6 +370,8 @@ type Image struct {
 	Height int    `json:"h,omitempty"`
 	Format string `json:"fmt,omitempty"`
 	Size   int    `json:"size,omitempty"`
+
+	Data []byte `json:"-"`
 }
 
 func NewImage() *Image {
@@ -382,6 +384,8 @@ type Video struct {
 	Length int    `json:"len,omitempty"`
 	Size   int    `json:"size,omitempty"`
 	Image  *Image `json:"img,omitempty"`
+
+	Data []byte `json:"-"`
 }
 
 func NewVideo() *Video {
@@ -393,6 +397,8 @@ type Audio struct {
 	Format string `json:"fmt,omitempty"`
 	Length int    `json:"len,omitempty"`
 	Size   int    `json:"size,omitempty"`
+
+	Data []byte `json:"-"`
 }
 
 func NewAudio() *Audio {
@@ -404,6 +410,8 @@ type File struct {
 	Name   string `json:"name"`
 	Size   int    `json:"size,omitempty"`
 	Format string `json:"fmt,omitempty"`
+
+	Data []byte `json:"-"`
 }
 
 func NewFile() *File {
