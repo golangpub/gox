@@ -19,12 +19,22 @@ func IsEmail(email string) bool {
 	return emailRegexp.MatchString(email)
 }
 
-func IsURL(s string) bool {
+func IsLink(s string) bool {
 	if len(s) == 0 {
 		return false
 	}
-	_, err := url.Parse(s)
-	return err == nil
+	u, err := url.Parse(s)
+	if err != nil {
+		return false
+	}
+	if len(u.Scheme) == 0 {
+		return false
+	}
+
+	if len(u.Host) == 0 {
+		return false
+	}
+	return true
 }
 
 func IsName(name string) bool {

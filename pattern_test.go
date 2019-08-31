@@ -130,3 +130,11 @@ func TestIsEmail(t *testing.T) {
 		})
 	}
 }
+
+func TestIsLink(t *testing.T) {
+	ok := gox.IsLink("")
+	assert.Empty(t, ok)
+
+	ok = gox.IsLink("abc")
+	assert.Empty(t, ok)
+}
