@@ -115,6 +115,10 @@ func (n *PhoneNumber) Scan(src interface{}) error {
 		}
 	}
 
+	if len(s) == 0 {
+		return nil
+	}
+
 	if !ok || len(s) < 10 {
 		return fmt.Errorf("failed to parse %v into gox.PhoneNumber", src)
 	}
