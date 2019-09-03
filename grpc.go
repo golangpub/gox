@@ -3,8 +3,9 @@ package gox
 import (
 	"context"
 	"fmt"
-	"github.com/gopub/log"
 	"time"
+
+	"github.com/gopub/log"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
