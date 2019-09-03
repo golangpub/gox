@@ -70,6 +70,10 @@ func (s *Int64Set) Map() map[int64]void {
 	return s.items
 }
 
+func (s *Int64Set) Size() int {
+	return len(s.items)
+}
+
 type StringSet struct {
 	items map[string]void
 }
@@ -104,4 +108,8 @@ func (s *StringSet) Slice() []string {
 
 func (s *StringSet) Map() map[string]void {
 	return s.items
+}
+
+func (s *StringSet) Size() int {
+	return len(s.items)
 }
