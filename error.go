@@ -2,11 +2,10 @@ package gox
 
 import (
 	"database/sql"
-	"net/http"
-
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"net/http"
 )
 
 type ErrorString string
@@ -16,7 +15,7 @@ func (es ErrorString) Error() string {
 }
 
 const (
-	ErrNoValue ErrorString = "no value"
+	ErrNotExist ErrorString = "does not exist"
 )
 
 type Error struct {
@@ -75,7 +74,7 @@ func ToStatusError(err error) error {
 
 	err = errors.Cause(err)
 
-	if err == ErrNoValue || err == sql.ErrNoRows {
+	if err == ErrNotExist || err == sql.ErrNoRows {
 		return status.Error(codes.Code(http.StatusNotFound), err.Error())
 	}
 

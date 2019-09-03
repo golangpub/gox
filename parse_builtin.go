@@ -9,7 +9,7 @@ import (
 
 func ParseBool(i interface{}) (bool, error) {
 	if i == nil {
-		return false, ErrNoValue
+		return false, ErrNotExist
 	}
 
 	v := reflect.ValueOf(i)
@@ -24,7 +24,7 @@ func ParseBool(i interface{}) (bool, error) {
 		if str == "false" {
 			return false, nil
 		}
-		return false, ErrNoValue
+		return false, ErrNotExist
 	default:
 		b, err := ParseInt(i)
 		if err == nil {
@@ -49,7 +49,7 @@ func ParseBool(i interface{}) (bool, error) {
 
 func ParseInt(i interface{}) (int64, error) {
 	if i == nil {
-		return 0, ErrNoValue
+		return 0, ErrNotExist
 	}
 
 	v := reflect.ValueOf(i)
@@ -80,12 +80,12 @@ func ParseInt(i interface{}) (int64, error) {
 			return int64(n), nil
 		}
 	}
-	return 0, ErrNoValue
+	return 0, ErrNotExist
 }
 
 func ParseFloat(i interface{}) (float64, error) {
 	if i == nil {
-		return 0, ErrNoValue
+		return 0, ErrNotExist
 	}
 
 	v := reflect.ValueOf(i)
@@ -98,6 +98,6 @@ func ParseFloat(i interface{}) (float64, error) {
 		}
 		return strconv.ParseFloat(v.String(), 64)
 	default:
-		return 0, ErrNoValue
+		return 0, ErrNotExist
 	}
 }

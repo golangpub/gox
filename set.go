@@ -66,6 +66,10 @@ func (s *Int64Set) Slice() []int64 {
 	return sl
 }
 
+func (s *Int64Set) Map() map[int64]void {
+	return s.items
+}
+
 type StringSet struct {
 	items map[string]void
 }
@@ -96,4 +100,8 @@ func (s *StringSet) Slice() []string {
 	}
 
 	return sl
+}
+
+func (s *StringSet) Map() map[string]void {
+	return s.items
 }
