@@ -14,8 +14,8 @@ import (
 )
 
 var KeepAliveClientParames = keepalive.ClientParameters{
-	Time:                time.Second * 30,
-	Timeout:             time.Second * 10,
+	Time:                time.Second * 10,
+	Timeout:             time.Second * 5,
 	PermitWithoutStream: true,
 }
 
