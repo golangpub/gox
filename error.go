@@ -66,13 +66,13 @@ func ToStatusError(err error) error {
 		return nil
 	}
 
+	err = errors.Cause(err)
+
 	// if err is status error, return directly
 	_, ok := status.FromError(err)
 	if ok {
 		return err
 	}
-
-	err = errors.Cause(err)
 
 	if err == ErrNotExist || err == sql.ErrNoRows {
 		return status.Error(codes.Code(http.StatusNotFound), err.Error())
@@ -86,14 +86,19 @@ func ToStatusError(err error) error {
 	}
 }
 
-func FromStatusError(err error) *Error {
+func FromStatusError(err error) error {
 	if err == nil {
 		return nil
 	}
 
 	s, ok := status.FromError(err)
 	if !ok {
-		return InternalError(err.Error())
+		return err
+	}
+
+	if int(s.Code()) == http.StatusNotFound &&
+		(s.Message() == ErrNotExist.Error() || s.Message() == sql.ErrNoRows.Error()) {
+		return ErrNotExist
 	}
 
 	return NewError(int(s.Code()), s.Message())
