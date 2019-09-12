@@ -370,6 +370,7 @@ type Image struct {
 	Height int    `json:"h,omitempty"`
 	Format string `json:"fmt,omitempty"`
 	Size   int    `json:"size,omitempty"`
+	Name   string `json:"name,omitempty"`
 
 	Data []byte `json:"-"`
 }
@@ -384,6 +385,7 @@ type Video struct {
 	Length int    `json:"len,omitempty"`
 	Size   int    `json:"size,omitempty"`
 	Image  *Image `json:"img,omitempty"`
+	Name   string `json:"name,omitempty"`
 
 	Data []byte `json:"-"`
 }
@@ -397,6 +399,7 @@ type Audio struct {
 	Format string `json:"fmt,omitempty"`
 	Length int    `json:"len,omitempty"`
 	Size   int    `json:"size,omitempty"`
+	Name   string `json:"name,omitempty"`
 
 	Data []byte `json:"-"`
 }
