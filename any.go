@@ -327,8 +327,24 @@ func (a *AnyList) Insert(i int, v *Any) {
 	}
 }
 
-func (a *AnyList) Remove(index int) {
+func (a *AnyList) RemoveAt(index int) {
 	a.list = append(a.list[0:index], a.list[index+1:]...)
+}
+
+func (a *AnyList) Remove(v *Any) {
+	i := a.IndexOf(v)
+	if i >= 0 {
+		a.RemoveAt(i)
+	}
+}
+
+func (a *AnyList) IndexOf(v *Any) int {
+	for i, m := range a.list {
+		if m == v {
+			return i
+		}
+	}
+	return -1
 }
 
 func (a *AnyList) Scan(src interface{}) error {
