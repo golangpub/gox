@@ -533,7 +533,7 @@ func (m M) RemoveAllExceptKeys(keys []string) {
 	}
 }
 
-func (m M) UnmarshalJSON(obj interface{}) error {
+func (m M) AssignToJSON(obj interface{}) error {
 	data, err := json.Marshal(m)
 	if err != nil {
 		return errors.Wrap(err, "marshal failed")
