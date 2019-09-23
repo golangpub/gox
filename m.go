@@ -432,9 +432,22 @@ func (m M) URL(key string) string {
 //	}
 //}
 
+func (m M) set(k string, v interface{}) {
+	val := reflect.ValueOf(v)
+	if !val.IsValid() {
+		return
+	}
+	if val.IsZero() {
+		if _, ok := m[k]; ok {
+			return
+		}
+	}
+	m[k] = v
+}
+
 func (m M) AddMap(val M) {
 	for k, v := range val {
-		m[k] = v
+		m.set(k, v)
 	}
 }
 
@@ -464,7 +477,7 @@ func (m M) AddMapObj(obj interface{}) {
 	for _, key := range v.MapKeys() {
 		val := v.MapIndex(key).Interface()
 		if val != nil {
-			m[key.String()] = val
+			m.set(key.String(), val)
 		}
 	}
 }
