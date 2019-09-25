@@ -76,6 +76,17 @@ func (m M) String(key string) string {
 	}
 }
 
+func (m M) TrimmedString(key string) string {
+	switch v := m.Value(key).(type) {
+	case string:
+		return strings.TrimSpace(v)
+	case json.Number:
+		return string(v)
+	default:
+		return ""
+	}
+}
+
 func (m M) DefaultString(key string, defaultValue string) string {
 	switch v := m.Value(key).(type) {
 	case string:
