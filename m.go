@@ -2,7 +2,6 @@ package gox
 
 import (
 	"encoding/json"
-	"github.com/pkg/errors"
 	"math/big"
 	"net/url"
 	"reflect"
@@ -544,15 +543,6 @@ func (m M) RemoveAllExceptKeys(keys []string) {
 			delete(m, k)
 		}
 	}
-}
-
-func (m M) AssignToJSON(obj interface{}) error {
-	data, err := json.Marshal(m)
-	if err != nil {
-		return errors.Wrap(err, "marshal failed")
-	}
-	err = json.Unmarshal(data, obj)
-	return errors.Wrap(err, "unmarshal failed")
 }
 
 func indexOfStr(strs []string, s string) int {
