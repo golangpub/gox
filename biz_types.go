@@ -186,8 +186,8 @@ type Address struct {
 	Room     string `json:"room,omitempty"`
 	PostCode string `json:"post_code,omitempty"`
 
-	Name     string `json:"name"`
-	FullName string `json:"full_name"`
+	Name     string `json:"name,omitempty"`
+	FullName string `json:"full_name,omitempty"`
 }
 
 var _ driver.Valuer = (*Address)(nil)
