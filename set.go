@@ -1,5 +1,7 @@
 package gox
 
+import "encoding/json"
+
 type void struct{}
 
 type Set struct {
@@ -38,6 +40,9 @@ type Int64Set struct {
 	items map[int64]void
 }
 
+var _ json.Unmarshaler = (*Int64Set)(nil)
+var _ json.Marshaler = (*Int64Set)(nil)
+
 func NewInt64Set(capacity int) *Int64Set {
 	s := &Int64Set{}
 	s.items = make(map[int64]void, capacity)
@@ -74,9 +79,27 @@ func (s *Int64Set) Size() int {
 	return len(s.items)
 }
 
+func (s *Int64Set) UnmarshalJSON(data []byte) error {
+	var ids []int64
+	if err := json.Unmarshal(data, &ids); err != nil {
+		return err
+	}
+	for _, id := range ids {
+		s.Add(id)
+	}
+	return nil
+}
+
+func (s *Int64Set) MarshalJSON() ([]byte, error) {
+	return json.Marshal(s.Slice())
+}
+
 type StringSet struct {
 	items map[string]void
 }
+
+var _ json.Unmarshaler = (*StringSet)(nil)
+var _ json.Marshaler = (*StringSet)(nil)
 
 func NewStringSet(capacity int) *StringSet {
 	s := &StringSet{}
@@ -112,4 +135,19 @@ func (s *StringSet) Map() map[string]void {
 
 func (s *StringSet) Size() int {
 	return len(s.items)
+}
+
+func (s *StringSet) UnmarshalJSON(data []byte) error {
+	var list []string
+	if err := json.Unmarshal(data, &list); err != nil {
+		return err
+	}
+	for _, v := range list {
+		s.Add(v)
+	}
+	return nil
+}
+
+func (s *StringSet) MarshalJSON() ([]byte, error) {
+	return json.Marshal(s.Slice())
 }
