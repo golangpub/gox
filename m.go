@@ -578,31 +578,3 @@ func indexOfStr(strs []string, s string) int {
 	}
 	return -1
 }
-
-func (m M) SetInt64(key string, val int64) {
-	m[key] = val
-}
-
-func (m M) SetFloat64(key string, val float64) {
-	m[key] = val
-}
-
-func (m M) SetString(key string, val string) {
-	m[key] = val
-}
-
-func (m M) SetBool(key string, val bool) {
-	m[key] = val
-}
-
-func (m M) SetPhoneNumber(key string, val *PhoneNumber) {
-	m[key] = val
-}
-
-func (m M) SetInt64s(key string, val *Int64List) {
-	m[key] = val.List
-}
-
-func (m M) SetLocation(key string, val *Location) {
-	m[key] = val
-}
