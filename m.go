@@ -2,6 +2,7 @@ package gox
 
 import (
 	"encoding/json"
+	"github.com/gopub/log"
 	"math/big"
 	"net/url"
 	"reflect"
@@ -390,17 +391,30 @@ func (m M) MustCurrency(key string) Currency {
 }
 
 func (m M) PhoneNumber(key string) *PhoneNumber {
-	s := m.String(key)
-	s = strings.TrimSpace(s)
-	parsedNumber, err := phonenumbers.Parse(s, "")
-	if err != nil || !phonenumbers.IsValidNumber(parsedNumber) {
+	switch v := m[key].(type) {
+	case string:
+		pn, err := phonenumbers.Parse(strings.TrimSpace(v), "")
+		if err != nil || !phonenumbers.IsValidNumber(pn) {
+			return nil
+		}
+		return &PhoneNumber{
+			CountryCode:    int(pn.GetCountryCode()),
+			NationalNumber: int64(pn.GetNationalNumber()),
+			Extension:      pn.GetExtension(),
+		}
+	case M, map[string]interface{}:
+		data, err := json.Marshal(v)
+		if err != nil {
+			log.Errorf("Marshal failed: %v", err)
+		}
+		var pn *PhoneNumber
+		err = json.Unmarshal(data, &pn)
+		if err != nil {
+			log.Errorf("Unmarshal failed: %v", err)
+		}
+		return pn
+	default:
 		return nil
-	}
-
-	return &PhoneNumber{
-		CountryCode:    int(parsedNumber.GetCountryCode()),
-		NationalNumber: int64(parsedNumber.GetNationalNumber()),
-		Extension:      parsedNumber.GetExtension(),
 	}
 }
 
