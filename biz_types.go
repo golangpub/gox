@@ -177,17 +177,20 @@ func (n *PhoneNumber) Copy(v interface{}) error {
 
 // Address
 type Address struct {
-	Country  string `json:"country,omitempty"`
-	Province string `json:"province,omitempty"`
-	City     string `json:"city,omitempty"`
-	District string `json:"district,omitempty"`
-	Street   string `json:"street,omitempty"`
-	Building string `json:"building,omitempty"`
-	Room     string `json:"room,omitempty"`
-	PostCode string `json:"post_code,omitempty"`
+	Country     string `json:"country,omitempty"`
+	Province    string `json:"province,omitempty"`
+	City        string `json:"city,omitempty"`
+	District    string `json:"district,omitempty"`
+	Street      string `json:"street,omitempty"`
+	Building    string `json:"building,omitempty"`
+	Room        string `json:"room,omitempty"`
+	PostCode    string `json:"post_code,omitempty"`
+	Name        string `json:"name,omitempty"`
+	PostalTitle string `json:"postal_title,omitempty"`
+}
 
-	Name     string `json:"name,omitempty"`
-	FullName string `json:"full_name,omitempty"`
+func NewAddress() *Address {
+	return &Address{}
 }
 
 var _ driver.Valuer = (*Address)(nil)

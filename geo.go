@@ -8,15 +8,19 @@ import (
 )
 
 const (
-	PI           = 3.14159265
-	Earth_Radius = 6378.1 //km
-	Earth_Circle = 2 * PI * Earth_Radius
-	Degree       = Earth_Circle * 1000 / 360
+	PI          = 3.14159265
+	EarthRadius = 6378.1 //km
+	EarthCircle = 2 * PI * EarthRadius
+	Degree      = EarthCircle * 1000 / 360
 )
 
 type Coordinate struct {
 	Latitude  float64 `json:"lat"`
 	Longitude float64 `json:"lng"`
+}
+
+func NewCoordinate() *Coordinate {
+	return &Coordinate{}
 }
 
 var _ driver.Valuer = (*Coordinate)(nil)
@@ -62,6 +66,10 @@ type Area struct {
 	MaxLng float64
 }
 
+func NewArea() *Area {
+	return &Area{}
+}
+
 func (a *Area) ContainsCoordinate(c *Coordinate) bool {
 	if c.Latitude < a.MinLat || c.Latitude > a.MaxLat {
 		return false
@@ -76,7 +84,7 @@ func (a *Area) ContainsCoordinate(c *Coordinate) bool {
 
 // @param radius is in km
 func (c *Coordinate) GetArea(radius float64) Area {
-	if radius > Earth_Circle {
+	if radius > EarthCircle {
 		panic("radius is too large")
 	}
 
@@ -85,7 +93,7 @@ func (c *Coordinate) GetArea(radius float64) Area {
 	lng := c.Longitude * PI / 180
 
 	//弧面距离=半径*夹角，故，夹角=弧面距离/半径, 夹角永远为正
-	angle := radius / Earth_Radius
+	angle := radius / EarthRadius
 
 	//纬度对应的半径均是地球的半径，故纬度的范围可以估算出来，但是不同经度对应的圆半径不一样，随着纬度的绝对值越大，经度半径越小
 	a.MinLat = lat - angle
@@ -121,12 +129,15 @@ func (c *Coordinate) DistanceTo(d Coordinate) float64 {
 
 	a := math.Sin(deltaLat/2)*math.Sin(deltaLat/2) + math.Cos(lat1)*math.Cos(lat2)*math.Sin(deltaLng/2)*math.Sin(deltaLng/2)
 	k := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
-	return k * Earth_Radius
+	return k * EarthRadius
 }
 
 type Location struct {
 	Name      string  `json:"name,omitempty"`
-	FullName  string  `json:"full_name,omitempty"`
 	Latitude  float64 `json:"lat"`
 	Longitude float64 `json:"lng"`
+}
+
+func NewLocation() *Location {
+	return &Location{}
 }

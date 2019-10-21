@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
-	"errors"
 	"fmt"
+	"github.com/pkg/errors"
 	"reflect"
 	"sync"
 )
@@ -349,9 +349,11 @@ func (a *AnyList) IndexOf(v *Any) int {
 
 func (a *AnyList) Scan(src interface{}) error {
 	if s, ok := src.(string); ok {
-		return json.Unmarshal([]byte(s), &a.list)
+		err := json.Unmarshal([]byte(s), &a.list)
+		return errors.Wrap(err, s)
 	} else if b, ok := src.([]byte); ok {
-		return json.Unmarshal(b, &a.list)
+		err := json.Unmarshal(b, &a.list)
+		return errors.Wrap(err, string(b))
 	} else {
 		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
 	}
@@ -381,12 +383,13 @@ func init() {
 }
 
 type Image struct {
-	Link   string `json:"link"`
-	Width  int    `json:"w,omitempty"`
-	Height int    `json:"h,omitempty"`
-	Format string `json:"fmt,omitempty"`
-	Size   int    `json:"size,omitempty"`
-	Name   string `json:"name,omitempty"`
+	Link      string `json:"link"`
+	Width     int    `json:"w,omitempty"`
+	Height    int    `json:"h,omitempty"`
+	Format    string `json:"fmt,omitempty"`
+	Size      int    `json:"size,omitempty"`
+	Name      string `json:"name,omitempty"`
+	Thumbnail string `json:"thumbnail,omitempty"`
 
 	Data []byte `json:"-"`
 }

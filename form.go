@@ -11,14 +11,27 @@ type FormItem struct {
 	Type        string   `json:"type"`
 	Name        string   `json:"name"`
 	Options     []string `json:"options"`
-	Values      []string `json:"values"`
 	Optional    bool     `json:"optional"`
 	DisplayName string   `json:"display_name"`
 	Description string   `json:"description"`
 }
 
+func NewFormItem() *FormItem {
+	return &FormItem{}
+}
+
+func (f *FormItem) Clone() *FormItem {
+	p := new(FormItem)
+	*p = *f
+	return p
+}
+
 type Form struct {
 	Items []*FormItem `json:"items"`
+}
+
+func NewForm() *Form {
+	return &Form{}
 }
 
 func (f *Form) Add(i *FormItem) {

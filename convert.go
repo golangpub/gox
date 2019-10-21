@@ -98,7 +98,6 @@ func FromPBLocation(l *base.Location) *Location {
 	}
 	return &Location{
 		Name:      l.Name,
-		FullName:  l.FullName,
 		Latitude:  l.Latitude,
 		Longitude: l.Longitude,
 	}
@@ -110,7 +109,6 @@ func ToPBLocation(l *Location) *base.Location {
 	}
 	return &base.Location{
 		Name:      l.Name,
-		FullName:  l.FullName,
 		Latitude:  l.Latitude,
 		Longitude: l.Longitude,
 	}
@@ -166,7 +164,6 @@ func ToPBFormItem(v *FormItem) *base.FormItem {
 		Type:        v.Type,
 		Name:        v.Name,
 		Options:     v.Options,
-		Values:      v.Values,
 		Optional:    v.Optional,
 		Description: v.Description,
 	}
@@ -180,7 +177,6 @@ func FromPBFormItem(v *base.FormItem) *FormItem {
 		Type:        v.Type,
 		Name:        v.Name,
 		Options:     v.Options,
-		Values:      v.Values,
 		Optional:    v.Optional,
 		Description: v.Description,
 	}

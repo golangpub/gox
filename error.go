@@ -2,6 +2,7 @@ package gox
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -27,7 +28,8 @@ func (e *Error) Error() string {
 	return e.Message
 }
 
-func NewError(code int, message string) *Error {
+func NewError(code int, msgFormat string, args ...interface{}) *Error {
+	message := fmt.Sprintf(msgFormat, args...)
 	if len(message) == 0 {
 		message = http.StatusText(code % 1000)
 	}
@@ -37,28 +39,28 @@ func NewError(code int, message string) *Error {
 	}
 }
 
-func InternalError(message string) *Error {
-	return NewError(http.StatusInternalServerError, message)
+func InternalError(format string, args ...interface{}) *Error {
+	return NewError(http.StatusInternalServerError, format, args...)
 }
 
-func BadRequest(message string) *Error {
-	return NewError(http.StatusBadRequest, message)
+func BadRequest(format string, args ...interface{}) *Error {
+	return NewError(http.StatusBadRequest, format, args...)
 }
 
-func Unauthorized(message string) *Error {
-	return NewError(http.StatusUnauthorized, message)
+func Unauthorized(format string, args ...interface{}) *Error {
+	return NewError(http.StatusUnauthorized, format, args...)
 }
 
-func Forbidden(message string) *Error {
-	return NewError(http.StatusForbidden, message)
+func Forbidden(format string, args ...interface{}) *Error {
+	return NewError(http.StatusForbidden, format, args...)
 }
 
-func NotFound(message string) *Error {
-	return NewError(http.StatusNotFound, message)
+func NotFound(format string, args ...interface{}) *Error {
+	return NewError(http.StatusNotFound, format, args...)
 }
 
-func Conflict(message string) *Error {
-	return NewError(http.StatusConflict, message)
+func Conflict(format string, args ...interface{}) *Error {
+	return NewError(http.StatusConflict, format, args...)
 }
 
 func ToStatusError(err error) error {
