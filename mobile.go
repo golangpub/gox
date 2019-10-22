@@ -158,3 +158,13 @@ func (l *PhoneNumberList) Len() int {
 func (l *PhoneNumberList) Get(index int) *PhoneNumber {
 	return l.List[index]
 }
+
+// For iOS/Android
+
+func NewPhoneNumberList() *PhoneNumberList {
+	return &PhoneNumberList{}
+}
+
+func (l *PhoneNumberList) Add(phoneNumber *PhoneNumber) {
+	l.List = append(l.List, phoneNumber)
+}

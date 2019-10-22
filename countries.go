@@ -12,6 +12,26 @@ type Country struct {
 	Flag        string `json:"flag"`
 }
 
+type CountryList struct {
+	List []*Country
+}
+
+func NewCountryList() *CountryList {
+	return &CountryList{}
+}
+
+func (l *CountryList) Size() int {
+	return len(l.List)
+}
+
+func (l *CountryList) Get(i int) *Country {
+	return l.List[i]
+}
+
+func GetCountryList() *CountryList {
+	return &CountryList{List: GetCountries()}
+}
+
 func GetCountries() []*Country {
 	loadCountries()
 	return countries
