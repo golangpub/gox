@@ -3,6 +3,7 @@ package gox
 import (
 	"net/url"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/gopub/log"
@@ -69,4 +70,8 @@ func IsBirthDate(s string) bool {
 	}
 
 	return true
+}
+
+func GetDialingCodeByRegionCode(regionCode string) int {
+	return phonenumbers.GetCountryCodeForRegion(strings.ToUpper(regionCode))
 }

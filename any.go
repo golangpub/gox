@@ -347,13 +347,22 @@ func (a *AnyList) IndexOf(v *Any) int {
 	return -1
 }
 
+func (a *AnyList) FirstImage() *Image {
+	for _, m := range a.list {
+		if img := m.Image(); img != nil {
+			return img
+		}
+	}
+	return nil
+}
+
 func (a *AnyList) Scan(src interface{}) error {
 	if s, ok := src.(string); ok {
 		err := json.Unmarshal([]byte(s), &a.list)
-		return errors.Wrap(err, s)
+		return errors.Wrapf(err, "unmarshal string failed: %s", s)
 	} else if b, ok := src.([]byte); ok {
 		err := json.Unmarshal(b, &a.list)
-		return errors.Wrap(err, string(b))
+		return errors.Wrapf(err, "unmarshal byte array failed: %s", string(b))
 	} else {
 		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
 	}
