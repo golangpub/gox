@@ -168,3 +168,21 @@ func NewPhoneNumberList() *PhoneNumberList {
 func (l *PhoneNumberList) Add(phoneNumber *PhoneNumber) {
 	l.List = append(l.List, phoneNumber)
 }
+
+func (l *PhoneNumberList) Contains(phoneNumber *PhoneNumber) bool {
+	for _, pn := range l.List {
+		if pn.String() == phoneNumber.String() {
+			return true
+		}
+	}
+	return false
+}
+
+func (l *PhoneNumberList) ContainsString(phoneNumber string) bool {
+	for _, pn := range l.List {
+		if pn.String() == phoneNumber {
+			return true
+		}
+	}
+	return false
+}
