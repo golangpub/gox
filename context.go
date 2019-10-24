@@ -10,6 +10,7 @@ const (
 	keyCoordinate  = "coordinate"
 	keyAccessToken = "access_token"
 	keyLoginID     = "login_id"
+	keyTraceID     = "trace_id"
 )
 
 func GetLoginID(ctx context.Context) int64 {
@@ -53,11 +54,23 @@ func GetDeviceID(ctx context.Context) string {
 	return id
 }
 
-func ContextWithDeviceID(ctx context.Context, deviceId string) context.Context {
-	if len(deviceId) == 0 {
+func ContextWithDeviceID(ctx context.Context, deviceID string) context.Context {
+	if len(deviceID) == 0 {
 		return ctx
 	}
-	return context.WithValue(ctx, keyDeviceID, deviceId)
+	return context.WithValue(ctx, keyDeviceID, deviceID)
+}
+
+func GetTraceID(ctx context.Context) string {
+	id, _ := ctx.Value(keyTraceID).(string)
+	return id
+}
+
+func ContextWithTraceID(ctx context.Context, traceID string) context.Context {
+	if len(traceID) == 0 {
+		return ctx
+	}
+	return context.WithValue(ctx, keyTraceID, traceID)
 }
 
 func GetCoordinate(ctx context.Context) *Coordinate {
@@ -85,6 +98,9 @@ func DetachedContext(ctx context.Context) context.Context {
 	}
 	if addr := GetRemoteAddr(ctx); len(addr) > 0 {
 		newCtx = ContextWithRemoteAddr(newCtx, addr)
+	}
+	if traceID := GetTraceID(ctx); len(traceID) > 0 {
+		newCtx = ContextWithTraceID(ctx, traceID)
 	}
 	return newCtx
 }
