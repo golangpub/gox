@@ -100,7 +100,7 @@ func DetachedContext(ctx context.Context) context.Context {
 		newCtx = ContextWithRemoteAddr(newCtx, addr)
 	}
 	if traceID := GetTraceID(ctx); len(traceID) > 0 {
-		newCtx = ContextWithTraceID(ctx, traceID)
+		newCtx = ContextWithTraceID(newCtx, traceID)
 	}
 	return newCtx
 }
