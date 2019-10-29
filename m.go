@@ -398,9 +398,9 @@ func (m M) PhoneNumber(key string) *PhoneNumber {
 			return nil
 		}
 		return &PhoneNumber{
-			CountryCode:    int(pn.GetCountryCode()),
-			NationalNumber: int64(pn.GetNationalNumber()),
-			Extension:      pn.GetExtension(),
+			Code:      int(pn.GetCountryCode()),
+			Number:    int64(pn.GetNationalNumber()),
+			Extension: pn.GetExtension(),
 		}
 	case M, map[string]interface{}:
 		data, err := json.Marshal(v)

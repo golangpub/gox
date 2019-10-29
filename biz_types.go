@@ -61,19 +61,19 @@ func (n *FullName) Value() (driver.Value, error) {
 
 // PhoneNumber
 type PhoneNumber struct {
-	CountryCode    int    `json:"country_code"`
-	NationalNumber int64  `json:"national_number"`
-	Extension      string `json:"extension,omitempty" sql:"type:VARCHAR(10)"`
+	Code      int    `json:"code"`
+	Number    int64  `json:"number"`
+	Extension string `json:"extension,omitempty" sql:"type:VARCHAR(10)"`
 }
 
 var _ driver.Valuer = (*PhoneNumber)(nil)
 
 func (n *PhoneNumber) String() string {
 	if len(n.Extension) == 0 {
-		return fmt.Sprintf("+%d%d", n.CountryCode, n.NationalNumber)
+		return fmt.Sprintf("+%d%d", n.Code, n.Number)
 	}
 
-	return fmt.Sprintf("+%d%d-%s", n.CountryCode, n.NationalNumber, n.Extension)
+	return fmt.Sprintf("+%d%d-%s", n.Code, n.Number, n.Extension)
 }
 
 func (n *PhoneNumber) InternationalFormat() string {
@@ -85,7 +85,7 @@ func (n *PhoneNumber) InternationalFormat() string {
 }
 
 func (n *PhoneNumber) MaskString() string {
-	nnBytes := []byte(fmt.Sprint(n.NationalNumber))
+	nnBytes := []byte(fmt.Sprint(n.Number))
 	maskLen := (len(nnBytes) + 2) / 3
 	start := len(nnBytes) - 2*maskLen
 	for i := 0; i < maskLen; i++ {
@@ -95,10 +95,10 @@ func (n *PhoneNumber) MaskString() string {
 	nn := string(nnBytes)
 
 	if len(n.Extension) == 0 {
-		return fmt.Sprintf("+%d%s", n.CountryCode, nn)
+		return fmt.Sprintf("+%d%s", n.Code, nn)
 	}
 
-	return fmt.Sprintf("+%d%s-%s", n.CountryCode, nn, n.Extension)
+	return fmt.Sprintf("+%d%s-%s", n.Code, nn, n.Extension)
 }
 
 func (n *PhoneNumber) Scan(src interface{}) error {
@@ -125,12 +125,12 @@ func (n *PhoneNumber) Scan(src interface{}) error {
 
 	s = s[1 : len(s)-1]
 	if s[len(s)-1] == ',' {
-		k, _ := fmt.Sscanf(s, "%d,%d", &n.CountryCode, &n.NationalNumber)
+		k, _ := fmt.Sscanf(s, "%d,%d", &n.Code, &n.Number)
 		if k == 2 {
 			return nil
 		}
 	} else {
-		k, _ := fmt.Sscanf(s, "%d,%d,%s", &n.CountryCode, &n.NationalNumber, &n.Extension)
+		k, _ := fmt.Sscanf(s, "%d,%d,%s", &n.Code, &n.Number, &n.Extension)
 		if k == 3 {
 			return nil
 		}
@@ -143,7 +143,7 @@ func (n *PhoneNumber) Value() (driver.Value, error) {
 		return nil, nil
 	}
 	ext := strings.Replace(n.Extension, ",", "\\,", -1)
-	s := fmt.Sprintf("(%d,%d,%s)", n.CountryCode, n.NationalNumber, ext)
+	s := fmt.Sprintf("(%d,%d,%s)", n.Code, n.Number, ext)
 	return s, nil
 }
 
@@ -154,8 +154,8 @@ func (n *PhoneNumber) Copy(v interface{}) error {
 	}
 
 	if pn, ok := v.(*base.PhoneNumber); ok {
-		n.CountryCode = int(pn.CountryCode)
-		n.NationalNumber = pn.NationalNumber
+		n.Code = int(pn.CountryCode)
+		n.Number = pn.NationalNumber
 		n.Extension = pn.Extension
 		return nil
 	}

@@ -102,5 +102,8 @@ func DetachedContext(ctx context.Context) context.Context {
 	if traceID := GetTraceID(ctx); len(traceID) > 0 {
 		newCtx = ContextWithTraceID(newCtx, traceID)
 	}
+	if loginID := GetLoginID(ctx); loginID > 0 {
+		newCtx = ContextWithLoginID(newCtx, loginID)
+	}
 	return newCtx
 }

@@ -10,8 +10,8 @@ import (
 
 func NewPhoneNumber(callingCode int, number int64) *PhoneNumber {
 	pn := new(PhoneNumber)
-	pn.CountryCode = callingCode
-	pn.NationalNumber = number
+	pn.Code = callingCode
+	pn.Number = number
 	return pn
 }
 
@@ -23,9 +23,9 @@ func ParsePhoneNumber(s string) (*PhoneNumber, error) {
 
 	if phonenumbers.IsValidNumber(parsedNumber) {
 		return &PhoneNumber{
-			CountryCode:    int(parsedNumber.GetCountryCode()),
-			NationalNumber: int64(parsedNumber.GetNationalNumber()),
-			Extension:      parsedNumber.GetExtension(),
+			Code:      int(parsedNumber.GetCountryCode()),
+			Number:    int64(parsedNumber.GetNationalNumber()),
+			Extension: parsedNumber.GetExtension(),
 		}, nil
 	}
 
@@ -37,9 +37,9 @@ func FromPBPhoneNumber(pn *base.PhoneNumber) *PhoneNumber {
 		return nil
 	}
 	return &PhoneNumber{
-		CountryCode:    int(pn.CountryCode),
-		NationalNumber: pn.NationalNumber,
-		Extension:      pn.Extension,
+		Code:      int(pn.CountryCode),
+		Number:    pn.NationalNumber,
+		Extension: pn.Extension,
 	}
 }
 
@@ -56,8 +56,8 @@ func ToPBPhoneNumber(pn *PhoneNumber) *base.PhoneNumber {
 		return nil
 	}
 	return &base.PhoneNumber{
-		CountryCode:    int32(pn.CountryCode),
-		NationalNumber: pn.NationalNumber,
+		CountryCode:    int32(pn.Code),
+		NationalNumber: pn.Number,
 		Extension:      pn.Extension,
 	}
 }

@@ -211,8 +211,8 @@ func TestCopyer(t *testing.T) {
 		assert.Equal(t, &Contact{
 			Name: "Tom",
 			PhoneNumber: &gox.PhoneNumber{
-				CountryCode:    86,
-				NationalNumber: 13800000001,
+				Code:   86,
+				Number: 13800000001,
 			},
 		}, c)
 	})
@@ -222,8 +222,8 @@ func TestCopyer(t *testing.T) {
 		err := gox.Copy(pn, "+8618600000001")
 		assert.NoError(t, err)
 		assert.Equal(t, pn, &gox.PhoneNumber{
-			CountryCode:    86,
-			NationalNumber: 18600000001,
+			Code:   86,
+			Number: 18600000001,
 		})
 	})
 }

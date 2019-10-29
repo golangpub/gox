@@ -242,7 +242,7 @@ func (g *SnakeIDGenerator) Clone() *SnakeIDGenerator {
 func (g *SnakeIDGenerator) NextID() ID {
 	id := g.timestampGetter.GetNumber() << (g.seqBitSize + g.shardBitSize)
 	if g.shardBitSize > 0 {
-		id |= g.shardIDGetter.GetNumber() << g.seqBitSize
+		id |= (g.shardIDGetter.GetNumber() % (1 << g.shardBitSize)) << g.seqBitSize
 	}
 	id |= g.seqNumGetter.GetNumber() % (1 << g.seqBitSize)
 	return ID(id)
