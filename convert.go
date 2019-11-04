@@ -156,66 +156,6 @@ func ToPBGender(v Gender) base.Gender {
 	}
 }
 
-func ToPBFormItem(v *FormItem) *base.FormItem {
-	if v == nil {
-		return nil
-	}
-	return &base.FormItem{
-		Type:        v.Type,
-		Name:        v.Name,
-		Options:     v.Options,
-		Optional:    v.Optional,
-		Description: v.Description,
-	}
-}
-
-func FromPBFormItem(v *base.FormItem) *FormItem {
-	if v == nil {
-		return nil
-	}
-	return &FormItem{
-		Type:        v.Type,
-		Name:        v.Name,
-		Options:     v.Options,
-		Optional:    v.Optional,
-		Description: v.Description,
-	}
-}
-
-func ToPBFormItemList(items []*FormItem) []*base.FormItem {
-	l := make([]*base.FormItem, len(items))
-	for i, v := range items {
-		l[i] = ToPBFormItem(v)
-	}
-	return l
-}
-
-func FromPBFormItems(items []*base.FormItem) []*FormItem {
-	l := make([]*FormItem, len(items))
-	for i, v := range items {
-		l[i] = FromPBFormItem(v)
-	}
-	return l
-}
-
-func ToPBForm(f *Form) *base.Form {
-	if f == nil {
-		return nil
-	}
-	return &base.Form{
-		Items: ToPBFormItemList(f.Items),
-	}
-}
-
-func FromPBForm(f *base.Form) *Form {
-	if f == nil {
-		return nil
-	}
-	return &Form{
-		Items: FromPBFormItems(f.Items),
-	}
-}
-
 type ByteUnit int64
 
 const (

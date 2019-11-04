@@ -263,7 +263,7 @@ var NextMilliseconds NumberGetterFunc = func() int64 {
 }
 
 var GetShardIDByIP NumberGetterFunc = func() int64 {
-	ip, err := GetOutboundIP()
+	ip, err := GetIP()
 	if err != nil {
 		log.Fatal(err)
 	}

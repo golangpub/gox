@@ -26,7 +26,9 @@ func randomString() string {
 		b.WriteString(u.Uid)
 	}
 
-	b.WriteString(GetIP().String())
+	if ip, err := GetIP(); err == nil {
+		b.WriteString(ip.String())
+	}
 	b.WriteString(time.Now().String())
 	b.WriteString(NextID().ShortString())
 	b.WriteString(fmt.Sprint(rand.Int()))
