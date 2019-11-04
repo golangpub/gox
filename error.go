@@ -68,7 +68,7 @@ func ToStatusError(err error) error {
 		return nil
 	}
 
-	err = Caused(err)
+	err = Cause(err)
 
 	// if err is status error, return directly
 	_, ok := status.FromError(err)
@@ -106,7 +106,7 @@ func FromStatusError(err error) error {
 	return NewError(int(s.Code()), s.Message())
 }
 
-func Caused(err error) error {
+func Cause(err error) error {
 	for {
 		if e, ok := err.(interface{ Unwrap() error }); ok {
 			err = e.Unwrap()
