@@ -211,7 +211,7 @@ func (a *Address) Scan(src interface{}) error {
 	if k == 8 {
 		return nil
 	}
-	return fmt.Errorf("failed to parse %v into gox.Address: %v", string(b), err)
+	return fmt.Errorf("parse %v into gox.Address: %w", string(b), err)
 }
 
 func (a *Address) Value() (driver.Value, error) {
@@ -302,7 +302,7 @@ func (m *Money) Scan(src interface{}) error {
 	if k == 2 {
 		return nil
 	}
-	return fmt.Errorf("failed to parse %v into gox.Money: %v", string(b), err)
+	return fmt.Errorf("parse %v into gox.Money: %w", string(b), err)
 }
 
 func (m *Money) Value() (driver.Value, error) {

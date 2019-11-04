@@ -3,7 +3,6 @@ package gox
 import (
 	"database/sql"
 	"fmt"
-	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"net/http"
@@ -68,7 +67,7 @@ func ToStatusError(err error) error {
 		return nil
 	}
 
-	err = errors.Cause(err)
+	err = Caused(err)
 
 	// if err is status error, return directly
 	_, ok := status.FromError(err)
@@ -104,4 +103,14 @@ func FromStatusError(err error) error {
 	}
 
 	return NewError(int(s.Code()), s.Message())
+}
+
+func Caused(err error) error {
+	for {
+		if e, ok := err.(interface{ Unwrap() error }); ok {
+			err = e.Unwrap()
+		} else {
+			return err
+		}
+	}
 }

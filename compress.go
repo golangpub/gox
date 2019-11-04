@@ -4,9 +4,8 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"fmt"
 	"io/ioutil"
-
-	"github.com/pkg/errors"
 )
 
 type Compressor interface {
@@ -90,10 +89,10 @@ func (g *gzipCompression) Compress(data []byte) ([]byte, error) {
 	//Make sure writer is closed before calling buffer.Bytes()!!!
 	err := WriteAll(writer, data)
 	if err != nil {
-		return nil, errors.Wrap(err, "cannot write data")
+		return nil, fmt.Errorf("write failed: %w", err)
 	}
 	if err = writer.Close(); err != nil {
-		return nil, errors.Wrap(err, "cannot close writer")
+		return nil, fmt.Errorf("close failed: %w", err)
 	}
 	return buffer.Bytes(), nil
 }

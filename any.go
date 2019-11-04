@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"github.com/pkg/errors"
 	"reflect"
 	"sync"
 )
@@ -359,10 +359,10 @@ func (a *AnyList) FirstImage() *Image {
 func (a *AnyList) Scan(src interface{}) error {
 	if s, ok := src.(string); ok {
 		err := json.Unmarshal([]byte(s), &a.list)
-		return errors.Wrapf(err, "unmarshal string failed: %s", s)
+		return fmt.Errorf("unmarshal string failed: %s, %w", s, err)
 	} else if b, ok := src.([]byte); ok {
 		err := json.Unmarshal(b, &a.list)
-		return errors.Wrapf(err, "unmarshal byte array failed: %s", string(b))
+		return fmt.Errorf("unmarshal byte array failed: %s, %w", string(b), err)
 	} else {
 		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
 	}

@@ -49,7 +49,7 @@ func (c *Coordinate) Scan(src interface{}) error {
 		return nil
 	}
 
-	return fmt.Errorf("failed to parse %v into geo.Coordinate: %v", s, err)
+	return fmt.Errorf("parse %v into geo.Coordinate: %w", s, err)
 }
 
 func (c *Coordinate) Value() (driver.Value, error) {

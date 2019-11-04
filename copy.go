@@ -1,11 +1,12 @@
 package gox
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 
+	"errors"
 	"github.com/gopub/log"
-	"github.com/pkg/errors"
 )
 
 type Copier interface {
@@ -28,7 +29,7 @@ func CopyWithNamer(dst interface{}, src interface{}, namer Namer) error {
 	}
 
 	err := copy(reflect.ValueOf(dst), reflect.ValueOf(src), namer)
-	return errors.Wrap(err, "cannot copy")
+	return fmt.Errorf("copy failed: %v", err)
 }
 
 // copy dst is valid value or pointer to value
@@ -38,7 +39,7 @@ func copy(dst reflect.Value, src reflect.Value, namer Namer) error {
 	}
 
 	if !dst.IsValid() {
-		return errors.Errorf("invalid values:dst=%#v,src=%#v", dst, src)
+		return fmt.Errorf("invalid values:dst=%#v,src=%#v", dst, src)
 	}
 
 	if a, ok := dst.Interface().(Copier); ok {
@@ -50,7 +51,7 @@ func copy(dst reflect.Value, src reflect.Value, namer Namer) error {
 			dst.Set(reflect.New(dst.Type().Elem()))
 			if err := dst.Interface().(Copier).Copy(src.Interface()); err != nil {
 				dst.Set(reflect.Zero(dst.Type()))
-				return errors.Wrap(err, "cannot assign via Copier interface")
+				return fmt.Errorf("cannot assign via Copier interface: %w", err)
 			}
 			return nil
 		}
@@ -80,25 +81,25 @@ func copy(dst reflect.Value, src reflect.Value, namer Namer) error {
 	case reflect.Bool:
 		b, err := ParseBool(src.Interface())
 		if err != nil {
-			return errors.Wrap(err, "cannot ParseBool")
+			return fmt.Errorf("parse bool failed: %w", err)
 		}
 		v.SetBool(b)
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		i, err := ParseInt(src.Interface())
 		if err != nil {
-			return errors.Wrap(err, "cannot ParseInt")
+			return fmt.Errorf("parse int failed: %w", err)
 		}
 		v.SetInt(i)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		i, err := ParseInt(src.Interface())
 		if err != nil {
-			return errors.Wrap(err, "cannot ParseInt")
+			return fmt.Errorf("parse uint failed: %w", err)
 		}
 		v.SetUint(uint64(i))
 	case reflect.Float32, reflect.Float64:
 		i, err := ParseFloat(src.Interface())
 		if err != nil {
-			return errors.Wrap(err, "cannot ParseFloat")
+			return fmt.Errorf("parse float failed: %w", err)
 		}
 		v.SetFloat(i)
 	case reflect.String:
@@ -114,28 +115,28 @@ func copy(dst reflect.Value, src reflect.Value, namer Namer) error {
 		for i := 0; i < src.Len(); i++ {
 			err := copy(v.Index(i), src.Index(i), namer)
 			if err != nil {
-				return errors.Wrapf(err, "cannot copy: i=%d", i)
+				return fmt.Errorf("cannot copy: i=%d, %w", i, err)
 			}
 		}
 	case reflect.Map:
 		err := mapToMap(v, src, namer)
 		if err != nil {
-			return errors.Wrapf(err, "cannot mapToMap")
+			return fmt.Errorf("mapToMap: %w", err)
 		}
 	case reflect.Struct:
 		if src.Kind() == reflect.Map {
 			if err := mapToStruct(v, src, namer); err != nil {
-				return errors.Wrapf(err, "cannot mapToStruct")
+				return fmt.Errorf("mapToStruct: %w", err)
 			}
 		} else if src.Kind() == reflect.Struct {
 			if err := structToStruct(v, src, namer); err != nil {
-				return errors.Wrapf(err, "cannot structToStruct")
+				return fmt.Errorf("structToStruct: %w", err)
 			}
 		} else {
-			return errors.Errorf("src is %v instead of struct or map", src.Kind())
+			return fmt.Errorf("src is %v instead of struct or map", src.Kind())
 		}
 	default:
-		return errors.Errorf("Unexpected dst %v", v.Kind())
+		return fmt.Errorf("Unexpected dst %v", v.Kind())
 	}
 
 	if dst.Kind() == reflect.Ptr && dst.IsNil() {
@@ -151,7 +152,7 @@ func copy(dst reflect.Value, src reflect.Value, namer Namer) error {
 // both dst and src must be map
 func mapToMap(dst reflect.Value, src reflect.Value, namer Namer) error {
 	if dst.Kind() != reflect.Map {
-		return errors.Errorf("dst isn't map: kind=%s", dst.Kind().String())
+		return fmt.Errorf("dst isn't map: kind=%s", dst.Kind().String())
 	}
 
 	if src.Kind() != reflect.Map {
@@ -159,7 +160,7 @@ func mapToMap(dst reflect.Value, src reflect.Value, namer Namer) error {
 	}
 
 	if !src.Type().Key().AssignableTo(dst.Type().Key()) {
-		return errors.Errorf("src:key=%s,type=%s can't be assigned to dst:key=%s,type=%s",
+		return fmt.Errorf("src:key=%s,type=%s can't be assigned to dst:key=%s,type=%s",
 			src.Type().Key().String(), src.Type().String(),
 			dst.Type().Key().String(), src.Type().String())
 	}
@@ -206,7 +207,7 @@ func mapToStruct(dst reflect.Value, src reflect.Value, namer Namer) error {
 	}
 
 	if src.Type().Key().Kind() != reflect.String {
-		return errors.Errorf("key: type=%v must be string", src.Type().Key().Kind())
+		return fmt.Errorf("key: type=%v must be string", src.Type().Key().Kind())
 	}
 
 	for i := 0; i < dst.NumField(); i++ {
@@ -219,7 +220,7 @@ func mapToStruct(dst reflect.Value, src reflect.Value, namer Namer) error {
 		if fieldType.Anonymous {
 			err := copy(fieldVal, src, namer)
 			if err != nil {
-				log.Warnf("cannot copy: i=%d %v", i, err)
+				log.Warnf("cannot copy: i=%d %w", i, err)
 			}
 			continue
 		}
@@ -238,7 +239,7 @@ func mapToStruct(dst reflect.Value, src reflect.Value, namer Namer) error {
 
 			err := copy(fieldVal, reflect.ValueOf(fieldSrcVal.Interface()), namer)
 			if err != nil {
-				return errors.Wrapf(err, "cannot copy: %s", key.String())
+				return fmt.Errorf("cannot copy %s: %w", key.String(), err)
 			}
 			break
 		}
