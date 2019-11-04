@@ -105,7 +105,8 @@ func (a *Any) SetVal(v interface{}) {
 
 func (a *Any) JSONString() string {
 	if len(a.jsonStr) == 0 {
-		a.jsonStr = JSONMarshalStr(a)
+		data, _ := json.Marshal(a)
+		a.jsonStr = string(data)
 	}
 	return a.jsonStr
 }

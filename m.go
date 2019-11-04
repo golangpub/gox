@@ -2,12 +2,13 @@ package gox
 
 import (
 	"encoding/json"
-	"github.com/gopub/log"
 	"math/big"
 	"net/url"
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/gopub/log"
 
 	"github.com/nyaruka/phonenumbers"
 )
@@ -324,32 +325,6 @@ func (m M) Map(key string) M {
 	default:
 		return M{}
 	}
-}
-
-func (m M) ContainsID(key string) bool {
-	return m.ContainsInt64(key)
-}
-
-func (m M) ID(key string) ID {
-	return ID(m.Int64(key))
-}
-
-func (m M) DefaultID(key string, defaultValue ID) ID {
-	return ID(m.DefaultInt64(key, int64(defaultValue)))
-}
-
-func (m M) MustID(key string) ID {
-	return ID(m.MustInt64(key))
-}
-
-func (m M) IDs(key string) IDList {
-	vals := m.Int64s(key)
-	result := make([]ID, len(vals))
-	for i, v := range vals {
-		result[i] = ID(v)
-	}
-
-	return result
 }
 
 func (m M) Date(key string) (time.Time, bool) {

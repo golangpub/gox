@@ -82,10 +82,10 @@ func (m *SQLMap) Scan(src interface{}) error {
 	}
 
 	if !ok {
-		return fmt.Errorf("failed to parse %v into gox.SQLMap", src)
+		return fmt.Errorf("parse %v into gox.SQLMap failed", src)
 	}
 
-	return JSONUnmarshal(b, m)
+	return json.Unmarshal(b, m)
 }
 
 func (m SQLMap) Value() (driver.Value, error) {

@@ -1,7 +1,11 @@
 package gox
 
 import (
+	"encoding/json"
+	"strings"
 	"sync"
+
+	"github.com/nyaruka/phonenumbers"
 
 	"github.com/gopub/log"
 )
@@ -42,6 +46,10 @@ func GetCountryByCallingCode(code int) *Country {
 	return codeToCountry[code]
 }
 
+func GetCallingCodeByRegion(regionCode string) int {
+	return phonenumbers.GetCountryCodeForRegion(strings.ToUpper(regionCode))
+}
+
 var countries []*Country
 var codeToCountry map[int]*Country
 var loadCountriesMutex sync.Mutex
@@ -58,7 +66,7 @@ func loadCountries() {
 		return
 	}
 
-	if err := JSONUnmarshal([]byte(countriesJSONString), &countries); err != nil {
+	if err := json.Unmarshal([]byte(countriesJSONString), &countries); err != nil {
 		log.Error(err)
 		countries = []*Country{}
 		return

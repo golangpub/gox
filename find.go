@@ -29,13 +29,3 @@ func IndexOfString(strs []string, s string) int {
 
 	return -1
 }
-
-func IndexOfID(ids []ID, id ID) int {
-	for i, v := range ids {
-		if v == id {
-			return i
-		}
-	}
-
-	return -1
-}
