@@ -360,10 +360,16 @@ func (a *AnyList) FirstImage() *Image {
 func (a *AnyList) Scan(src interface{}) error {
 	if s, ok := src.(string); ok {
 		err := json.Unmarshal([]byte(s), &a.list)
-		return fmt.Errorf("unmarshal string failed: %s, %w", s, err)
+		if err != nil {
+			return fmt.Errorf("unmarshal string %s: %w", s, err)
+		}
+		return nil
 	} else if b, ok := src.([]byte); ok {
 		err := json.Unmarshal(b, &a.list)
-		return fmt.Errorf("unmarshal byte array failed: %s, %w", string(b), err)
+		if err != nil {
+			return fmt.Errorf("unmarshal byte array %s: %w", string(b), err)
+		}
+		return nil
 	} else {
 		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
 	}
