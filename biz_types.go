@@ -298,8 +298,12 @@ func (m *Money) Scan(src interface{}) error {
 	if !ok {
 		return fmt.Errorf("failed to parse %v into gox.Money", src)
 	}
+	if len(b) < 2 || b[0] != '(' || b[len(b)-1] != ')' {
+		return fmt.Errorf("parse %s into gox.Money failed", string(b))
+	}
+	b = b[1 : len(b)-1]
 	s := strings.Replace(string(b), ",", " ", -1)
-	k, err := fmt.Sscanf(s, "(%s %d)", &m.Currency, &m.Amount)
+	k, err := fmt.Sscanf(s, "%s %d", &m.Currency, &m.Amount)
 	if k == 2 {
 		return nil
 	}
@@ -330,11 +334,15 @@ func (c *Coin) Scan(src interface{}) error {
 
 	b, ok := src.([]byte)
 	if !ok {
-		return fmt.Errorf("failed to parse %v into gox.Money", src)
+		return fmt.Errorf("parse %v into gox.Coin failed", src)
 	}
+	if len(b) < 2 || b[0] != '(' || b[len(b)-1] != ')' {
+		return fmt.Errorf("parse %s into gox.Coin failed", string(b))
+	}
+	b = b[1 : len(b)-1]
 	s := strings.Replace(string(b), ",", " ", -1)
 	var amount string
-	k, err := fmt.Sscanf(s, "(%s %d)", &c.Currency, &amount)
+	k, err := fmt.Sscanf(s, "%s %s", &c.Currency, &amount)
 	if err != nil {
 		return fmt.Errorf("sscanf %s: %w", s, err)
 	}
