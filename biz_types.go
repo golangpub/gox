@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
+	"math/big"
 	"reflect"
 	"strings"
 
@@ -297,8 +298,8 @@ func (m *Money) Scan(src interface{}) error {
 	if !ok {
 		return fmt.Errorf("failed to parse %v into gox.Money", src)
 	}
-
-	k, err := fmt.Sscanf(string(b), "(%s,%d)", &m.Currency, &m.Amount)
+	s := strings.Replace(string(b), ",", " ", -1)
+	k, err := fmt.Sscanf(s, "(%s %d)", &m.Currency, &m.Amount)
 	if k == 2 {
 		return nil
 	}
@@ -307,4 +308,46 @@ func (m *Money) Scan(src interface{}) error {
 
 func (m *Money) Value() (driver.Value, error) {
 	return fmt.Sprintf("(%s,%d)", m.Currency, m.Amount), nil
+}
+
+// Money
+type Coin struct {
+	Currency Currency `json:"currency"`
+	Amount   big.Int  `json:"amount"`
+}
+
+var _ driver.Valuer = (*Coin)(nil)
+var _ sql.Scanner = (*Coin)(nil)
+
+func (c *Coin) String() string {
+	return fmt.Sprintf("%s %s", c.Currency, c.Amount.String())
+}
+
+func (c *Coin) Scan(src interface{}) error {
+	if src == nil {
+		return nil
+	}
+
+	b, ok := src.([]byte)
+	if !ok {
+		return fmt.Errorf("failed to parse %v into gox.Money", src)
+	}
+	s := strings.Replace(string(b), ",", " ", -1)
+	var amount string
+	k, err := fmt.Sscanf(s, "(%s %d)", &c.Currency, &amount)
+	if err != nil {
+		return fmt.Errorf("sscanf %s: %w", s, err)
+	}
+	if k != 2 {
+		return fmt.Errorf("parse %v into gox.Money failed", string(b))
+	}
+	_, ok = c.Amount.SetString(amount, 10)
+	if !ok {
+		return fmt.Errorf("parse %s into big.Int failed", amount)
+	}
+	return nil
+}
+
+func (c *Coin) Value() (driver.Value, error) {
+	return fmt.Sprintf("(%s,%s)", c.Currency, c.Amount.String()), nil
 }
