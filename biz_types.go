@@ -203,16 +203,26 @@ func (a *Address) Scan(src interface{}) error {
 	}
 
 	b, ok := src.([]byte)
-	if !ok {
+	if !ok || len(b) < 2 || b[0] != '(' || b[len(b)-1] != ')' {
+		return fmt.Errorf("failed to parse %v into gox.Address", src)
+	}
+	b = b[1 : len(b)-1]
+	strs := strings.Split(string(b), ",")
+	if len(strs) != 10 {
 		return fmt.Errorf("failed to parse %v into gox.Address", src)
 	}
 
-	k, err := fmt.Sscanf(string(b), "(%s,%s,%s,%s,%s,%s,%s,%s)", &a.Country, &a.Province, &a.City, &a.District,
-		&a.Street, &a.Building, &a.Room, &a.PostCode)
-	if k == 8 {
-		return nil
-	}
-	return fmt.Errorf("parse %v into gox.Address: %w", string(b), err)
+	a.Country = strs[0]
+	a.Province = strs[1]
+	a.City = strs[2]
+	a.District = strs[3]
+	a.Street = strs[4]
+	a.Building = strs[5]
+	a.Room = strs[6]
+	a.PostCode = strs[7]
+	a.Name = strs[8]
+	a.PostalTitle = strs[9]
+	return nil
 }
 
 func (a *Address) Value() (driver.Value, error) {
@@ -228,8 +238,11 @@ func (a *Address) Value() (driver.Value, error) {
 	building := strings.Replace(a.Building, ",", "\\,", -1)
 	room := strings.Replace(a.Room, ",", "\\,", -1)
 	postCode := strings.Replace(a.PostCode, ",", "\\,", -1)
+	name := strings.Replace(a.name, ",", "\\,", -1)
+	postTitle := strings.Replace(a.PostalTitle, ",", "\\,", -1)
 
-	s := fmt.Sprintf("(%s,%s,%s,%s,%s,%s,%s,%s)", country, province, city, district, street, building, room, postCode)
+	s := fmt.Sprintf("(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", country, province, city, district, street,
+		building, room, postCode, name, postTitle)
 	return s, nil
 }
 
