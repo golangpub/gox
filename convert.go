@@ -92,45 +92,23 @@ func ToPBFullName(n *FullName) *base.FullName {
 	}
 }
 
-func FromPBLocation(l *base.Location) *Location {
+func FromPBPoint(l *base.Point) *Point {
 	if l == nil {
 		return nil
 	}
-	return &Location{
-		Name:      l.Name,
-		Latitude:  l.Latitude,
-		Longitude: l.Longitude,
+	return &Point{
+		Y: l.Y,
+		X: l.X,
 	}
 }
 
-func ToPBLocation(l *Location) *base.Location {
+func ToPBPoint(l *Point) *base.Point {
 	if l == nil {
 		return nil
 	}
-	return &base.Location{
-		Name:      l.Name,
-		Latitude:  l.Latitude,
-		Longitude: l.Longitude,
-	}
-}
-
-func FromPBCoordinate(l *base.Coordinate) *Coordinate {
-	if l == nil {
-		return nil
-	}
-	return &Coordinate{
-		Latitude:  l.Latitude,
-		Longitude: l.Longitude,
-	}
-}
-
-func ToPBCoordinate(l *Coordinate) *base.Coordinate {
-	if l == nil {
-		return nil
-	}
-	return &base.Coordinate{
-		Latitude:  l.Latitude,
-		Longitude: l.Longitude,
+	return &base.Point{
+		Y: l.Y,
+		X: l.X,
 	}
 }
 

@@ -47,8 +47,8 @@ func outgoingContext(ctx context.Context) context.Context {
 		md.Set(keyDeviceID, deviceID)
 	}
 
-	if coordinate := GetCoordinate(ctx); coordinate != nil {
-		md.Set(keyCoordinate, fmt.Sprintf("%f,%f", coordinate.Latitude, coordinate.Longitude))
+	if coordinate := GetPoint(ctx); coordinate != nil {
+		md.Set(keyPoint, fmt.Sprintf("%f,%f", coordinate.Y, coordinate.X))
 	}
 
 	if token := GetAccessToken(ctx); len(token) > 0 {
@@ -98,15 +98,15 @@ func handleIncomingMetadata(ctx context.Context) context.Context {
 		return ctx
 	}
 
-	coordinateVal := md.Get(keyCoordinate)
+	coordinateVal := md.Get(keyPoint)
 	if len(coordinateVal) > 0 && len(coordinateVal[0]) > 0 {
 		var lat, lng float64
 		if _, err := fmt.Sscanf(coordinateVal[0], "%f,%f", &lat, &lng); err == nil {
-			coordinate := &Coordinate{
-				Longitude: lng,
-				Latitude:  lat,
+			coordinate := &Point{
+				X: lng,
+				Y: lat,
 			}
-			ctx = ContextWithCoordinate(ctx, coordinate)
+			ctx = ContextWithPoint(ctx, coordinate)
 		}
 	}
 

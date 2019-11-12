@@ -7,7 +7,7 @@ import (
 const (
 	keyDeviceID    = "device_id"
 	keyRemoteAddr  = "remote"
-	keyCoordinate  = "coordinate"
+	keyPoint       = "coordinate"
 	keyAccessToken = "access_token"
 	keyLoginID     = "login_id"
 	keyTraceID     = "trace_id"
@@ -73,16 +73,16 @@ func ContextWithTraceID(ctx context.Context, traceID string) context.Context {
 	return context.WithValue(ctx, keyTraceID, traceID)
 }
 
-func GetCoordinate(ctx context.Context) *Coordinate {
-	id, _ := ctx.Value(keyCoordinate).(*Coordinate)
+func GetPoint(ctx context.Context) *Point {
+	id, _ := ctx.Value(keyPoint).(*Point)
 	return id
 }
 
-func ContextWithCoordinate(ctx context.Context, location *Coordinate) context.Context {
+func ContextWithPoint(ctx context.Context, location *Point) context.Context {
 	if location == nil {
 		return ctx
 	}
-	return context.WithValue(ctx, keyCoordinate, location)
+	return context.WithValue(ctx, keyPoint, location)
 }
 
 func DetachedContext(ctx context.Context) context.Context {
@@ -93,8 +93,8 @@ func DetachedContext(ctx context.Context) context.Context {
 	if deviceID := GetDeviceID(ctx); len(deviceID) > 0 {
 		newCtx = ContextWithDeviceID(newCtx, deviceID)
 	}
-	if c := GetCoordinate(ctx); c != nil {
-		newCtx = ContextWithCoordinate(newCtx, c)
+	if c := GetPoint(ctx); c != nil {
+		newCtx = ContextWithPoint(newCtx, c)
 	}
 	if addr := GetRemoteAddr(ctx); len(addr) > 0 {
 		newCtx = ContextWithRemoteAddr(newCtx, addr)

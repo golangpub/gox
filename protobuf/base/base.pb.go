@@ -416,56 +416,56 @@ func (m *Area) GetMaxLng() float64 {
 	return 0
 }
 
-type Coordinate struct {
-	Longitude            float64  `protobuf:"fixed64,1,opt,name=longitude,proto3" json:"longitude,omitempty"`
-	Latitude             float64  `protobuf:"fixed64,2,opt,name=latitude,proto3" json:"latitude,omitempty"`
+type Point struct {
+	X                    float64  `protobuf:"fixed64,1,opt,name=x,proto3" json:"x,omitempty"`
+	Y                    float64  `protobuf:"fixed64,2,opt,name=y,proto3" json:"y,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Coordinate) Reset()         { *m = Coordinate{} }
-func (m *Coordinate) String() string { return proto.CompactTextString(m) }
-func (*Coordinate) ProtoMessage()    {}
-func (*Coordinate) Descriptor() ([]byte, []int) {
+func (m *Point) Reset()         { *m = Point{} }
+func (m *Point) String() string { return proto.CompactTextString(m) }
+func (*Point) ProtoMessage()    {}
+func (*Point) Descriptor() ([]byte, []int) {
 	return fileDescriptor_db1b6b0986796150, []int{9}
 }
 
-func (m *Coordinate) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Coordinate.Unmarshal(m, b)
+func (m *Point) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Point.Unmarshal(m, b)
 }
-func (m *Coordinate) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Coordinate.Marshal(b, m, deterministic)
+func (m *Point) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Point.Marshal(b, m, deterministic)
 }
-func (m *Coordinate) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Coordinate.Merge(m, src)
+func (m *Point) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Point.Merge(m, src)
 }
-func (m *Coordinate) XXX_Size() int {
-	return xxx_messageInfo_Coordinate.Size(m)
+func (m *Point) XXX_Size() int {
+	return xxx_messageInfo_Point.Size(m)
 }
-func (m *Coordinate) XXX_DiscardUnknown() {
-	xxx_messageInfo_Coordinate.DiscardUnknown(m)
+func (m *Point) XXX_DiscardUnknown() {
+	xxx_messageInfo_Point.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Coordinate proto.InternalMessageInfo
+var xxx_messageInfo_Point proto.InternalMessageInfo
 
-func (m *Coordinate) GetLongitude() float64 {
+func (m *Point) GetX() float64 {
 	if m != nil {
-		return m.Longitude
+		return m.X
 	}
 	return 0
 }
 
-func (m *Coordinate) GetLatitude() float64 {
+func (m *Point) GetY() float64 {
 	if m != nil {
-		return m.Latitude
+		return m.Y
 	}
 	return 0
 }
 
 type Location struct {
-	Longitude            float64  `protobuf:"fixed64,1,opt,name=longitude,proto3" json:"longitude,omitempty"`
-	Latitude             float64  `protobuf:"fixed64,2,opt,name=latitude,proto3" json:"latitude,omitempty"`
+	X                    float64  `protobuf:"fixed64,1,opt,name=x,proto3" json:"x,omitempty"`
+	Y                    float64  `protobuf:"fixed64,2,opt,name=y,proto3" json:"y,omitempty"`
 	Name                 string   `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	FullName             string   `protobuf:"bytes,4,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -498,16 +498,16 @@ func (m *Location) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Location proto.InternalMessageInfo
 
-func (m *Location) GetLongitude() float64 {
+func (m *Location) GetX() float64 {
 	if m != nil {
-		return m.Longitude
+		return m.X
 	}
 	return 0
 }
 
-func (m *Location) GetLatitude() float64 {
+func (m *Location) GetY() float64 {
 	if m != nil {
-		return m.Latitude
+		return m.Y
 	}
 	return 0
 }
@@ -1009,7 +1009,7 @@ func init() {
 	proto.RegisterType((*StringValue)(nil), "gopub.protobuf.StringValue")
 	proto.RegisterType((*StringList)(nil), "gopub.protobuf.StringList")
 	proto.RegisterType((*Area)(nil), "gopub.protobuf.Area")
-	proto.RegisterType((*Coordinate)(nil), "gopub.protobuf.Coordinate")
+	proto.RegisterType((*Point)(nil), "gopub.protobuf.Point")
 	proto.RegisterType((*Location)(nil), "gopub.protobuf.Location")
 	proto.RegisterType((*PhoneNumber)(nil), "gopub.protobuf.PhoneNumber")
 	proto.RegisterType((*FullName)(nil), "gopub.protobuf.FullName")

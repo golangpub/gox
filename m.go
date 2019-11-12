@@ -341,30 +341,6 @@ func (m M) DateInLocation(key string, location *time.Location) (time.Time, bool)
 	return time.Time{}, false
 }
 
-func (m M) Currency(key string) Currency {
-	s := m.String(key)
-	s = strings.TrimSpace(s)
-	return Currency(strings.ToUpper(s))
-}
-
-func (m M) DefaultCurrency(key string, defaultValue Currency) Currency {
-	s := m.String(key)
-	s = strings.TrimSpace(s)
-	if len(s) > 0 {
-		return Currency(strings.ToUpper(s))
-	}
-	return defaultValue
-}
-
-func (m M) MustCurrency(key string) Currency {
-	s := m.String(key)
-	s = strings.TrimSpace(s)
-	if len(s) > 0 {
-		return Currency(strings.ToUpper(s))
-	}
-	panic("No currency for key: " + key)
-}
-
 func (m M) PhoneNumber(key string) *PhoneNumber {
 	switch v := m[key].(type) {
 	case string:
@@ -411,25 +387,6 @@ func (m M) URL(key string) string {
 	}
 	return s
 }
-
-//
-//func (m M) GetCoordinate(key string) *Coordinate {
-//	s := m.GetStr(key)
-//	strs := strings.Split(s, ",")
-//	if len(strs) != 2 {
-//		return nil
-//	}
-//
-//	if lng, err := ParseFloat(strs[0]); err != nil {
-//		return nil
-//	} else if lat, err := ParseFloat(strs[1]); err != nil {
-//		return nil
-//	} else if lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180 {
-//		return &Coordinate{Lat: lat, Lng: lng}
-//	} else {
-//		return nil
-//	}
-//}
 
 func (m M) set(k string, v interface{}) {
 	val := reflect.ValueOf(v)
