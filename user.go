@@ -2,6 +2,7 @@ package gox
 
 import (
 	"database/sql/driver"
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -172,6 +173,30 @@ func (n *PhoneNumber) Copy(v interface{}) error {
 	}
 	*n = *res
 	return nil
+}
+
+func NewPhoneNumber(callingCode int, number int64) *PhoneNumber {
+	pn := new(PhoneNumber)
+	pn.Code = callingCode
+	pn.Number = number
+	return pn
+}
+
+func ParsePhoneNumber(s string) (*PhoneNumber, error) {
+	parsedNumber, err := phonenumbers.Parse(s, "")
+	if err != nil {
+		return nil, err
+	}
+
+	if phonenumbers.IsValidNumber(parsedNumber) {
+		return &PhoneNumber{
+			Code:      int(parsedNumber.GetCountryCode()),
+			Number:    int64(parsedNumber.GetNationalNumber()),
+			Extension: parsedNumber.GetExtension(),
+		}, nil
+	}
+
+	return nil, errors.New("invalid phone number")
 }
 
 // Gender

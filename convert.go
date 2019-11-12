@@ -1,36 +1,10 @@
 package gox
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/gopub/gox/protobuf/base"
-	"github.com/nyaruka/phonenumbers"
 )
-
-func NewPhoneNumber(callingCode int, number int64) *PhoneNumber {
-	pn := new(PhoneNumber)
-	pn.Code = callingCode
-	pn.Number = number
-	return pn
-}
-
-func ParsePhoneNumber(s string) (*PhoneNumber, error) {
-	parsedNumber, err := phonenumbers.Parse(s, "")
-	if err != nil {
-		return nil, err
-	}
-
-	if phonenumbers.IsValidNumber(parsedNumber) {
-		return &PhoneNumber{
-			Code:      int(parsedNumber.GetCountryCode()),
-			Number:    int64(parsedNumber.GetNationalNumber()),
-			Extension: parsedNumber.GetExtension(),
-		}, nil
-	}
-
-	return nil, errors.New("invalid phone number")
-}
 
 func FromPBPhoneNumber(pn *base.PhoneNumber) *PhoneNumber {
 	if pn == nil {
