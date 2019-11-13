@@ -30,7 +30,10 @@ func CopyWithNamer(dst interface{}, src interface{}, namer Namer) error {
 	}
 
 	err := copy(reflect.ValueOf(dst), reflect.ValueOf(src), namer)
-	return fmt.Errorf("copy failed: %v", err)
+	if err != nil {
+		return fmt.Errorf("copy: %w", err)
+	}
+	return nil
 }
 
 // copy dst is valid value or pointer to value
