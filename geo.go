@@ -40,11 +40,13 @@ func (c *Point) Scan(src interface{}) error {
 		}
 	}
 
-	if !ok {
+	if !ok || len(s) < 2 {
 		return fmt.Errorf("failed to parse %v into geo.Point", src)
 	}
 
-	k, err := fmt.Sscanf(s, "POINT(%f %f)", &c.X, &c.Y)
+	s = s[1 : len(s)-1]
+	s = strings.Replace(s, ",", " ", -1)
+	k, err := fmt.Sscanf(s, "%f %f", &c.X, &c.Y)
 	if k == 2 {
 		return nil
 	}
@@ -56,7 +58,7 @@ func (c *Point) Value() (driver.Value, error) {
 	if c == nil {
 		return nil, nil
 	}
-	return fmt.Sprintf("POINT(%f %f)", c.X, c.Y), nil
+	return fmt.Sprintf("(%f,%f)", c.X, c.Y), nil
 }
 
 // Location
