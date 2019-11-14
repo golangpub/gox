@@ -16,7 +16,7 @@ func NewViperManager() *ViperManager {
 
 func (m *ViperManager) String(key string, defaultVal string) string {
 	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
+		log.Debugf("Env: missing %s", key)
 	}
 	viper.SetDefault(key, defaultVal)
 	v := viper.GetString(key)
@@ -26,7 +26,7 @@ func (m *ViperManager) String(key string, defaultVal string) string {
 
 func (m *ViperManager) Int(key string, defaultVal int) int {
 	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
+		log.Debugf("Env: missing %s", key)
 	}
 	viper.SetDefault(key, defaultVal)
 	v := viper.GetInt(key)
@@ -36,7 +36,7 @@ func (m *ViperManager) Int(key string, defaultVal int) int {
 
 func (m *ViperManager) Int64(key string, defaultVal int64) int64 {
 	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
+		log.Debugf("Env: missing %s", key)
 	}
 	viper.SetDefault(key, defaultVal)
 	v := viper.GetInt64(key)
@@ -46,7 +46,7 @@ func (m *ViperManager) Int64(key string, defaultVal int64) int64 {
 
 func (m *ViperManager) Int32(key string, defaultVal int32) int32 {
 	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
+		log.Debugf("Env: missing %s", key)
 	}
 	viper.SetDefault(key, defaultVal)
 	v := viper.GetInt32(key)
@@ -56,7 +56,7 @@ func (m *ViperManager) Int32(key string, defaultVal int32) int32 {
 
 func (m *ViperManager) Float64(key string, defaultVal float64) float64 {
 	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
+		log.Debugf("Env: missing %s", key)
 	}
 	viper.SetDefault(key, defaultVal)
 	v := viper.GetFloat64(key)
@@ -66,7 +66,7 @@ func (m *ViperManager) Float64(key string, defaultVal float64) float64 {
 
 func (m *ViperManager) Duration(key string, defaultVal time.Duration) time.Duration {
 	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
+		log.Debugf("Env: missing %s", key)
 	}
 	viper.SetDefault(key, defaultVal)
 	v := viper.GetDuration(key)
@@ -76,7 +76,7 @@ func (m *ViperManager) Duration(key string, defaultVal time.Duration) time.Durat
 
 func (m *ViperManager) Bool(key string, defaultVal bool) bool {
 	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
+		log.Debugf("Env: missing %s", key)
 	}
 	viper.SetDefault(key, defaultVal)
 	v := viper.GetBool(key)
