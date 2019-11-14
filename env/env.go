@@ -1,81 +1,44 @@
 package env
 
 import (
-	"github.com/gopub/log"
-	"github.com/spf13/viper"
 	"time"
 )
 
-func init() {
-	viper.AutomaticEnv()
+type Manager interface {
+	String(key string, defaultVal string) string
+	Int(key string, defaultVal int) int
+	Int64(key string, defaultVal int64) int64
+	Float64(key string, defaultVal float64) float64
+	Duration(key string, defaultVal time.Duration) time.Duration
+	Bool(key string, defaultVal bool) bool
 }
 
+var DefaultManager = NewViperManager()
+
 func String(key string, defaultVal string) string {
-	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
-	}
-	viper.SetDefault(key, defaultVal)
-	v := viper.GetString(key)
-	log.Debugf("Env: %s=%s", key, v)
-	return v
+	return DefaultManager.String(key, defaultVal)
 }
 
 func Int(key string, defaultVal int) int {
-	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
-	}
-	viper.SetDefault(key, defaultVal)
-	v := viper.GetInt(key)
-	log.Debugf("Env: %s=%d", key, v)
-	return v
+	return DefaultManager.Int(key, defaultVal)
 }
 
 func Int64(key string, defaultVal int64) int64 {
-	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
-	}
-	viper.SetDefault(key, defaultVal)
-	v := viper.GetInt64(key)
-	log.Debugf("Env: %s=%d", key, v)
-	return v
+	return DefaultManager.Int64(key, defaultVal)
 }
 
 func Int32(key string, defaultVal int32) int32 {
-	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
-	}
-	viper.SetDefault(key, defaultVal)
-	v := viper.GetInt32(key)
-	log.Debugf("Env: %s=%d", key, v)
-	return v
+	return DefaultManager.Int32(key, defaultVal)
 }
 
 func Float64(key string, defaultVal float64) float64 {
-	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
-	}
-	viper.SetDefault(key, defaultVal)
-	v := viper.GetFloat64(key)
-	log.Debugf("Env: %s=%f", key, v)
-	return v
+	return DefaultManager.Float64(key, defaultVal)
 }
 
 func Duration(key string, defaultVal time.Duration) time.Duration {
-	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
-	}
-	viper.SetDefault(key, defaultVal)
-	v := viper.GetDuration(key)
-	log.Debugf("Env: %s=%v", key, v)
-	return v
+	return DefaultManager.Duration(key, defaultVal)
 }
 
 func Bool(key string, defaultVal bool) bool {
-	if viper.Get(key) == nil {
-		log.Debugf("Missing env %s", key)
-	}
-	viper.SetDefault(key, defaultVal)
-	v := viper.GetBool(key)
-	log.Debugf("Env: %s=%t", key, v)
-	return v
+	return DefaultManager.Bool(key, defaultVal)
 }
