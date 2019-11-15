@@ -47,8 +47,8 @@ func outgoingContext(ctx context.Context) context.Context {
 		md.Set(keyDeviceID, deviceID)
 	}
 
-	if coordinate := GetPoint(ctx); coordinate != nil {
-		md.Set(keyPoint, fmt.Sprintf("%f,%f", coordinate.Y, coordinate.X))
+	if coordinate := GetLocation(ctx); coordinate != nil {
+		md.Set(keyLocation, fmt.Sprintf("%f,%f", coordinate.Y, coordinate.X))
 	}
 
 	if token := GetAccessToken(ctx); len(token) > 0 {
@@ -98,7 +98,7 @@ func handleIncomingMetadata(ctx context.Context) context.Context {
 		return ctx
 	}
 
-	coordinateVal := md.Get(keyPoint)
+	coordinateVal := md.Get(keyLocation)
 	if len(coordinateVal) > 0 && len(coordinateVal[0]) > 0 {
 		var lat, lng float64
 		if _, err := fmt.Sscanf(coordinateVal[0], "%f,%f", &lat, &lng); err == nil {
@@ -106,18 +106,18 @@ func handleIncomingMetadata(ctx context.Context) context.Context {
 				X: lng,
 				Y: lat,
 			}
-			ctx = ContextWithPoint(ctx, coordinate)
+			ctx = WithLocation(ctx, coordinate)
 		}
 	}
 
 	deviceID := md.Get(keyDeviceID)
 	if len(deviceID) > 0 && len(deviceID[0]) > 0 {
-		ctx = ContextWithDeviceID(ctx, deviceID[0])
+		ctx = WithDeviceID(ctx, deviceID[0])
 	}
 
 	accessToken := md.Get(keyAccessToken)
 	if len(accessToken) > 0 && len(accessToken[0]) > 0 {
-		ctx = ContextWithAccessToken(ctx, accessToken[0])
+		ctx = WithAccessToken(ctx, accessToken[0])
 		if TokenAuthenticator != nil {
 			ctx = TokenAuthenticator(ctx, accessToken[0])
 		}
@@ -178,7 +178,7 @@ type StatsHandler struct {
 // TagConn prepares context for HandleConn and the suffix handlers
 func (s *StatsHandler) TagConn(ctx context.Context, tag *stats.ConnTagInfo) context.Context {
 	remoteAddr := tag.RemoteAddr.String()
-	ctx = ContextWithRemoteAddr(ctx, remoteAddr)
+	ctx = WithRemoteAddr(ctx, remoteAddr)
 	return ctx
 }
 

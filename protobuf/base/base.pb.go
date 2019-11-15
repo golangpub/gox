@@ -1009,7 +1009,7 @@ func init() {
 	proto.RegisterType((*StringValue)(nil), "gopub.protobuf.StringValue")
 	proto.RegisterType((*StringList)(nil), "gopub.protobuf.StringList")
 	proto.RegisterType((*Area)(nil), "gopub.protobuf.Area")
-	proto.RegisterType((*Point)(nil), "gopub.protobuf.Point")
+	proto.RegisterType((*Point)(nil), "gopub.protobuf.Location")
 	proto.RegisterType((*Location)(nil), "gopub.protobuf.Location")
 	proto.RegisterType((*PhoneNumber)(nil), "gopub.protobuf.PhoneNumber")
 	proto.RegisterType((*FullName)(nil), "gopub.protobuf.FullName")
