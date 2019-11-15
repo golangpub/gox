@@ -92,18 +92,8 @@ func (p *Place) Scan(src interface{}) error {
 	p.Code = strs[0]
 	p.Name = strs[1]
 	p.Location = new(Point)
-	p.Location.Scan(strs[3])
-	if len(strs[2]) > 0 || len(strs[3]) > 0 {
-		p.Location = &Point{}
-		var err error
-		p.Location.X, err = ParseFloat(strs[2])
-		if err != nil {
-			return fmt.Errorf("parse point.x: %w", err)
-		}
-		p.Location.Y, err = ParseFloat(strs[3])
-		if err != nil {
-			return fmt.Errorf("parse point.y: %w", err)
-		}
+	if err := p.Location.Scan(strs[3]); err != nil {
+		return fmt.Errorf("scan location: %w", err)
 	}
 	return nil
 }
