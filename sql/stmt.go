@@ -9,7 +9,7 @@ import (
 func MustPrepare(db *sql.DB, format string, args ...interface{}) *sql.Stmt {
 	stmt, err := db.Prepare(fmt.Sprintf(format, args...))
 	if err != nil {
-		log.Fatalf("Prepare: %+v", err)
+		log.Panicf("Prepare: %+v", err)
 	}
 	return stmt
 }

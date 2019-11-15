@@ -41,7 +41,7 @@ func (c *Point) Scan(src interface{}) error {
 	}
 
 	if !ok || len(s) < 2 {
-		return fmt.Errorf("failed to parse %v into geo.Location", src)
+		return fmt.Errorf("failed to parse %v into geo.Point", src)
 	}
 
 	s = s[1 : len(s)-1]
@@ -91,6 +91,8 @@ func (p *Place) Scan(src interface{}) error {
 	}
 	p.Code = strs[0]
 	p.Name = strs[1]
+	p.Location = new(Point)
+	p.Location.Scan(strs[3])
 	if len(strs[2]) > 0 || len(strs[3]) > 0 {
 		p.Location = &Point{}
 		var err error
@@ -115,6 +117,6 @@ func (p *Place) Value() (driver.Value, error) {
 	if p.Location != nil {
 		x, y = fmt.Sprint(p.Location.X), fmt.Sprint(p.Location.Y)
 	}
-	s := fmt.Sprintf("(%s,%s,%s,%s)", p.Code, name, x, y)
+	s := fmt.Sprintf("(%s,%s,'(%s,%s)')", p.Code, name, x, y)
 	return s, nil
 }

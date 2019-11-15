@@ -123,18 +123,18 @@ func handleIncomingMetadata(ctx context.Context) context.Context {
 		}
 	}
 
-	if ContextWithMetadata != nil {
-		ctx = ContextWithMetadata(md)
+	if WithMetadata != nil {
+		ctx = WithMetadata(md)
 	}
 
 	if id := GetUserID(ctx); id > 0 {
 		logger := log.With("login", id)
-		ctx = log.ContextWithLogger(ctx, logger)
+		ctx = log.BuildContext(ctx, logger)
 	}
 	return ctx
 }
 
-var ContextWithMetadata func(md metadata.MD) context.Context
+var WithMetadata func(md metadata.MD) context.Context
 
 func UnaryServerInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 	ctx = handleIncomingMetadata(ctx)

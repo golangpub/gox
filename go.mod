@@ -5,7 +5,7 @@ go 1.12
 require (
 	github.com/aws/aws-lambda-go v1.8.1 // indirect
 	github.com/golang/protobuf v1.3.2
-	github.com/gopub/log v1.0.3
+	github.com/gopub/log v1.0.5
 	github.com/nyaruka/phonenumbers v1.0.51
 	github.com/spf13/viper v1.5.0
 	github.com/stretchr/testify v1.3.0
