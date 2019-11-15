@@ -127,7 +127,7 @@ func handleIncomingMetadata(ctx context.Context) context.Context {
 		ctx = ContextWithMetadata(md)
 	}
 
-	if id := GetLoginID(ctx); id > 0 {
+	if id := GetUserID(ctx); id > 0 {
 		logger := log.With("login", id)
 		ctx = log.ContextWithLogger(ctx, logger)
 	}

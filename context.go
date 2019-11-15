@@ -5,24 +5,33 @@ import (
 )
 
 const (
-	keyDeviceID    = "device_id"
-	keyRemoteAddr  = "remote"
-	keyLocation    = "location"
-	keyAccessToken = "access_token"
-	keyLoginID     = "login_id"
-	keyTraceID     = "trace_id"
+	keyDeviceID    = "_device_id"
+	keyRemoteAddr  = "_remote"
+	keyLocation    = "_location"
+	keyAccessToken = "_access_token"
+	keyUserID      = "_user_id"
+	keyTraceID     = "_trace_id"
+	keyUser        = "_user"
 )
 
-func GetLoginID(ctx context.Context) int64 {
-	id, _ := ctx.Value(keyLoginID).(int64)
+func GetUserID(ctx context.Context) int64 {
+	id, _ := ctx.Value(keyUserID).(int64)
 	return id
 }
 
-func WithLoginID(ctx context.Context, id int64) context.Context {
+func WithUserID(ctx context.Context, id int64) context.Context {
 	if id == 0 {
 		return ctx
 	}
-	return context.WithValue(ctx, keyLoginID, id)
+	return context.WithValue(ctx, keyUserID, id)
+}
+
+func GetUser(ctx context.Context) interface{} {
+	return ctx.Value(keyUser)
+}
+
+func WithUser(ctx context.Context, u interface{}) context.Context {
+	return context.WithValue(ctx, keyUser, u)
 }
 
 func GetAccessToken(ctx context.Context) string {
@@ -102,8 +111,8 @@ func DetachedContext(ctx context.Context) context.Context {
 	if traceID := GetTraceID(ctx); len(traceID) > 0 {
 		newCtx = WithTraceID(newCtx, traceID)
 	}
-	if loginID := GetLoginID(ctx); loginID > 0 {
-		newCtx = WithLoginID(newCtx, loginID)
+	if loginID := GetUserID(ctx); loginID > 0 {
+		newCtx = WithUserID(newCtx, loginID)
 	}
 	return newCtx
 }
