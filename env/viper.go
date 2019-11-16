@@ -1,9 +1,10 @@
 package env
 
 import (
+	"time"
+
 	"github.com/gopub/log"
 	"github.com/spf13/viper"
-	"time"
 )
 
 type ViperManager struct {

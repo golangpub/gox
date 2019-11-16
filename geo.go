@@ -3,8 +3,8 @@ package gox
 import (
 	"database/sql/driver"
 	"fmt"
+
 	"github.com/gopub/gox/sql"
-	"strings"
 )
 
 const (
@@ -30,28 +30,29 @@ func (c *Point) Scan(src interface{}) error {
 	if src == nil {
 		return nil
 	}
-	s, ok := src.(string)
-	if !ok {
-		var b []byte
-		b, ok = src.([]byte)
-		if ok {
-			s = string(b)
-		}
+	s, err := ParseString(src)
+	if err != nil {
+		return fmt.Errorf("parse string: %w", err)
 	}
-
-	fmt.Println(s)
-	if !ok || len(s) < 2 {
-		return fmt.Errorf("failed to parse %v into geo.Point", src)
-	}
-
-	s = s[1 : len(s)-1]
-	s = strings.Replace(s, ",", " ", -1)
-	k, err := fmt.Sscanf(s, "%f %f", &c.X, &c.Y)
-	if k == 2 {
+	if s == "" {
 		return nil
 	}
-
-	return fmt.Errorf("parse %v into geo.Location: %w", s, err)
+	fields, err := sql.ParseCompositeFields(s)
+	if err != nil {
+		return fmt.Errorf("parse composite fields %s: %w", s, err)
+	}
+	if len(fields) != 2 {
+		return fmt.Errorf("parse composite fields %s", s)
+	}
+	c.X, err = ParseFloat(fields[0])
+	if err != nil {
+		return fmt.Errorf("parse x %s: %w", fields[0], err)
+	}
+	c.Y, err = ParseFloat(fields[1])
+	if err != nil {
+		return fmt.Errorf("parse y %s: %w", fields[1], err)
+	}
+	return nil
 }
 
 func (c *Point) Value() (driver.Value, error) {
@@ -79,22 +80,27 @@ func (p *Place) Scan(src interface{}) error {
 	if src == nil {
 		return nil
 	}
-
-	b, ok := src.([]byte)
-	if !ok || len(b) < 2 || b[0] != '(' || b[len(b)-1] != ')' {
-		return fmt.Errorf("failed to parse %v into gox.Place", src)
+	s, err := ParseString(src)
+	if err != nil {
+		return fmt.Errorf("parse string: %w", err)
 	}
-	fmt.Println(string(b))
-	b = b[1 : len(b)-1]
-	strs := strings.Split(string(b), ",")
-	if len(strs) != 4 {
-		return fmt.Errorf("failed to parse %v into gox.Place", src)
+	if s == "" {
+		return nil
 	}
-	p.Code = strs[0]
-	p.Name = strs[1]
-	p.Location = new(Point)
-	if err := p.Location.Scan(strs[3]); err != nil {
-		return fmt.Errorf("scan location: %w", err)
+	fields, err := sql.ParseCompositeFields(s)
+	if err != nil {
+		return fmt.Errorf("parse composite fields %s: %w", s, err)
+	}
+	if len(fields) != 3 {
+		return fmt.Errorf("parse composite fields %s", s)
+	}
+	p.Code = fields[0]
+	p.Name = fields[1]
+	if len(fields[2]) > 0 {
+		p.Location = new(Point)
+		if err := p.Location.Scan(fields[2]); err != nil {
+			return fmt.Errorf("scan place.location: %w", err)
+		}
 	}
 	return nil
 }

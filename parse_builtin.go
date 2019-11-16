@@ -101,3 +101,17 @@ func ParseFloat(i interface{}) (float64, error) {
 		return 0, ErrNotExist
 	}
 }
+
+func ParseString(i interface{}) (string, error) {
+	if i == nil {
+		return "", ErrNotExist
+	}
+	switch v := i.(type) {
+	case string:
+		return v, nil
+	case []byte:
+		return string(v), nil
+	default:
+		return "", ErrNotExist
+	}
+}

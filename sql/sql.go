@@ -3,8 +3,9 @@ package sql
 import (
 	"database/sql"
 	"fmt"
-	"github.com/gopub/log"
 	"strings"
+
+	"github.com/gopub/log"
 )
 
 type (

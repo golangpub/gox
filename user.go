@@ -7,6 +7,8 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/gopub/gox/sql"
+
 	"github.com/gopub/gox/protobuf/base"
 	"github.com/nyaruka/phonenumbers"
 )
@@ -106,36 +108,34 @@ func (n *PhoneNumber) Scan(src interface{}) error {
 		return nil
 	}
 
-	s, ok := src.(string)
-	if !ok {
-		var b []byte
-		b, ok = src.([]byte)
-		if ok {
-			s = string(b)
-		}
+	s, err := ParseString(src)
+	if err != nil {
+		return fmt.Errorf("parse string: %w", err)
 	}
-
 	if len(s) == 0 {
 		return nil
 	}
 
-	if !ok || len(s) < 10 {
-		return fmt.Errorf("failed to parse %v into gox.PhoneNumber", src)
+	fields, err := sql.ParseCompositeFields(s)
+	if err != nil {
+		return fmt.Errorf("parse composite fields %s: %w", s, err)
 	}
 
-	s = s[1 : len(s)-1]
-	if s[len(s)-1] == ',' {
-		k, _ := fmt.Sscanf(s, "%d,%d", &n.Code, &n.Number)
-		if k == 2 {
-			return nil
-		}
-	} else {
-		k, _ := fmt.Sscanf(s, "%d,%d,%s", &n.Code, &n.Number, &n.Extension)
-		if k == 3 {
-			return nil
-		}
+	if len(fields) != 3 {
+		return fmt.Errorf("parse composite fields %s: got %v", s, fields)
 	}
-	return fmt.Errorf("failed to parse %s into gox.PhoneNumber", s)
+
+	code, err := ParseInt(fields[0])
+	if err != nil {
+		return fmt.Errorf("parse code %s: %w", fields[0], err)
+	}
+	n.Code = int(code)
+	n.Number, err = ParseInt(fields[1])
+	if err != nil {
+		return fmt.Errorf("parse code %s: %w", fields[1], err)
+	}
+	n.Extension = fields[2]
+	return nil
 }
 
 func (n *PhoneNumber) Value() (driver.Value, error) {
