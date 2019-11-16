@@ -45,16 +45,6 @@ func (m *ViperManager) Int64(key string, defaultVal int64) int64 {
 	return v
 }
 
-func (m *ViperManager) Int32(key string, defaultVal int32) int32 {
-	if viper.Get(key) == nil {
-		log.Debugf("Env: missing %s", key)
-	}
-	viper.SetDefault(key, defaultVal)
-	v := viper.GetInt32(key)
-	log.Debugf("Env: %s=%d", key, v)
-	return v
-}
-
 func (m *ViperManager) Float64(key string, defaultVal float64) float64 {
 	if viper.Get(key) == nil {
 		log.Debugf("Env: missing %s", key)
@@ -81,6 +71,26 @@ func (m *ViperManager) Bool(key string, defaultVal bool) bool {
 	}
 	viper.SetDefault(key, defaultVal)
 	v := viper.GetBool(key)
+	log.Debugf("Env: %s=%t", key, v)
+	return v
+}
+
+func (m *ViperManager) IntSlice(key string, defaultVal []int) []int {
+	if viper.Get(key) == nil {
+		log.Debugf("Env: missing %s", key)
+	}
+	viper.SetDefault(key, defaultVal)
+	v := viper.GetIntSlice(key)
+	log.Debugf("Env: %s=%t", key, v)
+	return v
+}
+
+func (m *ViperManager) StringSlice(key string, defaultVal []string) []string {
+	if viper.Get(key) == nil {
+		log.Debugf("Env: missing %s", key)
+	}
+	viper.SetDefault(key, defaultVal)
+	v := viper.GetStringSlice(key)
 	log.Debugf("Env: %s=%t", key, v)
 	return v
 }
