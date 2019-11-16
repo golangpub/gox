@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gopub/log"
+	"strings"
 )
 
 type (
@@ -21,6 +22,7 @@ type (
 	NullFloat64 = sql.NullFloat64
 	NullInt32   = sql.NullInt32
 	NullString  = sql.NullString
+	Scanner     = sql.Scanner
 )
 
 var (
@@ -42,12 +44,12 @@ type Executor interface {
 func OpenPostgres(dbURL string) *sql.DB {
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
-		log.Fatalf("Open %s: %+v", dbURL, err)
+		log.Panicf("Open %s: %+v", dbURL, err)
 	}
 
 	err = db.Ping()
 	if err != nil {
-		log.Fatalf("Ping %s: %+v", dbURL, err)
+		log.Panicf("Ping %s: %+v", dbURL, err)
 	}
 	return db
 }
@@ -59,9 +61,17 @@ func BuildPostgresURL(name, host string, port int, user, password string, sslEna
 	if port == 0 {
 		port = 5432
 	}
-	url := fmt.Sprintf("postgres://%s:%s@$%s:%d/%s", user, password, host, port, name)
+	url := fmt.Sprintf("postgres://%s:%s@%s:%d/%s", user, password, host, port, name)
 	if !sslEnabled {
 		url = url + "?sslmode=disable"
 	}
 	return url
+}
+
+func Escape(s string) string {
+	s = strings.Replace(s, ",", "\\,", -1)
+	s = strings.Replace(s, "(", "\\(", -1)
+	s = strings.Replace(s, ")", "\\)", -1)
+	s = strings.Replace(s, "\"", "\\\"", -1)
+	return s
 }

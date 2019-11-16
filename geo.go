@@ -1,9 +1,9 @@
 package gox
 
 import (
-	"database/sql"
 	"database/sql/driver"
 	"fmt"
+	"github.com/gopub/gox/sql"
 	"strings"
 )
 
@@ -30,7 +30,6 @@ func (c *Point) Scan(src interface{}) error {
 	if src == nil {
 		return nil
 	}
-
 	s, ok := src.(string)
 	if !ok {
 		var b []byte
@@ -40,6 +39,7 @@ func (c *Point) Scan(src interface{}) error {
 		}
 	}
 
+	fmt.Println(s)
 	if !ok || len(s) < 2 {
 		return fmt.Errorf("failed to parse %v into geo.Point", src)
 	}
@@ -84,6 +84,7 @@ func (p *Place) Scan(src interface{}) error {
 	if !ok || len(b) < 2 || b[0] != '(' || b[len(b)-1] != ')' {
 		return fmt.Errorf("failed to parse %v into gox.Place", src)
 	}
+	fmt.Println(string(b))
 	b = b[1 : len(b)-1]
 	strs := strings.Split(string(b), ",")
 	if len(strs) != 4 {
@@ -102,11 +103,14 @@ func (p *Place) Value() (driver.Value, error) {
 	if p == nil {
 		return nil, nil
 	}
-	name := strings.Replace(p.Name, ",", "\\,", -1)
-	x, y := "", ""
-	if p.Location != nil {
-		x, y = fmt.Sprint(p.Location.X), fmt.Sprint(p.Location.Y)
+	loc, err := p.Location.Value()
+	if err != nil {
+		return nil, fmt.Errorf("get location value: %w", err)
 	}
-	s := fmt.Sprintf("(%s,%s,'(%s,%s)')", p.Code, name, x, y)
+	if locStr, ok := loc.(string); ok {
+		loc = sql.Escape(locStr)
+	}
+	s := fmt.Sprintf("(%s,%s,%s)", sql.Escape(p.Code), sql.Escape(p.Name), loc)
+	fmt.Println(s)
 	return s, nil
 }
