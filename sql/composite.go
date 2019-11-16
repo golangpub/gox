@@ -92,6 +92,5 @@ Loop:
 			}
 		}
 	}
-	fmt.Println(fields)
 	return nil, fmt.Errorf("syntax error at %d", errPos)
 }
