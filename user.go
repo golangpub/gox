@@ -8,8 +8,6 @@ import (
 	"strings"
 
 	"github.com/gopub/gox/sql"
-
-	"github.com/gopub/gox/protobuf/base"
 	"github.com/nyaruka/phonenumbers"
 )
 
@@ -150,13 +148,6 @@ func (n *PhoneNumber) Value() (driver.Value, error) {
 func (n *PhoneNumber) Copy(v interface{}) error {
 	if pn, ok := v.(*PhoneNumber); ok {
 		*n = *pn
-		return nil
-	}
-
-	if pn, ok := v.(*base.PhoneNumber); ok {
-		n.Code = int(pn.CountryCode)
-		n.Number = pn.NationalNumber
-		n.Extension = pn.Extension
 		return nil
 	}
 
