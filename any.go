@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"reflect"
 	"sync"
 )
@@ -35,22 +36,15 @@ type AnyType interface {
 // Register bind typ with prototype
 // E.g.
 //		contents.Register("image", &contents.Image{})
-func RegisterAny(prototype interface{}) error {
+func RegisterAny(prototype interface{}) {
 	name := GetAnyTypeName(prototype)
 	mu.Lock()
 	defer mu.Unlock()
 	if _, ok := nameToPrototype[name]; ok {
-		return errors.New("conflict type name: " + name)
+		log.Fatalf("Duplicate name %s", name)
 	}
 
 	nameToPrototype[name] = reflect.TypeOf(prototype)
-	return nil
-}
-
-func MustRegisterAny(prototype interface{}) {
-	if err := RegisterAny(prototype); err != nil {
-		panic(err)
-	}
 }
 
 func GetAnyTypeName(prototype interface{}) string {
@@ -391,11 +385,11 @@ func (a *AnyList) MarshalJSON() ([]byte, error) {
 }
 
 func init() {
-	MustRegisterAny(&Image{})
-	MustRegisterAny(&Video{})
-	MustRegisterAny(&Audio{})
-	MustRegisterAny(&WebPage{})
-	MustRegisterAny(&File{})
+	RegisterAny(&Image{})
+	RegisterAny(&Video{})
+	RegisterAny(&Audio{})
+	RegisterAny(&WebPage{})
+	RegisterAny(&File{})
 }
 
 type Image struct {
