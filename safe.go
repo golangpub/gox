@@ -27,3 +27,7 @@ func (f *SafeFlags) Unlock(flag int64) {
 	f.flags &= ^flag
 	f.mu.Unlock()
 }
+
+func (f *SafeFlags) IsOn(flag int64) bool {
+	return f.flags&flag != 0
+}
