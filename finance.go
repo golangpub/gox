@@ -2,6 +2,7 @@ package gox
 
 import (
 	"database/sql/driver"
+	"encoding/json"
 	"fmt"
 	"math/big"
 
@@ -98,4 +99,29 @@ func (c *Coin) Scan(src interface{}) error {
 
 func (c *Coin) Value() (driver.Value, error) {
 	return fmt.Sprintf("(%s,%s)", c.Currency, c.Amount.String()), nil
+}
+
+func (c *Coin) UnmarshalJSON(data []byte) error {
+	type CoinType Coin
+	var cc *CoinType
+	if err := json.Unmarshal(data, &cc); err == nil {
+		c.Currency = cc.Currency
+		c.Amount = cc.Amount
+		return nil
+	}
+
+	var v struct {
+		Currency string `json:"currency"`
+		Amount   string `json:"amount"`
+	}
+	err := json.Unmarshal(data, &v)
+	if err == nil {
+		c.Currency = v.Currency
+		_, ok := c.Amount.SetString(v.Amount, 10)
+		if !ok {
+			return fmt.Errorf("cannot parse %s into big.Int", v.Amount)
+		}
+		return nil
+	}
+	return err
 }
