@@ -3,9 +3,11 @@ package gox
 import (
 	"database/sql/driver"
 	"fmt"
+	"github.com/gopub/gox/sql"
 	"strings"
 )
 
+// FullName defines user's full name
 type FullName struct {
 	FirstName  string `json:"first_name"`
 	MiddleName string `json:"middle_name"`
@@ -13,11 +15,13 @@ type FullName struct {
 }
 
 var _ driver.Valuer = (*FullName)(nil)
+var _ sql.Scanner = (*FullName)(nil)
 
 func (n *FullName) String() string {
 	return fmt.Sprintf("%s %s %s", n.FirstName, n.MiddleName, n.LastName)
 }
 
+// Scan implements sql.Scanner
 func (n *FullName) Scan(src interface{}) error {
 	if src == nil {
 		return nil
@@ -46,6 +50,7 @@ func (n *FullName) Scan(src interface{}) error {
 	return nil
 }
 
+// Scan implements driver.Valuer
 func (n *FullName) Value() (driver.Value, error) {
 	if n == nil {
 		return nil, nil
@@ -54,7 +59,6 @@ func (n *FullName) Value() (driver.Value, error) {
 	return s, nil
 }
 
-// Gender
 type Gender int
 
 const (
@@ -70,14 +74,5 @@ func (g Gender) String() string {
 		return "female"
 	default:
 		return "unknown"
-	}
-}
-
-func (g Gender) IsValid() bool {
-	switch g {
-	case Male, Female:
-		return true
-	default:
-		return false
 	}
 }

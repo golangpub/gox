@@ -2,20 +2,20 @@ package gox
 
 import "encoding/json"
 
-type void struct{}
+type Void struct{}
 
 type Set struct {
-	items map[interface{}]void
+	items map[interface{}]Void
 }
 
 func NewSet(capacity int) *Set {
 	s := &Set{}
-	s.items = make(map[interface{}]void, capacity)
+	s.items = make(map[interface{}]Void, capacity)
 	return s
 }
 
 func (s *Set) Add(item interface{}) {
-	s.items[item] = void{}
+	s.items[item] = Void{}
 }
 
 func (s *Set) Contains(item interface{}) bool {
@@ -37,7 +37,7 @@ func (s *Set) Slice() []interface{} {
 }
 
 type Int64Set struct {
-	items map[int64]void
+	items map[int64]Void
 }
 
 var _ json.Unmarshaler = (*Int64Set)(nil)
@@ -45,12 +45,12 @@ var _ json.Marshaler = (*Int64Set)(nil)
 
 func NewInt64Set(capacity int) *Int64Set {
 	s := &Int64Set{}
-	s.items = make(map[int64]void, capacity)
+	s.items = make(map[int64]Void, capacity)
 	return s
 }
 
 func (s *Int64Set) Add(item int64) {
-	s.items[item] = void{}
+	s.items[item] = Void{}
 }
 
 func (s *Int64Set) Contains(item int64) bool {
@@ -71,7 +71,7 @@ func (s *Int64Set) Slice() []int64 {
 	return sl
 }
 
-func (s *Int64Set) Map() map[int64]void {
+func (s *Int64Set) Map() map[int64]Void {
 	return s.items
 }
 
@@ -95,7 +95,7 @@ func (s *Int64Set) MarshalJSON() ([]byte, error) {
 }
 
 type StringSet struct {
-	items map[string]void
+	items map[string]Void
 }
 
 var _ json.Unmarshaler = (*StringSet)(nil)
@@ -103,12 +103,12 @@ var _ json.Marshaler = (*StringSet)(nil)
 
 func NewStringSet(capacity int) *StringSet {
 	s := &StringSet{}
-	s.items = make(map[string]void, capacity)
+	s.items = make(map[string]Void, capacity)
 	return s
 }
 
 func (s *StringSet) Add(item string) {
-	s.items[item] = void{}
+	s.items[item] = Void{}
 }
 
 func (s *StringSet) Contains(item string) bool {
@@ -129,7 +129,7 @@ func (s *StringSet) Slice() []string {
 	return sl
 }
 
-func (s *StringSet) Map() map[string]void {
+func (s *StringSet) Map() map[string]Void {
 	return s.items
 }
 

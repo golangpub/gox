@@ -64,9 +64,8 @@ func getProtoType(typ string) (reflect.Type, bool) {
 	defer mu.RUnlock()
 	if prototype, ok := nameToPrototype[typ]; ok {
 		return prototype, true
-	} else {
-		return nil, false
 	}
+	return nil, false
 }
 
 var _ sql.Scanner = (*Any)(nil)

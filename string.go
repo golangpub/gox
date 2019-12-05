@@ -9,7 +9,7 @@ func SmartLen(s string) int {
 	n := 0
 	for _, c := range s {
 		if c <= 255 {
-			n += 1
+			n++
 		} else {
 			n += 2
 		}

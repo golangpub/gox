@@ -35,18 +35,23 @@ func randomString() string {
 	return b.String()
 }
 
+// UniqueID returns an unique id
+// Deprecated: please use UniqueID32/UniqueID40/UniqueID64 instead
 func UniqueID() string {
 	return SHA1(randomString())
 }
 
+// UniqueID32 returns an unique id of 32 letters
 func UniqueID32() string {
 	return MD5(randomString())
 }
 
+// UniqueID40 returns an unique id of 40 letters
 func UniqueID40() string {
 	return SHA1(randomString())
 }
 
+// UniqueID64 returns an unique id of 64 letters
 func UniqueID64() string {
 	return SHA256(randomString())
 }
