@@ -18,7 +18,7 @@ var _ driver.Valuer = (*Money)(nil)
 var _ sql.Scanner = (*Money)(nil)
 
 func (m *Money) String() string {
-	return fmt.Sprintf("%s %d", m.Currency, m.Amount)
+	return fmt.Sprintf("%s %s", m.Currency, m.Amount.String())
 }
 
 func (m *Money) Scan(src interface{}) error {
@@ -51,5 +51,5 @@ func (m *Money) Scan(src interface{}) error {
 }
 
 func (m *Money) Value() (driver.Value, error) {
-	return fmt.Sprintf("(%s,%d)", m.Currency, m.Amount), nil
+	return fmt.Sprintf("(%s,%s)", m.Currency, m.Amount.String()), nil
 }
