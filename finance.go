@@ -2,17 +2,16 @@ package gox
 
 import (
 	"database/sql/driver"
-	"encoding/json"
 	"fmt"
-	"math/big"
 
 	"github.com/gopub/gox/sql"
+	"github.com/shopspring/decimal"
 )
 
 // Money
 type Money struct {
-	Currency string `json:"currency"`
-	Amount   int64  `json:"amount"`
+	Currency string          `json:"currency"`
+	Amount   decimal.Decimal `json:"amount"`
 }
 
 var _ driver.Valuer = (*Money)(nil)
@@ -44,7 +43,7 @@ func (m *Money) Scan(src interface{}) error {
 		return fmt.Errorf("parse composite fields %s: got %v", s, fields)
 	}
 	m.Currency = fields[0]
-	m.Amount, err = ParseInt(fields[1])
+	m.Amount, err = decimal.NewFromString(fields[1])
 	if err != nil {
 		return fmt.Errorf("parse amount %s: %w", fields[1], err)
 	}
@@ -57,8 +56,8 @@ func (m *Money) Value() (driver.Value, error) {
 
 // Money
 type Coin struct {
-	Currency string  `json:"currency"`
-	Amount   big.Int `json:"amount"`
+	Currency string          `json:"currency"`
+	Amount   decimal.Decimal `json:"amount"`
 }
 
 var _ driver.Valuer = (*Coin)(nil)
@@ -90,38 +89,13 @@ func (c *Coin) Scan(src interface{}) error {
 		return fmt.Errorf("parse composite fields %s: got %v", s, fields)
 	}
 	c.Currency = fields[0]
-	_, ok := c.Amount.SetString(fields[1], 10)
-	if !ok {
-		return fmt.Errorf("parse amount %s failed", fields[1])
+	c.Amount, err = decimal.NewFromString(fields[1])
+	if err != nil {
+		return fmt.Errorf("parse amount %s: %w", fields[1], err)
 	}
 	return nil
 }
 
 func (c *Coin) Value() (driver.Value, error) {
 	return fmt.Sprintf("(%s,%s)", c.Currency, c.Amount.String()), nil
-}
-
-func (c *Coin) UnmarshalJSON(data []byte) error {
-	type CoinType Coin
-	var cc *CoinType
-	if err := json.Unmarshal(data, &cc); err == nil {
-		c.Currency = cc.Currency
-		c.Amount = cc.Amount
-		return nil
-	}
-
-	var v struct {
-		Currency string `json:"currency"`
-		Amount   string `json:"amount"`
-	}
-	err := json.Unmarshal(data, &v)
-	if err == nil {
-		c.Currency = v.Currency
-		_, ok := c.Amount.SetString(v.Amount, 10)
-		if !ok {
-			return fmt.Errorf("cannot parse %s into big.Int", v.Amount)
-		}
-		return nil
-	}
-	return err
 }

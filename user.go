@@ -3,8 +3,9 @@ package gox
 import (
 	"database/sql/driver"
 	"fmt"
-	"github.com/gopub/gox/sql"
 	"strings"
+
+	"github.com/gopub/gox/sql"
 )
 
 // FullName defines user's full name
