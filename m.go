@@ -2,6 +2,7 @@ package gox
 
 import (
 	"encoding/json"
+	"github.com/shopspring/decimal"
 	"math/big"
 	"net/url"
 	"reflect"
@@ -314,6 +315,34 @@ func (m M) MustBigFloat(key string) *big.Float {
 		return n
 	}
 	panic("No big.Float value for key:" + key)
+}
+
+func (m M) ContainsDecimal(key string) bool {
+	s := m.String(key)
+	if s == "" {
+		return false
+	}
+	_, err := decimal.NewFromString(s)
+	return err == nil
+}
+
+func (m M) Decimal(key string) decimal.Decimal {
+	v, _ := decimal.NewFromString(m.String(key))
+	return v
+}
+
+func (m M) DefaultDecimal(key string, defaultVal decimal.Decimal) decimal.Decimal {
+	if v, err := decimal.NewFromString(m.String(key)); err == nil {
+		return v
+	}
+	return defaultVal
+}
+
+func (m M) MustDecimal(key string) decimal.Decimal {
+	if v, err := decimal.NewFromString(m.String(key)); err == nil {
+		return v
+	}
+	panic("No decimal value for key:" + key)
 }
 
 func (m M) Map(key string) M {
