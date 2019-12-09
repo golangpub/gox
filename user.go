@@ -51,7 +51,7 @@ func (n *FullName) Scan(src interface{}) error {
 	return nil
 }
 
-// Scan implements driver.Valuer
+// Value implements driver.Valuer
 func (n *FullName) Value() (driver.Value, error) {
 	if n == nil {
 		return nil, nil

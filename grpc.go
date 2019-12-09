@@ -44,15 +44,15 @@ func outgoingContext(ctx context.Context) context.Context {
 	md := metadata.New(nil)
 
 	if deviceID := GetDeviceID(ctx); len(deviceID) > 0 {
-		md.Set(keyDeviceID, deviceID)
+		md.Set(CKDeviceID.String(), deviceID)
 	}
 
 	if coordinate := GetLocation(ctx); coordinate != nil {
-		md.Set(keyLocation, fmt.Sprintf("%f,%f", coordinate.Y, coordinate.X))
+		md.Set(CKLocation.String(), fmt.Sprintf("%f,%f", coordinate.Y, coordinate.X))
 	}
 
 	if token := GetAccessToken(ctx); len(token) > 0 {
-		md.Set(keyAccessToken, token)
+		md.Set(CKAccessToken.String(), token)
 	}
 
 	if ClientMetadataFromContext != nil {
@@ -98,7 +98,7 @@ func handleIncomingMetadata(ctx context.Context) context.Context {
 		return ctx
 	}
 
-	coordinateVal := md.Get(keyLocation)
+	coordinateVal := md.Get(CKLocation.String())
 	if len(coordinateVal) > 0 && len(coordinateVal[0]) > 0 {
 		var lat, lng float64
 		if _, err := fmt.Sscanf(coordinateVal[0], "%f,%f", &lat, &lng); err == nil {
@@ -110,12 +110,12 @@ func handleIncomingMetadata(ctx context.Context) context.Context {
 		}
 	}
 
-	deviceID := md.Get(keyDeviceID)
+	deviceID := md.Get(CKDeviceID.String())
 	if len(deviceID) > 0 && len(deviceID[0]) > 0 {
 		ctx = WithDeviceID(ctx, deviceID[0])
 	}
 
-	accessToken := md.Get(keyAccessToken)
+	accessToken := md.Get(CKAccessToken.String())
 	if len(accessToken) > 0 && len(accessToken[0]) > 0 {
 		ctx = WithAccessToken(ctx, accessToken[0])
 		if TokenAuthenticator != nil {

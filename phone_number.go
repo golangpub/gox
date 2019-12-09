@@ -11,7 +11,6 @@ import (
 	"github.com/nyaruka/phonenumbers"
 )
 
-// PhoneNumber
 type PhoneNumber struct {
 	Code      int    `json:"code"`
 	Number    int64  `json:"number"`

@@ -22,7 +22,6 @@ var prettyTable = [prettyTableSize]byte{
 	'U', 'V', 'W',
 	'X', 'Y', 'Z'}
 
-// Change to int64, as https://github.com/golang/go/issues/12401 is fixed in golang v1.6
 type ID int64
 
 // JSON中若没有指定类型，number默认解析成double，double整数部分最大值为2^53，因此控制在53bit内比较好
