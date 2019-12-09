@@ -2,6 +2,7 @@ package gox
 
 import (
 	"context"
+	"github.com/gopub/gox/geo"
 )
 
 type ContextKey int
@@ -105,12 +106,12 @@ func WithTraceID(ctx context.Context, traceID string) context.Context {
 	return context.WithValue(ctx, CKTraceID, traceID)
 }
 
-func GetLocation(ctx context.Context) *Point {
-	id, _ := ctx.Value(CKLocation).(*Point)
+func GetLocation(ctx context.Context) *geo.Point {
+	id, _ := ctx.Value(CKLocation).(*geo.Point)
 	return id
 }
 
-func WithLocation(ctx context.Context, location *Point) context.Context {
+func WithLocation(ctx context.Context, location *geo.Point) context.Context {
 	if location == nil {
 		return ctx
 	}

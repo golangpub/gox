@@ -1,4 +1,4 @@
-package gox_test
+package runtime_test
 
 import (
 	"encoding/json"

@@ -3,6 +3,7 @@ package gox
 import (
 	"context"
 	"fmt"
+	"github.com/gopub/gox/geo"
 	"time"
 
 	"github.com/gopub/log"
@@ -102,7 +103,7 @@ func handleIncomingMetadata(ctx context.Context) context.Context {
 	if len(coordinateVal) > 0 && len(coordinateVal[0]) > 0 {
 		var lat, lng float64
 		if _, err := fmt.Sscanf(coordinateVal[0], "%f,%f", &lat, &lng); err == nil {
-			coordinate := &Point{
+			coordinate := &geo.Point{
 				X: lng,
 				Y: lat,
 			}

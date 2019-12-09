@@ -1,4 +1,4 @@
-package gox
+package runtime
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package gox
+package geo
 
 import (
 	"encoding/json"
