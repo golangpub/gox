@@ -2,9 +2,10 @@ package runtime
 
 import (
 	"fmt"
-	"github.com/gopub/gox"
 	"reflect"
 	"strings"
+
+	"github.com/gopub/gox"
 
 	"errors"
 

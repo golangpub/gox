@@ -1,8 +1,9 @@
 package gox_test
 
 import (
-	"github.com/gopub/gox"
 	"testing"
+
+	"github.com/gopub/gox"
 
 	"github.com/stretchr/testify/assert"
 )

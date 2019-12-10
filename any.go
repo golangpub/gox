@@ -76,11 +76,6 @@ type Any struct {
 	jsonStr string
 }
 
-// NewAnyObj is for gomobile
-func NewAnyObj() *Any {
-	return new(Any)
-}
-
 func NewAny(v interface{}) *Any {
 	a := &Any{}
 	a.SetVal(v)
@@ -278,11 +273,6 @@ type AnyList struct {
 	list []*Any
 }
 
-// NewAnyListObj is for gomobile
-func NewAnyListObj() *AnyList {
-	return new(AnyList)
-}
-
 func NewAnyList(items ...*Any) *AnyList {
 	return &AnyList{
 		list: items,
@@ -403,10 +393,6 @@ type Image struct {
 	Data []byte `json:"-"`
 }
 
-func NewImage() *Image {
-	return new(Image)
-}
-
 type Video struct {
 	Link   string `json:"link"`
 	Format string `json:"fmt,omitempty"`
@@ -416,10 +402,6 @@ type Video struct {
 	Name   string `json:"name,omitempty"`
 
 	Data []byte `json:"-"`
-}
-
-func NewVideo() *Video {
-	return new(Video)
 }
 
 type Audio struct {
@@ -432,10 +414,6 @@ type Audio struct {
 	Data []byte `json:"-"`
 }
 
-func NewAudio() *Audio {
-	return new(Audio)
-}
-
 type File struct {
 	Link   string `json:"link"`
 	Name   string `json:"name"`
@@ -445,17 +423,9 @@ type File struct {
 	Data []byte `json:"-"`
 }
 
-func NewFile() *File {
-	return new(File)
-}
-
 type WebPage struct {
 	Title   string `json:"title,omitempty"`
 	Summary string `json:"summary,omitempty"`
 	Image   *Image `json:"image,omitempty"`
 	Link    string `json:"link"`
-}
-
-func NewWebPage() *WebPage {
-	return new(WebPage)
 }

@@ -2,6 +2,12 @@ package mobile
 
 import "github.com/gopub/gox"
 
+type Image = gox.Image
+
+func NewImage() *Image {
+	return new(Image)
+}
+
 type ImageList struct {
 	List []*gox.Image
 }

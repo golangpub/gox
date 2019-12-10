@@ -3,8 +3,9 @@ package gox
 import (
 	"context"
 	"fmt"
-	"github.com/gopub/gox/geo"
 	"time"
+
+	"github.com/gopub/gox/geo"
 
 	"github.com/gopub/log"
 

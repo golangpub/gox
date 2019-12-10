@@ -2,12 +2,13 @@ package gox
 
 import (
 	"encoding/json"
-	"github.com/shopspring/decimal"
 	"math/big"
 	"net/url"
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/shopspring/decimal"
 
 	"github.com/gopub/log"
 

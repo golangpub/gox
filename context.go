@@ -2,6 +2,7 @@ package gox
 
 import (
 	"context"
+
 	"github.com/gopub/gox/geo"
 )
 
