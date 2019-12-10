@@ -4,10 +4,10 @@ import (
 	"github.com/gopub/gox"
 )
 
-type PhoneNumber = gox.PhoneNumber
+type PhoneNumber gox.PhoneNumber
 
 type PhoneNumberList struct {
-	List []*PhoneNumber
+	List []*gox.PhoneNumber
 }
 
 func (l *PhoneNumberList) Len() int {
@@ -18,7 +18,7 @@ func (l *PhoneNumberList) Len() int {
 }
 
 func (l *PhoneNumberList) Get(index int) *PhoneNumber {
-	return l.List[index]
+	return (*PhoneNumber)(l.List[index])
 }
 
 func NewPhoneNumberList() *PhoneNumberList {
@@ -26,12 +26,12 @@ func NewPhoneNumberList() *PhoneNumberList {
 }
 
 func (l *PhoneNumberList) Add(phoneNumber *PhoneNumber) {
-	l.List = append(l.List, phoneNumber)
+	l.List = append(l.List, (*gox.PhoneNumber)(phoneNumber))
 }
 
 func (l *PhoneNumberList) Contains(phoneNumber *PhoneNumber) bool {
 	for _, pn := range l.List {
-		if pn.String() == phoneNumber.String() {
+		if pn.String() == (*gox.PhoneNumber)(phoneNumber).String() {
 			return true
 		}
 	}
@@ -48,13 +48,17 @@ func (l *PhoneNumberList) ContainsString(phoneNumber string) bool {
 }
 
 func NewPhoneNumber(callingCode int, number int64) *PhoneNumber {
-	return gox.NewPhoneNumber(callingCode, number)
+	return (*PhoneNumber)(gox.NewPhoneNumber(callingCode, number))
 }
 
 func ParsePhoneNumber(s string) (*PhoneNumber, error) {
-	return gox.ParsePhoneNumber(s)
+	v, err := gox.ParsePhoneNumber(s)
+	if err != nil {
+		return nil, err
+	}
+	return (*PhoneNumber)(v), nil
 }
 
 func TidyPhoneNumber(s string, code int) *PhoneNumber {
-	return gox.TidyPhoneNumber(s, code)
+	return (*PhoneNumber)(gox.TidyPhoneNumber(s, code))
 }
