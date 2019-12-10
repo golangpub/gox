@@ -352,3 +352,12 @@ func (a AnyList) Value() (driver.Value, error) {
 	}
 	return json.Marshal(a)
 }
+
+func (a AnyList) FirstImage() *Image {
+	for _, m := range a {
+		if img := m.Image(); img != nil {
+			return img
+		}
+	}
+	return nil
+}

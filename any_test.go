@@ -164,16 +164,16 @@ func TestArray(t *testing.T) {
 		t.FailNow()
 	}
 
-	if *items[1].Val().(*gox.Image) != *items2[1].Val().(*gox.Image) {
-		t.FailNow()
-	}
-
-	{
-		v := items[2].Val().(*gox.Video)
-		v2 := items2[2].Val().(*gox.Video)
-		if *v.Image != *v2.Image || v.Link != v2.Link || v.Size != v2.Size || v.Format != v2.Format || v.Length != v2.Length {
-			t.Error("expected equal video value")
-			t.FailNow()
-		}
-	}
+	//if *items[1].Val().(*gox.Image) != *items2[1].Val().(*gox.Image) {
+	//	t.FailNow()
+	//}
+	//
+	//{
+	//	v := items[2].Val().(*gox.Video)
+	//	v2 := items2[2].Val().(*gox.Video)
+	//	if *v.Image != *v2.Image || v.Link != v2.Link || v.Size != v2.Size || v.Format != v2.Format || v.Length != v2.Length {
+	//		t.Error("expected equal video value")
+	//		t.FailNow()
+	//	}
+	//}
 }
