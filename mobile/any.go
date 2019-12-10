@@ -6,19 +6,19 @@ import (
 	"github.com/gopub/gox"
 )
 
-type Video = gox.Video
+type Video gox.Video
 
 func NewVideo() *Video {
 	return new(Video)
 }
 
-type Audio = gox.Audio
+type Audio gox.Audio
 
 func NewAudio() *Audio {
 	return new(Audio)
 }
 
-type File = gox.File
+type File gox.File
 
 func NewFile() *File {
 	return new(File)
@@ -30,18 +30,18 @@ func NewWebPage() *WebPage {
 	return new(WebPage)
 }
 
-type Any = gox.Any
+type Any gox.Any
 
 func NewAnyObj() *Any {
 	return new(Any)
 }
 
 type AnyList struct {
-	List []*Any
+	List []*gox.Any
 }
 
-func NewAnyList(list []*Any) *AnyList {
-	return new(AnyList)
+func NewAnyList(list []*gox.Any) *AnyList {
+	return &AnyList{List: list}
 }
 
 func (a *AnyList) Size() int {
@@ -55,23 +55,23 @@ func (a *AnyList) Get(index int) *Any {
 	if a == nil {
 		return nil
 	}
-	return a.List[index]
+	return (*Any)(a.List[index])
 }
 
 func (a *AnyList) Append(v *Any) {
-	a.List = append(a.List, v)
+	a.List = append(a.List, (*gox.Any)(v))
 }
 
 func (a *AnyList) Prepend(v *Any) {
-	a.List = append([]*Any{v}, a.List...)
+	a.List = append([]*gox.Any{(*gox.Any)(v)}, a.List...)
 }
 
 func (a *AnyList) Insert(i int, v *Any) {
 	if len(a.List) <= i {
-		a.List = append(a.List, v)
+		a.List = append(a.List, (*gox.Any)(v))
 	} else {
 		l := a.List[i:]
-		l = append([]*Any{v}, l...)
+		l = append([]*gox.Any{(*gox.Any)(v)}, l...)
 		a.List = append(a.List[0:i], l...)
 	}
 }
@@ -89,7 +89,7 @@ func (a *AnyList) Remove(v *Any) {
 
 func (a *AnyList) IndexOf(v *Any) int {
 	for i, m := range a.List {
-		if m == v {
+		if (*Any)(m) == v {
 			return i
 		}
 	}
@@ -99,7 +99,7 @@ func (a *AnyList) IndexOf(v *Any) int {
 func (a *AnyList) FirstImage() *Image {
 	for _, m := range a.List {
 		if img := m.Image(); img != nil {
-			return img
+			return (*Image)(img)
 		}
 	}
 	return nil

@@ -2,7 +2,7 @@ package mobile
 
 import "github.com/gopub/gox"
 
-type Image = gox.Image
+type Image gox.Image
 
 func NewImage() *Image {
 	return new(Image)
