@@ -2,8 +2,7 @@ package mobile
 
 import (
 	"encoding/json"
-	"regexp"
-	"strings"
+	"github.com/gopub/gox"
 )
 
 type StringList struct {
@@ -47,11 +46,7 @@ func SmartLen(s string) int {
 	return n
 }
 
-var whitespaceRegexp = regexp.MustCompile(`\\s`)
-
-// CombineSpaces cobines multiple spaces to a single space
+// CombineSpaces combines multiple spaces to a single space
 func CombineSpaces(s string) string {
-	s = strings.TrimSpace(s)
-	s = whitespaceRegexp.ReplaceAllString(s, " ")
-	return s
+	return gox.CombineSpaces(s)
 }
