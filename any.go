@@ -269,110 +269,6 @@ func (a *Any) Value() (driver.Value, error) {
 	return json.Marshal(a)
 }
 
-type AnyList struct {
-	list []*Any
-}
-
-func NewAnyList(items ...*Any) *AnyList {
-	return &AnyList{
-		list: items,
-	}
-}
-
-func (a *AnyList) Size() int {
-	if a == nil {
-		return 0
-	}
-	return len(a.list)
-}
-
-func (a *AnyList) Get(index int) *Any {
-	if a == nil {
-		return nil
-	}
-	return a.list[index]
-}
-
-func (a *AnyList) Append(v *Any) {
-	a.list = append(a.list, v)
-}
-
-func (a *AnyList) Prepend(v *Any) {
-	a.list = append([]*Any{v}, a.list...)
-}
-
-func (a *AnyList) Insert(i int, v *Any) {
-	if len(a.list) <= i {
-		a.list = append(a.list, v)
-	} else {
-		l := a.list[i:]
-		l = append([]*Any{v}, l...)
-		a.list = append(a.list[0:i], l...)
-	}
-}
-
-func (a *AnyList) RemoveAt(index int) {
-	a.list = append(a.list[0:index], a.list[index+1:]...)
-}
-
-func (a *AnyList) Remove(v *Any) {
-	i := a.IndexOf(v)
-	if i >= 0 {
-		a.RemoveAt(i)
-	}
-}
-
-func (a *AnyList) IndexOf(v *Any) int {
-	for i, m := range a.list {
-		if m == v {
-			return i
-		}
-	}
-	return -1
-}
-
-func (a *AnyList) FirstImage() *Image {
-	for _, m := range a.list {
-		if img := m.Image(); img != nil {
-			return img
-		}
-	}
-	return nil
-}
-
-func (a *AnyList) Scan(src interface{}) error {
-	if s, ok := src.(string); ok {
-		err := json.Unmarshal([]byte(s), &a.list)
-		if err != nil {
-			return fmt.Errorf("unmarshal string %s: %w", s, err)
-		}
-		return nil
-	} else if b, ok := src.([]byte); ok {
-		err := json.Unmarshal(b, &a.list)
-		if err != nil {
-			return fmt.Errorf("unmarshal byte array %s: %w", string(b), err)
-		}
-		return nil
-	} else {
-		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
-	}
-}
-
-func (a *AnyList) Value() (driver.Value, error) {
-	if a == nil {
-		return nil, nil
-	}
-	return json.Marshal(a.list)
-}
-
-func (a *AnyList) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &a.list)
-}
-
-func (a *AnyList) MarshalJSON() ([]byte, error) {
-	return json.Marshal(a.list)
-}
-
 func init() {
 	RegisterAny(&Image{})
 	RegisterAny(&Video{})
@@ -428,4 +324,31 @@ type WebPage struct {
 	Summary string `json:"summary,omitempty"`
 	Image   *Image `json:"image,omitempty"`
 	Link    string `json:"link"`
+}
+
+type AnyList []*Any
+
+func (a *AnyList) Scan(src interface{}) error {
+	if s, ok := src.(string); ok {
+		err := json.Unmarshal([]byte(s), a)
+		if err != nil {
+			return fmt.Errorf("unmarshal string %s: %w", s, err)
+		}
+		return nil
+	} else if b, ok := src.([]byte); ok {
+		err := json.Unmarshal(b, &a)
+		if err != nil {
+			return fmt.Errorf("unmarshal byte array %s: %w", string(b), err)
+		}
+		return nil
+	} else {
+		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
+	}
+}
+
+func (a AnyList) Value() (driver.Value, error) {
+	if a == nil {
+		return nil, nil
+	}
+	return json.Marshal(a)
 }
