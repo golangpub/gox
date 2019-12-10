@@ -5,7 +5,24 @@ import (
 )
 
 type Point geo.Point
+
+func NewPoint() *Point {
+	return new(Point)
+}
+
 type Place geo.Place
+
+func NewPlace() *Place {
+	return new(Place)
+}
+
+func (p *Place) SetLocation(location *Point) {
+	p.Location = (*geo.Point)(location)
+}
+
+func (p *Place) GetLocation() *Point {
+	return (*Point)(p.Location)
+}
 
 type Country geo.Country
 

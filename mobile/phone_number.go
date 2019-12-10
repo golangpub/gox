@@ -10,6 +10,10 @@ func (pn *PhoneNumber) String() string {
 	return (*gox.PhoneNumber)(pn).String()
 }
 
+func (pn *PhoneNumber) InternationalFormat() string {
+	return (*gox.PhoneNumber)(pn).InternationalFormat()
+}
+
 type PhoneNumberList struct {
 	List []*gox.PhoneNumber
 }

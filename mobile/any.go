@@ -84,6 +84,10 @@ type AnyList struct {
 	List []*gox.Any
 }
 
+func NewAnyListObj() *AnyList {
+	return new(AnyList)
+}
+
 func NewAnyList(list []*gox.Any) *AnyList {
 	return &AnyList{List: list}
 }
