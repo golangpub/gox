@@ -2,6 +2,7 @@ package mobile
 
 import (
 	"encoding/json"
+
 	"github.com/gopub/gox"
 )
 

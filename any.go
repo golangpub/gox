@@ -325,39 +325,3 @@ type WebPage struct {
 	Image   *Image `json:"image,omitempty"`
 	Link    string `json:"link"`
 }
-
-type AnyList []*Any
-
-func (a *AnyList) Scan(src interface{}) error {
-	if s, ok := src.(string); ok {
-		err := json.Unmarshal([]byte(s), a)
-		if err != nil {
-			return fmt.Errorf("unmarshal string %s: %w", s, err)
-		}
-		return nil
-	} else if b, ok := src.([]byte); ok {
-		err := json.Unmarshal(b, &a)
-		if err != nil {
-			return fmt.Errorf("unmarshal byte array %s: %w", string(b), err)
-		}
-		return nil
-	} else {
-		return fmt.Errorf("invalid type:%v", reflect.TypeOf(src))
-	}
-}
-
-func (a AnyList) Value() (driver.Value, error) {
-	if a == nil {
-		return nil, nil
-	}
-	return json.Marshal(a)
-}
-
-func (a AnyList) FirstImage() *Image {
-	for _, m := range a {
-		if img := m.Image(); img != nil {
-			return img
-		}
-	}
-	return nil
-}

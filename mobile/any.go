@@ -37,10 +37,10 @@ func NewAnyObj() *Any {
 }
 
 type AnyList struct {
-	list []*Any
+	List []*Any
 }
 
-func NewAnyList() *AnyList {
+func NewAnyList(list []*Any) *AnyList {
 	return new(AnyList)
 }
 
@@ -48,36 +48,36 @@ func (a *AnyList) Size() int {
 	if a == nil {
 		return 0
 	}
-	return len(a.list)
+	return len(a.List)
 }
 
 func (a *AnyList) Get(index int) *Any {
 	if a == nil {
 		return nil
 	}
-	return a.list[index]
+	return a.List[index]
 }
 
 func (a *AnyList) Append(v *Any) {
-	a.list = append(a.list, v)
+	a.List = append(a.List, v)
 }
 
 func (a *AnyList) Prepend(v *Any) {
-	a.list = append([]*Any{v}, a.list...)
+	a.List = append([]*Any{v}, a.List...)
 }
 
 func (a *AnyList) Insert(i int, v *Any) {
-	if len(a.list) <= i {
-		a.list = append(a.list, v)
+	if len(a.List) <= i {
+		a.List = append(a.List, v)
 	} else {
-		l := a.list[i:]
+		l := a.List[i:]
 		l = append([]*Any{v}, l...)
-		a.list = append(a.list[0:i], l...)
+		a.List = append(a.List[0:i], l...)
 	}
 }
 
 func (a *AnyList) RemoveAt(index int) {
-	a.list = append(a.list[0:index], a.list[index+1:]...)
+	a.List = append(a.List[0:index], a.List[index+1:]...)
 }
 
 func (a *AnyList) Remove(v *Any) {
@@ -88,7 +88,7 @@ func (a *AnyList) Remove(v *Any) {
 }
 
 func (a *AnyList) IndexOf(v *Any) int {
-	for i, m := range a.list {
+	for i, m := range a.List {
 		if m == v {
 			return i
 		}
@@ -97,7 +97,7 @@ func (a *AnyList) IndexOf(v *Any) int {
 }
 
 func (a *AnyList) FirstImage() *Image {
-	for _, m := range a.list {
+	for _, m := range a.List {
 		if img := m.Image(); img != nil {
 			return img
 		}
@@ -106,9 +106,9 @@ func (a *AnyList) FirstImage() *Image {
 }
 
 func (a *AnyList) UnmarshalJSON(b []byte) error {
-	return json.Unmarshal(b, &a.list)
+	return json.Unmarshal(b, &a.List)
 }
 
 func (a *AnyList) MarshalJSON() ([]byte, error) {
-	return json.Marshal(a.list)
+	return json.Marshal(a.List)
 }
