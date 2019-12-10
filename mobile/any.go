@@ -12,6 +12,10 @@ func NewVideo() *Video {
 	return new(Video)
 }
 
+func (v *Video) GetImage() *Image {
+	return (*Image)(v.Image)
+}
+
 type Audio gox.Audio
 
 func NewAudio() *Audio {
