@@ -6,6 +6,10 @@ import (
 
 type PhoneNumber gox.PhoneNumber
 
+func (pn *PhoneNumber) String() string {
+	return (*gox.PhoneNumber)(pn).String()
+}
+
 type PhoneNumberList struct {
 	List []*gox.PhoneNumber
 }

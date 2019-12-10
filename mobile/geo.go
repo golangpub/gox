@@ -4,8 +4,8 @@ import (
 	"github.com/gopub/gox/geo"
 )
 
-type Point = geo.Point
-type Place = geo.Place
+type Point geo.Point
+type Place geo.Place
 
 type Country geo.Country
 
