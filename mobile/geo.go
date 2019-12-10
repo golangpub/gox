@@ -6,7 +6,8 @@ import (
 
 type Point = geo.Point
 type Place = geo.Place
-type Country = geo.Country
+
+type Country geo.Country
 
 type CountryList struct {
 	List []*Country
@@ -25,11 +26,17 @@ func (l *CountryList) Get(i int) *Country {
 }
 
 func GetCountryList() *CountryList {
-	return &CountryList{List: geo.GetCountries()}
+	l := geo.GetCountries()
+	ll := NewCountryList()
+	ll.List = make([]*Country, len(l))
+	for i, c := range l {
+		ll.List[i] = (*Country)(c)
+	}
+	return ll
 }
 
 func GetCountryByCallingCode(code int) *Country {
-	return geo.GetCountryByCallingCode(code)
+	return (*Country)(geo.GetCountryByCallingCode(code))
 }
 
 func GetCallingCodeByRegion(regionCode string) int {
