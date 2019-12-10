@@ -24,13 +24,53 @@ func NewFile() *File {
 	return new(File)
 }
 
-type WebPage = gox.WebPage
+type WebPage gox.WebPage
 
 func NewWebPage() *WebPage {
 	return new(WebPage)
 }
 
 type Any gox.Any
+
+func (a *Any) SetImage(i *Image) {
+	(*gox.Any)(a).SetImage((*gox.Image)(i))
+}
+
+func (a *Any) SetAudio(au *Audio) {
+	(*gox.Any)(a).SetAudio((*gox.Audio)(au))
+}
+
+func (a *Any) SetVideo(v *Video) {
+	(*gox.Any)(a).SetVideo((*gox.Video)(v))
+}
+
+func (a *Any) SetFile(f *File) {
+	(*gox.Any)(a).SetFile((*gox.File)(f))
+}
+
+func (a *Any) SetWebPage(wp *WebPage) {
+	(*gox.Any)(a).SetWebPage((*gox.WebPage)(wp))
+}
+
+func (a *Any) Image() *Image {
+	return (*Image)((*gox.Any)(a).Image())
+}
+
+func (a *Any) Video() *Video {
+	return (*Video)((*gox.Any)(a).Video())
+}
+
+func (a *Any) Audio() *Audio {
+	return (*Audio)((*gox.Any)(a).Audio())
+}
+
+func (a *Any) File() *File {
+	return (*File)((*gox.Any)(a).File())
+}
+
+func (a *Any) WebPage() *WebPage {
+	return (*WebPage)((*gox.Any)(a).WebPage())
+}
 
 func NewAnyObj() *Any {
 	return new(Any)
