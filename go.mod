@@ -3,7 +3,7 @@ module github.com/gopub/gox
 go 1.12
 
 require (
-	github.com/gopub/log v1.0.5
+	github.com/gopub/log v1.0.6
 	github.com/nyaruka/phonenumbers v1.0.53
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/shopspring/decimal v0.0.0-20191130220710-360f2bc03045

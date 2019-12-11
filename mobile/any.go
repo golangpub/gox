@@ -36,6 +36,10 @@ func NewWebPage() *WebPage {
 
 type Any gox.Any
 
+func (a *Any) TypeName() string {
+	return (*gox.Any)(a).TypeName()
+}
+
 func (a *Any) SetImage(i *Image) {
 	(*gox.Any)(a).SetImage((*gox.Image)(i))
 }
