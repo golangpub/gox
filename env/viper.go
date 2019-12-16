@@ -81,7 +81,7 @@ func (m *ViperManager) IntSlice(key string, defaultVal []int) []int {
 	}
 	viper.SetDefault(key, defaultVal)
 	v := viper.GetIntSlice(key)
-	log.Debugf("Env: %s=%t", key, v)
+	log.Debugf("Env: %s=%v", key, v)
 	return v
 }
 
@@ -91,6 +91,6 @@ func (m *ViperManager) StringSlice(key string, defaultVal []string) []string {
 	}
 	viper.SetDefault(key, defaultVal)
 	v := viper.GetStringSlice(key)
-	log.Debugf("Env: %s=%t", key, v)
+	log.Debugf("Env: %s=%v", key, v)
 	return v
 }
