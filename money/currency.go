@@ -13,6 +13,10 @@ const (
 	USDT Currency = "USDT"
 )
 
+func (c Currency) String() string {
+	return string(c)
+}
+
 func GetCurrency(c string) (Currency, bool) {
 	cc := Currency(strings.ToUpper(c))
 	switch cc {
