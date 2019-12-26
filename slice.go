@@ -20,8 +20,8 @@ func IndexOfInt64(a []int64, i int64) int {
 	return -1
 }
 
-func IndexOfString(strs []string, s string) int {
-	for i, str := range strs {
+func IndexOfString(a []string, s string) int {
+	for i, str := range a {
 		if str == s {
 			return i
 		}

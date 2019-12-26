@@ -28,12 +28,12 @@ func (s *Set) Remove(item interface{}) {
 }
 
 func (s *Set) Slice() []interface{} {
-	sl := make([]interface{}, 0, len(s.items))
+	l := make([]interface{}, 0, len(s.items))
 	for k := range s.items {
-		sl = append(sl, k)
+		l = append(l, k)
 	}
 
-	return sl
+	return l
 }
 
 type Int64Set struct {
@@ -63,12 +63,12 @@ func (s *Int64Set) Remove(item int64) {
 }
 
 func (s *Int64Set) Slice() []int64 {
-	sl := make([]int64, 0, len(s.items))
+	l := make([]int64, 0, len(s.items))
 	for k := range s.items {
-		sl = append(sl, k)
+		l = append(l, k)
 	}
 
-	return sl
+	return l
 }
 
 func (s *Int64Set) Map() map[int64]Void {
@@ -138,11 +138,11 @@ func (s *StringSet) Size() int {
 }
 
 func (s *StringSet) UnmarshalJSON(data []byte) error {
-	var list []string
-	if err := json.Unmarshal(data, &list); err != nil {
+	var l []string
+	if err := json.Unmarshal(data, &l); err != nil {
 		return err
 	}
-	for _, v := range list {
+	for _, v := range l {
 		s.Add(v)
 	}
 	return nil

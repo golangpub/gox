@@ -1,4 +1,4 @@
-package gox
+package money
 
 import (
 	"database/sql/driver"
@@ -26,10 +26,15 @@ func (m *Money) Scan(src interface{}) error {
 		return nil
 	}
 
-	s, err := ParseString(src)
-	if err != nil {
-		return fmt.Errorf("parse string: %w", err)
+	s, ok := src.(string)
+	if !ok {
+		b, ok := src.([]byte)
+		if !ok {
+			return fmt.Errorf("src is not []byte or string")
+		}
+		s = string(b)
 	}
+
 	if len(s) == 0 {
 		return nil
 	}
