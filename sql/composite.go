@@ -30,8 +30,9 @@ Loop:
 		switch state {
 		case compositeScanInit:
 			if c != '(' {
-				errPos = i
-				break Loop
+				//errPos = i
+				//break Loop
+				continue
 			}
 			state = compositeScanField
 		case compositeScanField:
