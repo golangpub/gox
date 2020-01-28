@@ -3,6 +3,7 @@ package geo
 import (
 	"database/sql/driver"
 	"fmt"
+	"strings"
 
 	"github.com/gopub/gox/sql"
 )
@@ -47,6 +48,9 @@ func (c *Point) Scan(src interface{}) error {
 	if err != nil {
 		return fmt.Errorf("parse composite fields %s: %w", s, err)
 	}
+	if len(fields) == 1 {
+		fields = strings.Split(fields[0], " ")
+	}
 	if len(fields) != 2 {
 		return fmt.Errorf("parse composite fields %s", s)
 	}
@@ -65,5 +69,5 @@ func (c *Point) Value() (driver.Value, error) {
 	if c == nil {
 		return nil, nil
 	}
-	return fmt.Sprintf("(%f,%f)", c.X, c.Y), nil
+	return fmt.Sprintf("POINT(%f %f)", c.X, c.Y), nil
 }
