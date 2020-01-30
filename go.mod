@@ -3,6 +3,7 @@ module github.com/gopub/gox
 go 1.12
 
 require (
+	github.com/google/go-cmp v0.2.0
 	github.com/gopub/log v1.0.6
 	github.com/nyaruka/phonenumbers v1.0.53
 	github.com/pelletier/go-toml v1.6.0 // indirect
