@@ -42,35 +42,29 @@ func ReverseInt64Slice(s []int64) {
 	}
 }
 
-func RemoveInt64(s []int64, v int64) int {
-	n := 0
+func RemoveInt64(s []int64, v int64) []int64 {
 	for i := len(s) - 1; i >= 0; i-- {
 		if s[i] == v {
 			s = append(s[:i], s[i+1:]...)
-			n++
 		}
 	}
-	return n
+	return s
 }
 
-func RemoveFloat64(s []float64, v float64) int {
-	n := 0
+func RemoveFloat64(s []float64, v float64) []float64 {
 	for i := len(s) - 1; i >= 0; i-- {
 		if s[i] == v {
 			s = append(s[:i], s[i+1:]...)
-			n++
 		}
 	}
-	return n
+	return s
 }
 
-func RemoveString(s []string, v string) int {
-	n := 0
+func RemoveString(s []string, v string) []string {
 	for i := len(s) - 1; i >= 0; i-- {
 		if s[i] == v {
 			s = append(s[:i], s[i+1:]...)
-			n++
 		}
 	}
-	return n
+	return s
 }
