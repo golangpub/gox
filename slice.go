@@ -41,3 +41,36 @@ func ReverseInt64Slice(s []int64) {
 		s[i], s[j] = s[j], s[i]
 	}
 }
+
+func RemoveInt64(s []int64, v int64) int {
+	n := 0
+	for i := len(s) - 1; i >= 0; i-- {
+		if s[i] == v {
+			s = append(s[:i], s[i+1:]...)
+			n++
+		}
+	}
+	return n
+}
+
+func RemoveFloat64(s []float64, v float64) int {
+	n := 0
+	for i := len(s) - 1; i >= 0; i-- {
+		if s[i] == v {
+			s = append(s[:i], s[i+1:]...)
+			n++
+		}
+	}
+	return n
+}
+
+func RemoveString(s []string, v string) int {
+	n := 0
+	for i := len(s) - 1; i >= 0; i-- {
+		if s[i] == v {
+			s = append(s[:i], s[i+1:]...)
+			n++
+		}
+	}
+	return n
+}
