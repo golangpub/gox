@@ -16,11 +16,11 @@ const (
 )
 
 type Point struct {
-	X float64 `json:"x"` // X
-	Y float64 `json:"y"` // Y
+	X float64 `json:"x"` // X is longitude for geodetic coordinate
+	Y float64 `json:"y"` // Y is latitude for geodetic coordinate
 }
 
-func NewPoint() *Point {
+func NewPoint(x, y float64) *Point {
 	return &Point{}
 }
 
