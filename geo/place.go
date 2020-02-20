@@ -68,6 +68,5 @@ func (p *Place) Value() (driver.Value, error) {
 		loc = sql.Escape(locStr)
 	}
 	s := fmt.Sprintf("(%s,%s,%s)", sql.Escape(p.Code), sql.Escape(p.Name), loc)
-	fmt.Println(s)
 	return s, nil
 }

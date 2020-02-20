@@ -21,6 +21,10 @@ func (m *Money) String() string {
 	return fmt.Sprintf("%s %s", m.Currency, m.Amount.String())
 }
 
+func (m *Money) Equals(v *Money) bool {
+	return m.Currency == v.Currency && m.Amount.Cmp(v.Amount) == 0
+}
+
 func (m *Money) Scan(src interface{}) error {
 	if src == nil {
 		return nil
