@@ -21,7 +21,7 @@ type Point struct {
 }
 
 func NewPoint(x, y float64) *Point {
-	return &Point{}
+	return &Point{X: x, Y: y}
 }
 
 var _ driver.Valuer = (*Point)(nil)
@@ -69,5 +69,6 @@ func (p *Point) Value() (driver.Value, error) {
 	if p == nil {
 		return nil, nil
 	}
-	return fmt.Sprintf("POINT(%f %f)", p.X, p.Y), nil
+	v := fmt.Sprintf("POINT(%f %f)", p.X, p.Y)
+	return v, nil
 }
