@@ -76,7 +76,7 @@ func (p *Point) Value() (driver.Value, error) {
 
 func (p *Point) Distance(v *Point) int {
 	p1 := s2.PointFromLatLng(s2.LatLngFromDegrees(p.Y, p.X))
-	p2 := s2.PointFromLatLng(s2.LatLngFromDegrees(p.Y, p.X))
+	p2 := s2.PointFromLatLng(s2.LatLngFromDegrees(v.Y, v.X))
 	d := p1.Distance(p2)
 	return int(d.Radians() * 6371000)
 }
