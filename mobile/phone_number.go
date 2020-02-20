@@ -1,7 +1,9 @@
 package mobile
 
 import (
+	"fmt"
 	"github.com/gopub/gox"
+	"strings"
 )
 
 type PhoneNumber gox.PhoneNumber
@@ -59,12 +61,21 @@ func NewPhoneNumber(callingCode int, number int64) *PhoneNumber {
 	return (*PhoneNumber)(gox.NewPhoneNumber(callingCode, number))
 }
 
-func ParsePhoneNumber(s string) (*PhoneNumber, error) {
-	v, err := gox.ParsePhoneNumber(s)
-	if err != nil {
-		return nil, err
+func ParsePhoneNumber(s string, code int) *PhoneNumber {
+	s = strings.Replace(s, "-", "", -1)
+	s = strings.Replace(s, " ", "", -1)
+	s = strings.Replace(s, "(", "", -1)
+	s = strings.Replace(s, ")", "", -1)
+	if len(s) == 0 {
+		return nil
 	}
-	return (*PhoneNumber)(v), nil
+	pn, _ := gox.ParsePhoneNumber(s)
+	if pn != nil {
+		return (*PhoneNumber)(pn)
+	}
+	s = fmt.Sprintf("+%d%s", code, s)
+	pn, _ = gox.ParsePhoneNumber(s)
+	return (*PhoneNumber)(pn)
 }
 
 func TidyPhoneNumber(s string, code int) *PhoneNumber {
