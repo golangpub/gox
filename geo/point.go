@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/golang/geo/s2"
 	"github.com/gopub/gox/sql"
 )
 
 const (
 	PI          = 3.14159265
-	EarthRadius = 6378.1 //km
+	EarthRadius = 6_378_100
 	EarthCircle = 2 * PI * EarthRadius
 	Degree      = EarthCircle * 1000 / 360
 )
@@ -71,4 +72,11 @@ func (p *Point) Value() (driver.Value, error) {
 	}
 	v := fmt.Sprintf("POINT(%f %f)", p.X, p.Y)
 	return v, nil
+}
+
+func (p *Point) Distance(v *Point) int {
+	p1 := s2.PointFromLatLng(s2.LatLngFromDegrees(p.Y, p.X))
+	p2 := s2.PointFromLatLng(s2.LatLngFromDegrees(p.Y, p.X))
+	d := p1.Distance(p2)
+	return int(d.Radians() * 6371000)
 }

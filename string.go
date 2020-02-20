@@ -2,9 +2,10 @@ package gox
 
 import (
 	"encoding/json"
-	"github.com/gopub/log"
 	"regexp"
 	"strings"
+
+	"github.com/gopub/log"
 )
 
 var whitespaceRegexp = regexp.MustCompile(`\\s`)
