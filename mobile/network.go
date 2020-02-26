@@ -19,5 +19,5 @@ const (
 )
 
 func GetIP() (net.IP, error) {
-	return gox.GetIP()
+	return gox.GetOutboundIP()
 }
