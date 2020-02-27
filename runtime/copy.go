@@ -25,7 +25,7 @@ func Copy(dst interface{}, src interface{}) error {
 	return CopyWithNamer(dst, src, DefaultNamer)
 }
 
-// Copy copies src to dst with namer
+// CopyWithNamer copies src to dst with namer
 func CopyWithNamer(dst interface{}, src interface{}, namer Namer) error {
 	if namer == nil {
 		return errors.New("namer is nil")

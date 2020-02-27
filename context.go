@@ -6,23 +6,23 @@ import (
 	"github.com/gopub/gox/geo"
 )
 
-type ContextKey int
+type ContextKey string
 
 const (
-	CKDeviceID ContextKey = iota + 1
-	CKRemoteAdr
-	CKLocation
-	CKAccessToken
-	CKUserID
-	CKTraceID
-	CKUser
+	CKDeviceID    ContextKey = "gox_device_id"
+	CKRemoteAddr  ContextKey = "gox_remote_addr"
+	CKLocation    ContextKey = "gox_location"
+	CKAccessToken ContextKey = "gox_access_token"
+	CKUserID      ContextKey = "gox_user_id"
+	CKTraceID     ContextKey = "gox_trace_id"
+	CKUser        ContextKey = "gox_user"
 )
 
 func (k ContextKey) String() string {
 	switch k {
 	case CKDeviceID:
 		return "device_id"
-	case CKRemoteAdr:
+	case CKRemoteAddr:
 		return "remote_addr"
 	case CKLocation:
 		return "location"
@@ -72,7 +72,7 @@ func WithAccessToken(ctx context.Context, token string) context.Context {
 }
 
 func GetRemoteAddr(ctx context.Context) string {
-	ip, _ := ctx.Value(CKRemoteAdr).(string)
+	ip, _ := ctx.Value(CKRemoteAddr).(string)
 	return ip
 }
 
@@ -80,7 +80,7 @@ func WithRemoteAddr(ctx context.Context, addr string) context.Context {
 	if len(addr) == 0 {
 		return ctx
 	}
-	return context.WithValue(ctx, CKRemoteAdr, addr)
+	return context.WithValue(ctx, CKRemoteAddr, addr)
 }
 
 func GetDeviceID(ctx context.Context) string {

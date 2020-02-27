@@ -29,7 +29,7 @@ func IsNil(i interface{}) bool {
 	}
 }
 
-// AllocValue: ppObj should be the address of a pointer to a value
+// AllocValue allocate value: ppObj should be the address of a pointer to a value
 func AllocValue(ppObj interface{}) {
 	v := reflect.ValueOf(ppObj)
 	if v.Kind() != reflect.Ptr {

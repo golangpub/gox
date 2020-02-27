@@ -102,7 +102,7 @@ func searchPrettyTable(v byte) int {
 	return -1
 }
 
-// NewID returns new ID created by default id generator
+// NextID returns new ID created by default id generator
 func NextID() ID {
 	return defaultIDGenerator.NextID()
 }

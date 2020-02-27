@@ -73,9 +73,13 @@ const (
 	StatusNotExtended                   int = 510 // RFC 2774, 7
 	StatusNetworkAuthenticationRequired int = 511 // RFC 6585, 6
 
+	// ---------------------------------------------------------
 	// Custom status codes
+
 	StatusTransportFailed int = 600
 	StatusInvalidResponse int = 601
+
+	// ----------------------------------------------------------
 )
 
 func StatusText(code int) string {

@@ -33,7 +33,7 @@ type AnyType interface {
 	AnyType() string
 }
 
-// Register bind typ with prototype
+// RegisterAny bind typ with prototype
 // E.g.
 //		contents.Register("image", &contents.Image{})
 func RegisterAny(prototype interface{}) {
