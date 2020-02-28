@@ -13,14 +13,14 @@ type Manager interface {
 	Bool(key string, defaultVal bool) bool
 	IntSlice(key string, defaultVal []int) []int
 	StringSlice(key string, defaultVal []string) []string
-	Contains(key string) bool
+	Has(key string) bool
 	SetDefault(key string, value interface{})
 }
 
 var DefaultManager Manager = NewViperManager()
 
-func Contains(key string) bool {
-	return DefaultManager.Contains(key)
+func Has(key string) bool {
+	return DefaultManager.Has(key)
 }
 
 func SetDefault(key string, value interface{}) {

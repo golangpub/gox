@@ -15,7 +15,7 @@ func NewViperManager() *ViperManager {
 	return &ViperManager{}
 }
 
-func (m *ViperManager) Contains(key string) bool {
+func (m *ViperManager) Has(key string) bool {
 	return viper.IsSet(key)
 }
 
