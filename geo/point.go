@@ -2,7 +2,9 @@ package geo
 
 import (
 	"database/sql/driver"
+	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/golang/geo/s2"
@@ -16,6 +18,9 @@ const (
 	Degree      = EarthCircle * 1000 / 360
 )
 
+var _ driver.Valuer = (*Point)(nil)
+var _ sql.Scanner = (*Point)(nil)
+
 type Point struct {
 	X float64 `json:"x"` // X is longitude for geodetic coordinate
 	Y float64 `json:"y"` // Y is latitude for geodetic coordinate
@@ -25,8 +30,35 @@ func NewPoint(x, y float64) *Point {
 	return &Point{X: x, Y: y}
 }
 
-var _ driver.Valuer = (*Point)(nil)
-var _ sql.Scanner = (*Point)(nil)
+func NewPointFromString(s string) (*Point, error) {
+	l := strings.Split(s, ",")
+	if len(l) != 2 {
+		return nil, errors.New("invalid format")
+	}
+	x := strings.TrimSpace(l[0])
+	if x == "" {
+		return nil, errors.New("x is empty")
+	}
+	p := new(Point)
+	var err error
+	p.X, err = strconv.ParseFloat(x, 64)
+	if err != nil {
+		return nil, fmt.Errorf("parse x %s: %w", x, err)
+	}
+	y := strings.TrimSpace(l[1])
+	if y == "" {
+		return nil, errors.New("y is empty")
+	}
+	p.Y, err = strconv.ParseFloat(y, 64)
+	if err != nil {
+		return nil, fmt.Errorf("parse y  %s: %w", x, err)
+	}
+	return p, nil
+}
+
+func (p *Point) String() string {
+	return fmt.Sprintf("%f,%f", p.X, p.Y)
+}
 
 func (p *Point) Scan(src interface{}) error {
 	if src == nil {
