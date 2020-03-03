@@ -2,8 +2,9 @@ package mobile
 
 import (
 	"fmt"
-	"github.com/gopub/gox"
 	"strings"
+
+	"github.com/gopub/gox"
 )
 
 type PhoneNumber gox.PhoneNumber
