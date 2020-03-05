@@ -2,7 +2,9 @@ package env
 
 import (
 	"log"
+	"strings"
 	"time"
+	"unicode"
 
 	"github.com/gopub/gox"
 	"github.com/spf13/cast"
@@ -170,4 +172,73 @@ func MustMap(key string) gox.M {
 		log.Panicf("%s is empty", key)
 	}
 	return v
+}
+
+func SizeInBytes(key string, defaultValue int) int {
+	if !DefaultManager.Has(key) {
+		return defaultValue
+	}
+	s, err := cast.ToStringE(DefaultManager.Get(key))
+	if err != nil {
+		return defaultValue
+	}
+	return int(parseSizeInBytes(s))
+}
+
+func MustSizeInBytes(key string) int {
+	if !DefaultManager.Has(key) {
+		log.Panicf("%s is not defined", key)
+	}
+	v := DefaultManager.Get(key)
+	s, err := cast.ToStringE(v)
+	if err != nil {
+		log.Panicf("Cast to string %v: %v", v, err)
+	}
+	if len(s) == 0 {
+		log.Panicf("%s is empty", key)
+	}
+	return int(parseSizeInBytes(s))
+}
+
+// parseSizeInBytes converts strings like 1GB or 12 mb into an unsigned integer number of bytes
+func parseSizeInBytes(sizeStr string) uint {
+	sizeStr = strings.TrimSpace(sizeStr)
+	lastChar := len(sizeStr) - 1
+	multiplier := uint(1)
+
+	if lastChar > 0 {
+		if sizeStr[lastChar] == 'b' || sizeStr[lastChar] == 'B' {
+			if lastChar > 1 {
+				switch unicode.ToLower(rune(sizeStr[lastChar-1])) {
+				case 'k':
+					multiplier = 1 << 10
+					sizeStr = strings.TrimSpace(sizeStr[:lastChar-1])
+				case 'm':
+					multiplier = 1 << 20
+					sizeStr = strings.TrimSpace(sizeStr[:lastChar-1])
+				case 'g':
+					multiplier = 1 << 30
+					sizeStr = strings.TrimSpace(sizeStr[:lastChar-1])
+				default:
+					multiplier = 1
+					sizeStr = strings.TrimSpace(sizeStr[:lastChar])
+				}
+			}
+		}
+	}
+
+	size := cast.ToInt(sizeStr)
+	if size < 0 {
+		size = 0
+	}
+
+	return safeMul(uint(size), multiplier)
+}
+
+func safeMul(a, b uint) uint {
+	c := a * b
+	if a > 1 && b > 1 && c/b != a {
+		return 0
+	}
+	return c
 }
