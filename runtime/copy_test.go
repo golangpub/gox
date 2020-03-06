@@ -2,12 +2,11 @@ package runtime_test
 
 import (
 	"encoding/json"
+	"errors"
 	"testing"
 
-	"errors"
-
 	"github.com/gopub/gox"
-
+	"github.com/gopub/gox/runtime"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -49,7 +48,7 @@ func TestCopyPlainTypes(t *testing.T) {
 		}
 
 		i2 := Item{}
-		err := gox.Copy(&i2, i1)
+		err := runtime.Copy(&i2, i1)
 		assert.NoError(t, err)
 		assert.Equal(t, i2, i1)
 	})
@@ -65,7 +64,7 @@ func TestCopyPlainTypes(t *testing.T) {
 		}
 
 		i2 := &Item{}
-		err := gox.Copy(i2, i1)
+		err := runtime.Copy(i2, i1)
 		assert.NoError(t, err)
 		assert.Equal(t, i2, i1)
 	})
@@ -81,7 +80,7 @@ func TestCopyPlainTypes(t *testing.T) {
 		}
 
 		i2 := Item{}
-		err := gox.Copy(i2, i1)
+		err := runtime.Copy(i2, i1)
 		assert.Error(t, err)
 	})
 
@@ -90,7 +89,7 @@ func TestCopyPlainTypes(t *testing.T) {
 			"Int": 1, "Uint": 2, "Float32": 3.3, "String": "s", "Bytes": []byte("bytes"),
 		}
 		i := &Item{}
-		err := gox.Copy(i, m)
+		err := runtime.Copy(i, m)
 		assert.NoError(t, err)
 	})
 }
@@ -130,7 +129,7 @@ func TestCopyEmbeddedStruct(t *testing.T) {
 		}
 
 		i2 := &Item{}
-		err := gox.Copy(i2, i1)
+		err := runtime.Copy(i2, i1)
 		assert.NoError(t, err)
 		assert.Equal(t, i2, i1)
 	})
@@ -163,7 +162,7 @@ func TestCopyEmbeddedPtrStruct(t *testing.T) {
 		}
 
 		i2 := &Item{}
-		err := gox.Copy(i2, i1)
+		err := runtime.Copy(i2, i1)
 		assert.NoError(t, err)
 		assert.Equal(t, i2, i1)
 	})
@@ -185,7 +184,7 @@ func TestCopyEmbeddedPtrStruct(t *testing.T) {
 		}
 
 		i := &Item{}
-		err := gox.Copy(i, m)
+		err := runtime.Copy(i, m)
 		assert.NoError(t, err)
 		assert.Equal(t, i.SubItem, m["SubItem"])
 		jm, err := json.Marshal(m)
@@ -204,7 +203,7 @@ func TestCopyer(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		c := &Contact{}
-		err := gox.Copy(c, map[string]interface{}{
+		err := runtime.Copy(c, map[string]interface{}{
 			"Name":        "Tom",
 			"PhoneNumber": "+8613800000001",
 		})
@@ -220,7 +219,7 @@ func TestCopyer(t *testing.T) {
 
 	t.Run("CopyString", func(t *testing.T) {
 		pn := &gox.PhoneNumber{}
-		err := gox.Copy(pn, "+8618600000001")
+		err := runtime.Copy(pn, "+8618600000001")
 		assert.NoError(t, err)
 		assert.Equal(t, pn, &gox.PhoneNumber{
 			Code:   86,
@@ -250,14 +249,14 @@ func TestValidator(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		i := &Item{}
 		m := map[string]interface{}{"id": 123, "score": 100}
-		err := gox.Copy(i, m)
+		err := runtime.Copy(i, m)
 		assert.NoError(t, err)
 	})
 
 	t.Run("Error", func(t *testing.T) {
 		i := &Item{}
 		m := map[string]interface{}{"id": 123, "score": -10}
-		err := gox.CopyWithNamer(i, m, gox.SnakeToCamelNamer)
+		err := runtime.CopyWithNamer(i, m, runtime.SnakeToCamelNamer)
 		assert.Error(t, err)
 	})
 }
