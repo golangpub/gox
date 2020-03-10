@@ -18,7 +18,7 @@ const (
 	Windows DeviceType = "windows"
 )
 
-type Env int
+type Env string
 
 func (e Env) IsValid() bool {
 	switch e {
@@ -30,23 +30,12 @@ func (e Env) IsValid() bool {
 }
 
 func (e Env) String() string {
-	switch e {
-	case Dev:
-		return "dev"
-	case Testing:
-		return "testing"
-	case Staging:
-		return "staging"
-	case Prod:
-		return "prod"
-	default:
-		return "nil"
-	}
+	return string(e)
 }
 
 const (
-	Dev Env = iota
-	Testing
-	Staging
-	Prod
+	Dev     Env = "dev"
+	Testing Env = "testing"
+	Staging Env = "staging"
+	Prod    Env = "prod"
 )
