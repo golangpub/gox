@@ -1,7 +1,6 @@
 package gox
 
 import (
-	"encoding/json"
 	"reflect"
 	"strconv"
 	"strings"
@@ -62,16 +61,6 @@ func ParseInt(i interface{}) (int64, error) {
 	case reflect.Float32, reflect.Float64:
 		return int64(v.Float()), nil
 	case reflect.String:
-		if num, ok := i.(json.Number); ok {
-			n, e := num.Int64()
-			if e != nil {
-				var f float64
-				f, e = num.Float64()
-				n = int64(f)
-			}
-			return n, e
-		}
-
 		if n, err := strconv.ParseInt(v.String(), 0, 64); err == nil {
 			return n, nil
 		}
@@ -93,9 +82,6 @@ func ParseFloat(i interface{}) (float64, error) {
 	case reflect.Float32, reflect.Float64:
 		return v.Float(), nil
 	case reflect.String:
-		if num, ok := i.(json.Number); ok {
-			return num.Float64()
-		}
 		return strconv.ParseFloat(v.String(), 64)
 	default:
 		return 0, ErrNotExist
