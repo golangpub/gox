@@ -3,7 +3,7 @@ package gox_test
 import (
 	"encoding/json"
 	"errors"
-	"github.com/gopub/gox"
+	"github.com/gopub/gox/v2"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

@@ -63,6 +63,7 @@ github.com/gopub/conv v0.2.1 h1:0swaC5+4gPrblqnY/EQzIb195FsdEwMXzfOl2JuJMZE=
 github.com/gopub/conv v0.2.1/go.mod h1:OAog+Vown+go6heGhEj/5dcPE5JjHMIaus5kLvvnzxE=
 github.com/gopub/conv v0.3.0 h1:FBbmYeY6q6cKi/3xBn2uP5tL/IcvTMfVqmcEQdXMHVY=
 github.com/gopub/conv v0.3.0/go.mod h1:OAog+Vown+go6heGhEj/5dcPE5JjHMIaus5kLvvnzxE=
+github.com/gopub/gox v1.20.4 h1:BaMrdyRLE679rwGlPnI5hctdYaobf8gTMq51+F1+mmM=
 github.com/gopub/gox v1.20.4/go.mod h1:BBAY69jUoMWWGoai+EI7AW60QMUBoTbaHRoEuuwS/n4=
 github.com/gopub/log v1.2.0 h1:/MN2pPHuocexZ6irULUN40vC6R6/rNIKhHllAWLfwUU=
 github.com/gopub/log v1.2.0/go.mod h1:N7GzW/a2tgyQp/wSwd9YzUN5AbVB2G1yE7+nZUGL46A=

@@ -1,4 +1,4 @@
-module github.com/gopub/gox
+module github.com/gopub/gox/v2
 
 go 1.13
 

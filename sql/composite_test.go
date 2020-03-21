@@ -3,7 +3,7 @@ package sql_test
 import (
 	"testing"
 
-	"github.com/gopub/gox/sql"
+	"github.com/gopub/gox/v2/sql"
 	"github.com/stretchr/testify/require"
 )
 
