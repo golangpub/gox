@@ -5,41 +5,20 @@ import (
 	"github.com/gopub/types"
 )
 
-type ContextKey string
+type contextKey int
 
 const (
-	CKDeviceID    ContextKey = "gox_device_id"
-	CKRemoteAddr  ContextKey = "gox_remote_addr"
-	CKLocation    ContextKey = "gox_location"
-	CKAccessToken ContextKey = "gox_access_token"
-	CKUserID      ContextKey = "gox_user_id"
-	CKTraceID     ContextKey = "gox_trace_id"
-	CKUser        ContextKey = "gox_user"
+	ckDeviceID contextKey = iota + 1
+	ckRemoteAddr
+	ckLocation
+	ckAccessToken
+	ckUserID
+	ckTraceID
+	ckUser
 )
 
-func (k ContextKey) String() string {
-	switch k {
-	case CKDeviceID:
-		return "device_id"
-	case CKRemoteAddr:
-		return "remote_addr"
-	case CKLocation:
-		return "location"
-	case CKAccessToken:
-		return "access_token"
-	case CKUserID:
-		return "user_id"
-	case CKTraceID:
-		return "trace_id"
-	case CKUser:
-		return "user"
-	default:
-		return "none"
-	}
-}
-
 func GetUserID(ctx context.Context) int64 {
-	id, _ := ctx.Value(CKUserID).(int64)
+	id, _ := ctx.Value(ckUserID).(int64)
 	return id
 }
 
@@ -47,19 +26,19 @@ func WithUserID(ctx context.Context, id int64) context.Context {
 	if id == 0 {
 		return ctx
 	}
-	return context.WithValue(ctx, CKUserID, id)
+	return context.WithValue(ctx, ckUserID, id)
 }
 
 func GetUser(ctx context.Context) interface{} {
-	return ctx.Value(CKUser)
+	return ctx.Value(ckUser)
 }
 
 func WithUser(ctx context.Context, u interface{}) context.Context {
-	return context.WithValue(ctx, CKUser, u)
+	return context.WithValue(ctx, ckUser, u)
 }
 
 func GetAccessToken(ctx context.Context) string {
-	token, _ := ctx.Value(CKAccessToken).(string)
+	token, _ := ctx.Value(ckAccessToken).(string)
 	return token
 }
 
@@ -67,11 +46,11 @@ func WithAccessToken(ctx context.Context, token string) context.Context {
 	if len(token) == 0 {
 		return ctx
 	}
-	return context.WithValue(ctx, CKAccessToken, token)
+	return context.WithValue(ctx, ckAccessToken, token)
 }
 
 func GetRemoteAddr(ctx context.Context) string {
-	ip, _ := ctx.Value(CKRemoteAddr).(string)
+	ip, _ := ctx.Value(ckRemoteAddr).(string)
 	return ip
 }
 
@@ -79,11 +58,11 @@ func WithRemoteAddr(ctx context.Context, addr string) context.Context {
 	if len(addr) == 0 {
 		return ctx
 	}
-	return context.WithValue(ctx, CKRemoteAddr, addr)
+	return context.WithValue(ctx, ckRemoteAddr, addr)
 }
 
 func GetDeviceID(ctx context.Context) string {
-	id, _ := ctx.Value(CKDeviceID).(string)
+	id, _ := ctx.Value(ckDeviceID).(string)
 	return id
 }
 
@@ -91,11 +70,11 @@ func WithDeviceID(ctx context.Context, deviceID string) context.Context {
 	if len(deviceID) == 0 {
 		return ctx
 	}
-	return context.WithValue(ctx, CKDeviceID, deviceID)
+	return context.WithValue(ctx, ckDeviceID, deviceID)
 }
 
 func GetTraceID(ctx context.Context) string {
-	id, _ := ctx.Value(CKTraceID).(string)
+	id, _ := ctx.Value(ckTraceID).(string)
 	return id
 }
 
@@ -103,11 +82,11 @@ func WithTraceID(ctx context.Context, traceID string) context.Context {
 	if len(traceID) == 0 {
 		return ctx
 	}
-	return context.WithValue(ctx, CKTraceID, traceID)
+	return context.WithValue(ctx, ckTraceID, traceID)
 }
 
 func GetLocation(ctx context.Context) *types.Point {
-	id, _ := ctx.Value(CKLocation).(*types.Point)
+	id, _ := ctx.Value(ckLocation).(*types.Point)
 	return id
 }
 
@@ -115,7 +94,7 @@ func WithLocation(ctx context.Context, location *types.Point) context.Context {
 	if location == nil {
 		return ctx
 	}
-	return context.WithValue(ctx, CKLocation, location)
+	return context.WithValue(ctx, ckLocation, location)
 }
 
 func DetachedContext(ctx context.Context) context.Context {
