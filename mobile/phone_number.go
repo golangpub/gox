@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gopub/gox"
+	"github.com/golangpub/gox"
 )
 
 type PhoneNumber gox.PhoneNumber

@@ -1,8 +1,8 @@
 package mobile
 
 import (
-	"github.com/gopub/gox"
-	"github.com/gopub/gox/geo"
+	"github.com/golangpub/gox"
+	"github.com/golangpub/gox/geo"
 )
 
 type Map struct {

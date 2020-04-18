@@ -1,8 +1,8 @@
 package mobile
 
 import (
-	"github.com/gopub/gox"
-	"github.com/gopub/log"
+	"github.com/golangpub/gox"
+	"github.com/golangpub/log"
 )
 
 const (

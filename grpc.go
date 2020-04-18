@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gopub/gox/geo"
+	"github.com/golangpub/gox/geo"
 
-	"github.com/gopub/log"
+	"github.com/golangpub/log"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"

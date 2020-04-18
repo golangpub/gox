@@ -4,7 +4,7 @@ import (
 	"database/sql/driver"
 	"fmt"
 
-	"github.com/gopub/gox/sql"
+	"github.com/golangpub/gox/sql"
 	"github.com/shopspring/decimal"
 )
 

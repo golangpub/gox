@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gopub/log"
+	"github.com/golangpub/log"
 )
 
 const prettyTableSize = 34

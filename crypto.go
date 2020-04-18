@@ -9,7 +9,7 @@ import (
 	"encoding/hex"
 	"errors"
 
-	"github.com/gopub/log"
+	"github.com/golangpub/log"
 )
 
 // AES crypt data with key, iv

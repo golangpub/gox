@@ -6,7 +6,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/gopub/gox"
+	"github.com/golangpub/gox"
 	"github.com/spf13/cast"
 )
 

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gopub/gox"
+	"github.com/golangpub/gox"
 	"github.com/stretchr/testify/require"
 )
 

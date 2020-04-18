@@ -3,7 +3,7 @@ package mobile
 import (
 	"os"
 
-	"github.com/gopub/log"
+	"github.com/golangpub/log"
 )
 
 func MustMkdir(dir string) {

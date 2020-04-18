@@ -1,7 +1,7 @@
 package mobile
 
 import (
-	"github.com/gopub/gox/geo"
+	"github.com/golangpub/gox/geo"
 )
 
 type Point geo.Point

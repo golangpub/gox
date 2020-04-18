@@ -1,6 +1,6 @@
 package mobile
 
-import "github.com/gopub/gox"
+import "github.com/golangpub/gox"
 
 type Image gox.Image
 

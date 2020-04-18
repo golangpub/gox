@@ -1,6 +1,6 @@
 package mobile
 
-import "github.com/gopub/gox/env"
+import "github.com/golangpub/gox/env"
 
 func EnvString(key string) string {
 	return env.String(key, "")

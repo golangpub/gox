@@ -3,7 +3,7 @@ package gox
 import (
 	"context"
 
-	"github.com/gopub/gox/geo"
+	"github.com/golangpub/gox/geo"
 )
 
 type ContextKey string

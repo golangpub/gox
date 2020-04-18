@@ -1,7 +1,7 @@
 package mobile
 
 import (
-	"github.com/gopub/gox"
+	"github.com/golangpub/gox"
 )
 
 func IsEmail(email string) bool {

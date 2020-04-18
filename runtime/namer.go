@@ -1,6 +1,6 @@
 package runtime
 
-import "github.com/gopub/gox"
+import "github.com/golangpub/gox"
 
 type Namer interface {
 	Name(srcName string) (dstName string)

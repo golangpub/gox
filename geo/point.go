@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/golang/geo/s2"
-	"github.com/gopub/gox/sql"
+	"github.com/golangpub/gox/sql"
 )
 
 const (

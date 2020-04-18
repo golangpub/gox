@@ -7,7 +7,7 @@ import (
 
 	"github.com/nyaruka/phonenumbers"
 
-	"github.com/gopub/log"
+	"github.com/golangpub/log"
 )
 
 type Country struct {

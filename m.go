@@ -10,7 +10,7 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/gopub/log"
+	"github.com/golangpub/log"
 
 	"github.com/nyaruka/phonenumbers"
 )

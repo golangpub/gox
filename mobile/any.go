@@ -3,7 +3,7 @@ package mobile
 import (
 	"encoding/json"
 
-	"github.com/gopub/gox"
+	"github.com/golangpub/gox"
 )
 
 type Video gox.Video

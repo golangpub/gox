@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/gopub/gox/sql"
+	"github.com/golangpub/gox/sql"
 	"github.com/nyaruka/phonenumbers"
 )
 

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/gopub/gox"
-	"github.com/gopub/gox/runtime"
+	"github.com/golangpub/gox"
+	"github.com/golangpub/gox/runtime"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

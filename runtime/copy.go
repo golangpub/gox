@@ -5,11 +5,11 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/gopub/gox"
+	"github.com/golangpub/gox"
 
 	"errors"
 
-	"github.com/gopub/log"
+	"github.com/golangpub/log"
 )
 
 type Copier interface {
