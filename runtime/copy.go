@@ -1,11 +1,11 @@
-package gox
+package runtime
 
 import (
 	"fmt"
 	"reflect"
 	"strings"
 
-	"github.com/gopub/conv"
+	"github.com/gopub/gox"
 
 	"errors"
 
@@ -85,25 +85,25 @@ func copy(dst reflect.Value, src reflect.Value, namer Namer) error {
 
 	switch v.Kind() {
 	case reflect.Bool:
-		b, err := conv.ToBool(src.Interface())
+		b, err := gox.ParseBool(src.Interface())
 		if err != nil {
 			return fmt.Errorf("parse bool failed: %w", err)
 		}
 		v.SetBool(b)
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		i, err := conv.ToInt64(src.Interface())
+		i, err := gox.ParseInt(src.Interface())
 		if err != nil {
 			return fmt.Errorf("parse int failed: %w", err)
 		}
 		v.SetInt(i)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		i, err := conv.ToInt(src.Interface())
+		i, err := gox.ParseInt(src.Interface())
 		if err != nil {
 			return fmt.Errorf("parse uint failed: %w", err)
 		}
 		v.SetUint(uint64(i))
 	case reflect.Float32, reflect.Float64:
-		i, err := conv.ToFloat64(src.Interface())
+		i, err := gox.ParseFloat(src.Interface())
 		if err != nil {
 			return fmt.Errorf("parse float failed: %w", err)
 		}

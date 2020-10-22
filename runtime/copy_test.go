@@ -1,10 +1,12 @@
-package gox_test
+package runtime_test
 
 import (
 	"encoding/json"
-	"errors"
-	"github.com/gopub/gox/v2"
 	"testing"
+
+	"errors"
+
+	"github.com/gopub/gox"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -191,6 +193,39 @@ func TestCopyEmbeddedPtrStruct(t *testing.T) {
 		ji, err := json.Marshal(i)
 		require.NoError(t, err)
 		assert.JSONEq(t, string(ji), string(jm))
+	})
+}
+
+func TestCopyer(t *testing.T) {
+	type Contact struct {
+		Name        string
+		PhoneNumber *gox.PhoneNumber
+	}
+
+	t.Run("Success", func(t *testing.T) {
+		c := &Contact{}
+		err := gox.Copy(c, map[string]interface{}{
+			"Name":        "Tom",
+			"PhoneNumber": "+8613800000001",
+		})
+		require.NoError(t, err)
+		assert.Equal(t, &Contact{
+			Name: "Tom",
+			PhoneNumber: &gox.PhoneNumber{
+				Code:   86,
+				Number: 13800000001,
+			},
+		}, c)
+	})
+
+	t.Run("CopyString", func(t *testing.T) {
+		pn := &gox.PhoneNumber{}
+		err := gox.Copy(pn, "+8618600000001")
+		assert.NoError(t, err)
+		assert.Equal(t, pn, &gox.PhoneNumber{
+			Code:   86,
+			Number: 18600000001,
+		})
 	})
 }
 

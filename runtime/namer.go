@@ -1,6 +1,6 @@
-package gox
+package runtime
 
-import "github.com/gopub/conv"
+import "github.com/gopub/gox"
 
 type Namer interface {
 	Name(srcName string) (dstName string)
@@ -19,11 +19,11 @@ func MapNamer(srcToDst map[string]string) Namer {
 }
 
 var SnakeToCamelNamer NameFunc = func(snakeSrcName string) (camelDstName string) {
-	return conv.ToCamel(snakeSrcName)
+	return gox.SnakeToCamel(snakeSrcName)
 }
 
 var CamelToSnakeNamer NameFunc = func(camelSrcName string) (snakeDstName string) {
-	return conv.ToSnake(camelSrcName)
+	return gox.CamelToSnake(camelSrcName)
 }
 
 var EqualNamer NameFunc = func(srcName string) (dstName string) {

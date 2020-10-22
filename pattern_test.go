@@ -3,7 +3,7 @@ package gox_test
 import (
 	"testing"
 
-	"github.com/gopub/gox/v2"
+	"github.com/gopub/gox"
 	"github.com/stretchr/testify/assert"
 )
 

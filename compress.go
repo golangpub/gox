@@ -54,7 +54,7 @@ func (g *flateCompression) Compress(data []byte) ([]byte, error) {
 		return nil, err
 	}
 	//Make sure writer is closed before calling buffer.Bytes()!!!
-	_, err = writer.Write(data)
+	err = WriteAll(writer, data)
 	if err != nil {
 		writer.Close()
 		return nil, err
@@ -87,7 +87,7 @@ func (g *gzipCompression) Compress(data []byte) ([]byte, error) {
 	buffer := new(bytes.Buffer)
 	writer := gzip.NewWriter(buffer)
 	//Make sure writer is closed before calling buffer.Bytes()!!!
-	_, err := writer.Write(data)
+	err := WriteAll(writer, data)
 	if err != nil {
 		return nil, fmt.Errorf("write failed: %w", err)
 	}
